@@ -9,6 +9,7 @@ const envVariablesSchema = Joi.object()
     NODE_ENV: Joi.string().valid(...Object.values(ENodeEnvironment)),
     HOST: Joi.string().required(),
     PORT: Joi.number().required(),
+    OPENAI_API_KEY: Joi.string().required(),
   })
   .unknown();
 
@@ -25,4 +26,5 @@ export const appConfig = {
   env: envVariables.NODE_ENV,
   host: envVariables.HOST,
   port: envVariables.PORT,
+  openAiKey: envVariables.OPENAI_API_KEY,
 };
