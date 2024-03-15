@@ -10,6 +10,7 @@ export const generateDialogue = async ({
   listeningTaskOptions,
   listeningTaskCategories,
   ideaGenerator,
+  wordsforScript,
 }: {
   level: string;
   ageGroup: string;
@@ -17,6 +18,7 @@ export const generateDialogue = async ({
   listeningTaskOptions: string;
   listeningTaskCategories: string;
   ideaGenerator: string;
+  wordsforScript: string;
 }) => {
   const promptTemplate = dialoguePrompt;
   const prompt = replacePromptPlaceholders(promptTemplate, {
@@ -26,7 +28,9 @@ export const generateDialogue = async ({
     listeningTaskOptions,
     listeningTaskCategories,
     ideaGenerator,
+    wordsforScript,
   });
   const completion = await callChatGPTWithFunctions(prompt, dialogueSchema);
+  console.log(completion);
   return parseAndRepair(completion!);
 };

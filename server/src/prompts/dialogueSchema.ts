@@ -4,31 +4,21 @@ export const dialogueSchema = {
     title: {
       type: "string",
     },
-    scene: {
+    dialogues: {
       type: "array",
-      minItems: 8, // ?
       items: {
         type: "object",
         properties: {
-          dialogues: {
-            type: "array",
-            items: {
-              type: "object",
-              properties: {
-                speaker: {
-                  type: "string",
-                },
-                text: {
-                  type: "string",
-                },
-              },
-              required: ["speaker", "text"],
-            },
+          speaker: {
+            type: "string",
+          },
+          text: {
+            type: "string",
           },
         },
-        required: ["dialogues"],
+        required: ["speaker", "text"],
       },
     },
   },
-  required: ["title", "scenes"],
+  required: ["title", "dialogues"],
 };

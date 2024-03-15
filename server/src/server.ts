@@ -3,7 +3,6 @@ import http from "http";
 import { app } from "./app";
 
 const createHttpServer = (app: Express) => {
-  console.log("istek")
   return http.createServer(app);
 };
 

@@ -16,7 +16,10 @@ export const generateDialogue = createAsyncThunk(
   "generateListeningScript",
   async ({ body }: { body: IBody }) => {
     try {
-      const response = await axios.post("/generate-dialogue", body);
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/dialogue/generate-dialogue`,
+        body
+      );
       return response.data;
     } catch (err: any) {
       throw new Error(handleApiError(err).message);

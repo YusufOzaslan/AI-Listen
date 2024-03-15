@@ -1,34 +1,44 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { IForm, IFormFetchedThreeIdeas } from "../interfaces";
 import { generateDialogue } from "@/store/thunks";
 
+interface IFetchedDialogue {
+  title: string;
+  dialogues: Array<{
+    speaker: string;
+    text: string;
+  }>;
+}
 interface IState {
-  isLoading: boolean;
   isGenerating: boolean;
-  data: IForm | null;
-  fetchedData: IFormFetchedThreeIdeas | null;
+  dialogue: IFetchedDialogue | null;
 }
 
 const initialState: IState = {
-  isLoading: false,
   isGenerating: false,
-  data: null,
-  fetchedData: null,
+  dialogue: null,
 };
 
 export const content = createSlice({
   name: "contentForm",
   initialState,
-  reducers: {
-    updateData(state, { payload }: PayloadAction<IForm>) {
-      state.data = {
-        ...state.data,
-        ...payload,
-      };
-    },
+  reducers: {},
+  extraReducers(build) {
+    // Generate  dialogue
+    build.addCase(generateDialogue.pending, (state) => {
+      state.isGenerating = true;
+    });
+    build.addCase(
+      generateDialogue.fulfilled,
+      (state, { payload }: PayloadAction<IFetchedDialogue>) => {
+        state.isGenerating = false;
+        state.dialogue = payload;
+      }
+    );
+    build.addCase(generateDialogue.rejected, (state, { error }) => {
+      state.isGenerating = false;
+    });
   },
-  extraReducers(build) {},
 });
 
 const contentReducer = content.reducer;

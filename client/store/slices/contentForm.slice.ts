@@ -1,31 +1,27 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { IForm, IFormFetchedThreeIdeas } from "../interfaces";
 import { generateIdeas } from "@/store/thunks";
 
+interface IFormFetchedThreeIdeas {
+  ideas: Array<{
+    title: string;
+    description: string;
+  }>;
+}
 interface IState {
   isGenerating: boolean;
-  data: IForm | null;
   fetchedData: IFormFetchedThreeIdeas | null;
 }
 
 const initialState: IState = {
   isGenerating: false,
-  data: null,
   fetchedData: null,
 };
 
 export const contentForm = createSlice({
   name: "contentForm",
   initialState,
-  reducers: {
-    updateData(state, { payload }: PayloadAction<IForm>) {
-      state.data = {
-        ...state.data,
-        ...payload,
-      };
-    },
-  },
+  reducers: {},
   extraReducers(build) {
     // Generate  Ideas
     build.addCase(generateIdeas.pending, (state) => {

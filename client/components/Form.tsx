@@ -15,6 +15,7 @@ dotenv.config();
 function Form() {
     const dispatch = useAppDispatch();
     const contentForm = useAppSelector((store) => store.form);
+    const content = useAppSelector((store) => store.content);
     const initialValues = {
         level: '',
         ageGroup: '',
@@ -27,23 +28,9 @@ function Form() {
     };
 
     const formik = useFormik({
-        initialValues: initialValues || contentForm.data,
+        initialValues: initialValues,
         validationSchema: formValidation.schema,
         onSubmit: values => {
-            const response = dispatch(
-                generateDialogue({
-                    body: {
-                        level: values.level!,
-                        ageGroup: values.ageGroup!,
-                        numberOfWords: values.numberOfWords!,
-                        listeningTaskOptions: values.listeningTaskOption!,
-                        listeningTaskCategories: values.listeningTaskCategory!,
-                        ideaGenerator: values.idea!,
-                        wordsforScript: values.wordsForScript!,
-                    },
-                }),
-            );
-            console.log(response);
         }
     });
 
@@ -54,8 +41,6 @@ function Form() {
     };
 
     const handleTaskOptionChange = (selectedtaskOption: any) => {
-        console.log(selectedtaskOption)
-        console.log(selectedtaskOption.value)
         updateListeningCategories(selectedtaskOption.value);
     };
 
@@ -72,15 +57,35 @@ function Form() {
                 },
             }),
         );
-        console.log(response);
     };
+
+    const handleSubmit = async (values: typeof formValidation.initialValues) => {
+        console.log(values)
+        const response = await dispatch(
+            generateDialogue({
+                body: {
+                    level: values.level!,
+                    ageGroup: values.ageGroup!,
+                    numberOfWords: values.numberOfWords!,
+                    listeningTaskOptions: values.listeningTaskOption!,
+                    listeningTaskCategories: values.listeningTaskCategory!,
+                    ideaGenerator: values.idea!,
+                    wordsforScript: values.wordsForScript!,
+                },
+            }),
+        );
+        console.log(response);
+
+    }
+
     const handleGenerateIdeaClick = async () => {
         await handleGenerateIdea(formik.values);
     };
+
     return (
         <Box bg="gray.200" minHeight="100vh" py="20">
             <Box maxW="md" mx="auto" p="4" borderWidth="1px" borderRadius="lg" bg="white" boxShadow="md">
-                <form onSubmit={formik.handleSubmit}>
+                <form >
                     <FormControl mb="4">
                         <FormLabel>Level</FormLabel>
                         <Select
@@ -89,7 +94,6 @@ function Form() {
                             options={level.map((option) => ({ value: option.value, label: option.label }))}
                         />
                     </FormControl>
-
                     <FormControl mb="4">
                         <FormLabel>Age Group</FormLabel>
                         <Select
@@ -98,7 +102,6 @@ function Form() {
                             options={ageGroup.map((option) => ({ value: option.value, label: option.label }))}
                         />
                     </FormControl>
-
                     <FormControl mb="4">
                         <FormLabel>Number Of Words</FormLabel>
                         <Select
@@ -107,7 +110,6 @@ function Form() {
                             options={numberOfWordsOptions.map((option) => ({ value: option, label: option }))}
                         />
                     </FormControl>
-
                     <FormControl mb="4">
                         <FormLabel>Listening Task Options</FormLabel>
                         <Select
@@ -116,7 +118,6 @@ function Form() {
                             options={listeningTaskOptions.map((option) => ({ value: option.value, label: option.label }))}
                         />
                     </FormControl>
-
                     <FormControl mb="4">
                         <FormLabel>Listening Task Categories</FormLabel>
                         <Select
@@ -126,7 +127,6 @@ function Form() {
                             }
                         />
                     </FormControl>
-
                     <FormControl mb="4">
                         <FormLabel>Listening Topic - Idea Generator</FormLabel>
                         <Textarea placeholder="Enter your keywords (e.g., concert, teamwork, holiday) and click on the dice to generate creative ideas for your listening task."
@@ -134,11 +134,9 @@ function Form() {
                             value={formik.values.listeningTopic}
                             name="listeningTopic" />
                     </FormControl>
-
                     <Box textAlign="right">
                         <Button isLoading={contentForm.isGenerating} colorScheme="blue" mt="4" onClick={handleGenerateIdeaClick}>Generate Ideas</Button>
                     </Box>
-
                     <Box textAlign="center">
                         <FormControl mb="4" textAlign="left">
                             <FormLabel>Idea</FormLabel>
@@ -154,7 +152,6 @@ function Form() {
                                     )
                                 }))} />
                         </FormControl>
-
                         <FormControl mb="4">
                             <FormLabel>Words For Script</FormLabel>
                             <Textarea placeholder="Words provided here will be used as a part of listening script."
@@ -162,7 +159,8 @@ function Form() {
                                 value={formik.values.wordsForScript}
                                 name="wordsForScript" />
                         </FormControl>
-                        <Button colorScheme="blue" mt="4" type="submit">Next</Button>
+                        <Button isLoading={content.isGenerating} colorScheme="blue" mt="4"
+                            onClick={() => handleSubmit(formik.values)}>Next</Button>
                     </Box>
                 </form>
             </Box>

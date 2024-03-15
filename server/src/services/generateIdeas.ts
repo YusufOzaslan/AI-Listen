@@ -28,6 +28,5 @@ export const generateIdeas = async ({
     ideaGenerator,
   });
   const completion = await callChatGPTWithFunctions(prompt, ideaSchema);
-  console.log(completion)
   return parseAndRepair(completion!);
 };
