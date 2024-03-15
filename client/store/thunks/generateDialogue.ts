@@ -1,12 +1,11 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { AxiosInstance } from "axios";
+import axios from "axios";
 import { handleApiError } from "./handleApiError";
 
 interface IBody {
-  title: string;
   level: string;
   ageGroup: string;
-  numberOfWords: number;
+  numberOfWords: string;
   listeningTaskOptions: string;
   listeningTaskCategories: string;
   ideaGenerator: string;
@@ -15,9 +14,9 @@ interface IBody {
 
 export const generateDialogue = createAsyncThunk(
   "generateListeningScript",
-  async ({ axios, body }: { axios: AxiosInstance; body: IBody }) => {
+  async ({ body }: { body: IBody }) => {
     try {
-      const response = await axios.post("/generate-listening-script", body);
+      const response = await axios.post("/generate-dialogue", body);
       return response.data;
     } catch (err: any) {
       throw new Error(handleApiError(err).message);

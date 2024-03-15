@@ -1,12 +1,13 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { AxiosInstance } from "axios";
+import axios from "axios";
 import { handleApiError } from "./handleApiError";
+import dotenv from "dotenv";
+dotenv.config();
 
 interface IBody {
-  title: string;
   level: string;
   ageGroup: string;
-  numberOfWords: number;
+  numberOfWords: string;
   listeningTaskOptions: string;
   listeningTaskCategories: string;
   ideaGenerator: string;
@@ -14,9 +15,12 @@ interface IBody {
 
 export const generateIdeas = createAsyncThunk(
   "generateIdeas",
-  async ({ axios, body }: { axios: AxiosInstance; body: IBody }) => {
+  async ({ body }: { body: IBody }) => {
     try {
-      const response = await axios.post("/generate-three-ideas", body);
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/idea/generate-ideas`,
+        body
+      );
       return response.data;
     } catch (err: any) {
       throw new Error(handleApiError(err).message);

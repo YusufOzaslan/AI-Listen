@@ -1,6 +1,7 @@
 import { callChatGPTWithFunctions } from "./openAi";
 import { dialoguePrompt, dialogueSchema } from "../prompts";
 import { replacePromptPlaceholders } from "../utils/promptUtil";
+import { parseAndRepair } from "../utils/repairUtil";
 
 export const generateDialogue = async ({
   level,
@@ -27,6 +28,5 @@ export const generateDialogue = async ({
     ideaGenerator,
   });
   const completion = await callChatGPTWithFunctions(prompt, dialogueSchema);
-  return completion;
-  //return articleUtil.processThreeIdeas(completion);
+  return parseAndRepair(completion!);
 };

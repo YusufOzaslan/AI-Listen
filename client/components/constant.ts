@@ -15,7 +15,7 @@ export const ageGroup = [
   { value: "Adult&Young Adults 19-35", label: "Adult&Young Adults 19-35" },
 ];
 
-export const numberOfWordsOptions = [20, 40, 60, 80, 100, 200];
+export const numberOfWordsOptions = ["20", "40", "60", "80", "100", "200"];
 
 export const listeningTaskOptions = [
   {

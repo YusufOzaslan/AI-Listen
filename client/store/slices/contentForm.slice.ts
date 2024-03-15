@@ -1,16 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { IForm, IFormFetchedThreeIdeas } from "../interfaces";
+import { generateIdeas } from "@/store/thunks";
 
 interface IState {
-  isLoading: boolean;
   isGenerating: boolean;
   data: IForm | null;
   fetchedData: IFormFetchedThreeIdeas | null;
 }
 
 const initialState: IState = {
-  isLoading: false,
   isGenerating: false,
   data: null,
   fetchedData: null,
@@ -27,10 +26,25 @@ export const contentForm = createSlice({
       };
     },
   },
-  extraReducers(build) {},
+  extraReducers(build) {
+    // Generate  Ideas
+    build.addCase(generateIdeas.pending, (state) => {
+      state.isGenerating = true;
+    });
+    build.addCase(
+      generateIdeas.fulfilled,
+      (state, { payload }: PayloadAction<IFormFetchedThreeIdeas>) => {
+        state.isGenerating = false;
+        state.fetchedData = payload;
+      }
+    );
+    build.addCase(generateIdeas.rejected, (state, { error }) => {
+      state.isGenerating = false;
+    });
+  },
 });
 
-const listeningFormReducer = contentForm.reducer;
-const listeningFormActionCreators = contentForm.actions;
+const formReducer = contentForm.reducer;
+const formActionCreators = contentForm.actions;
 
-export { listeningFormReducer, listeningFormActionCreators };
+export { formReducer, formActionCreators };
