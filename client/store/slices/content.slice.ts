@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { generateDialogue } from "@/store/thunks";
 
-interface IFetchedDialogue {
+export interface IFetchedDialogue {
   title: string;
   dialogues: Array<{
     speaker: string;
@@ -11,12 +11,12 @@ interface IFetchedDialogue {
 }
 interface IState {
   isGenerating: boolean;
-  dialogue: IFetchedDialogue | null;
+  data: IFetchedDialogue | null;
 }
 
 const initialState: IState = {
   isGenerating: false,
-  dialogue: null,
+  data: null,
 };
 
 export const content = createSlice({
@@ -32,7 +32,7 @@ export const content = createSlice({
       generateDialogue.fulfilled,
       (state, { payload }: PayloadAction<IFetchedDialogue>) => {
         state.isGenerating = false;
-        state.dialogue = payload;
+        state.data = payload;
       }
     );
     build.addCase(generateDialogue.rejected, (state, { error }) => {

@@ -28,3 +28,11 @@ export const formValidation = {
     wordsForScript: "",
   },
 };
+export const dialogueValidation = {
+  schema: Yup.object().shape({
+    voice: Yup.array().of(Yup.string().required()).length(2).required(),
+  }),
+  initialValues: {
+    voice: [],
+  },
+};

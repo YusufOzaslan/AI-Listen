@@ -28,5 +28,7 @@ export const generateIdeas = async ({
     ideaGenerator,
   });
   const completion = await callChatGPTWithFunctions(prompt, ideaSchema);
-  return parseAndRepair(completion!);
+  return completion === "wrong_content"
+    ? completion
+    : parseAndRepair(completion);
 };

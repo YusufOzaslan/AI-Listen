@@ -45,7 +45,7 @@ function Form() {
     };
 
     const handleGenerateIdea = async (values: typeof formValidation.initialValues) => {
-        const response = await dispatch(
+        await dispatch(
             generateIdeas({
                 body: {
                     level: values.level!,
@@ -60,8 +60,7 @@ function Form() {
     };
 
     const handleSubmit = async (values: typeof formValidation.initialValues) => {
-        console.log(values)
-        const response = await dispatch(
+        await dispatch(
             generateDialogue({
                 body: {
                     level: values.level!,
@@ -74,8 +73,6 @@ function Form() {
                 },
             }),
         );
-        console.log(response);
-
     }
 
     const handleGenerateIdeaClick = async () => {

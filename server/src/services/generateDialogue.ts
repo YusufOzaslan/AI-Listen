@@ -31,6 +31,7 @@ export const generateDialogue = async ({
     wordsforScript,
   });
   const completion = await callChatGPTWithFunctions(prompt, dialogueSchema);
-  console.log(completion);
-  return parseAndRepair(completion!);
+  return completion === "wrong_content"
+    ? completion
+    : parseAndRepair(completion);
 };

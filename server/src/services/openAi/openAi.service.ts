@@ -1,5 +1,4 @@
 import OpenAI from "openai";
-import axios, { AxiosResponse } from "axios";
 import { appConfig } from "../../configs";
 
 const openai = new OpenAI({
@@ -12,23 +11,25 @@ export const callChatGPTWithFunctions = async (
 ) => {
   const response = await openai.chat.completions.create({
     model: "gpt-3.5-turbo-0613",
-    messages: [
+    messages: [{ role: "assistant", content }],
+    tools: [
       {
-        role: "system",
-        content: content,
+        type: "function",
+        function: {
+          name: "ListeningPractice",
+          parameters: schema,
+        },
       },
     ],
-    functions: [
-      {
-        name: "dialogue",
-        parameters: schema,
-      },
-    ],
-    function_call: "auto",
-    max_tokens: 200,
+    tool_choice: "auto",
   });
 
-  const completion = response.choices[0].message.content;
-
-  return completion;
+  const willInvokeFunction = response.choices[0].finish_reason == "tool_calls";
+  if (willInvokeFunction) {
+    const completion =
+      response.choices[0].message.tool_calls![0].function.arguments;
+    return completion;
+  } else {
+    return "wrong_content";
+  }
 };

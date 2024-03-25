@@ -3,6 +3,7 @@ export const dialogueSchema = {
   properties: {
     title: {
       type: "string",
+      description: "Title"
     },
     dialogues: {
       type: "array",
@@ -11,9 +12,11 @@ export const dialogueSchema = {
         properties: {
           speaker: {
             type: "string",
+            description: "Speaker"
           },
           text: {
             type: "string",
+            description: "Text"
           },
         },
         required: ["speaker", "text"],
