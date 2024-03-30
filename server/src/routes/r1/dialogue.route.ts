@@ -3,8 +3,15 @@ import { dialogueController } from "../../controllers";
 
 const router = express.Router();
 
-router.get("/test", dialogueController.test);
-router.get("/plan", dialogueController.plan);
-router.post("/generate-dialogue", dialogueController.generateDialogueController);
+router.post(
+  "/generate-dialogue",
+  dialogueController.generateDialogueController
+);
+
+router.post(
+  "/generate-dialogue-speech",
+  dialogueController.generateDialogueSpeechController
+);
+
 
 export { router as dialogueRouter };

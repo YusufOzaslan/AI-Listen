@@ -27,7 +27,6 @@ interface IProps {
 }
 
 const SpeechSample: FC<IProps> = ({ audio, start = false }) => {
-    console.log("jjj", audio)
     const bgColor = useColorModeValue('gray', 'white');
     const {
         audioRef,

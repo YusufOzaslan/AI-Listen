@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useRouter } from 'next/router';
 import {
     Avatar,
     WrapItem,
@@ -10,37 +11,42 @@ import {
     HStack,
     useColorModeValue,
     Text,
+    Button
 } from '@chakra-ui/react';
-import { SpeechSample } from './SpeechSample';
-import { IFetchedDialogue } from "../store/slices/content.slice"
+import { SpeechSample } from '@/components/SpeechSample';
+import { IFetchedDialogue } from "@/store/slices/content.slice"
+import {
+    useAppDispatch,
+    useAppSelector,
+} from '@/store';
 import Select from 'react-select';
-import Jeny from "../statics/avatars/Jeny.webp"
-import Aria from "../statics/avatars/Aria.webp"
-import Davis from "../statics/avatars/Davis.webp"
-import Emma from "../statics/avatars/Emma.webp"
-import Ava from "../statics/avatars/Ava.webp"
-import Brian from "../statics/avatars/Brian.webp"
-import Andrew from "../statics/avatars/Andrew.webp"
-import AiGenerateFemale from "../statics/avatars/AiGenerateFemale.webp"
-import AiGenerateMale from "../statics/avatars/AiGenerateMale.webp"
+import Jeny from "@/statics/avatars/Jeny.webp"
+import Aria from "@/statics/avatars/Aria.webp"
+import Davis from "@/statics/avatars/Davis.webp"
+import Emma from "@/statics/avatars/Emma.webp"
+import Ava from "@/statics/avatars/Ava.webp"
+import Brian from "@/statics/avatars/Brian.webp"
+import Andrew from "@/statics/avatars/Andrew.webp"
+import AiGenerateFemale from "@/statics/avatars/AiGenerateFemale.webp"
+import AiGenerateMale from "@/statics/avatars/AiGenerateMale.webp"
 // @ts-ignore
-import JenyAudio from "../statics/audio/JenyAudio.mp3";
+import JenyAudio from "@/statics/audio/JenyAudio.mp3";
 // @ts-ignore
-import AriaAudio from "../statics/audio/AriaAudio.mp3";
+import AriaAudio from "@/statics/audio/AriaAudio.mp3";
 // @ts-ignore
-import DavisAudio from "../statics/audio/DavisAudio.mp3";
+import DavisAudio from "@/statics/audio/DavisAudio.mp3";
 // @ts-ignore
-import EmmaAudio from "../statics/audio/EmmaAudio.mp3";
+import EmmaAudio from "@/statics/audio/EmmaAudio.mp3";
 // @ts-ignore
-import AvaAudio from "../statics/audio/AvaAudio.mp3";
+import AvaAudio from "@/statics/audio/AvaAudio.mp3";
 // @ts-ignore
-import BrianAudio from "../statics/audio/BrianAudio.mp3";
+import BrianAudio from "@/statics/audio/BrianAudio.mp3";
 // @ts-ignore
-import AndrewAudio from "../statics/audio/AndrewAudio.mp3";
+import AndrewAudio from "@/statics/audio/AndrewAudio.mp3";
 // @ts-ignore
-import AiGenerateFemaleAudio from "../statics/audio/AiGenerateFemaleAudio.mp3";
+import AiGenerateFemaleAudio from "@/statics/audio/AiGenerateFemaleAudio.mp3";
 // @ts-ignore
-import AiGenerateMaleAudio from "../statics/audio/AiGenerateMaleAudio.mp3";
+import AiGenerateMaleAudio from "@/statics/audio/AiGenerateMaleAudio.mp3";
 
 
 interface SelectOption {
@@ -123,7 +129,14 @@ const selectOptions: SelectOption[] = [
 ];
 
 
-const Dialogue: React.FC<IFetchedDialogue> = ({ title, dialogues }) => {
+const DialoguePage: React.FC<IFetchedDialogue> = () => {
+    const router = useRouter();
+    const dispatch = useAppDispatch();
+    const contentForm = useAppSelector((store) => store.form);
+    const content = useAppSelector((store) => store.content);
+    const title = content.data?.title
+    const dialogues = content.data?.dialogues
+
     const [voice, setVoice] = useState<IVoice[]>([
         {
             voice: 'en-US-AIGenerate2Neural',
@@ -136,6 +149,10 @@ const Dialogue: React.FC<IFetchedDialogue> = ({ title, dialogues }) => {
             speechSample: AiGenerateMaleAudio
         }]);
 
+    const handleSubmit = async () => {
+        console.log("test")
+    }
+
     const handleVoice = (option: SelectOption, index: number) => {
         const updatedVoice = [...voice];
         updatedVoice[index].voice = option.value;
@@ -146,7 +163,7 @@ const Dialogue: React.FC<IFetchedDialogue> = ({ title, dialogues }) => {
     const color = useColorModeValue('gray.100', 'gray.700');
 
     return (
-        <Box bg="gray.200" minHeight="100vh" py="20">
+        <Box maxW="lg" mx="auto" p="4" borderWidth="1px" borderRadius="lg" bg="gray.200" boxShadow="md">
             <Box mb={5}>
                 <Heading textAlign="center">{title}</Heading>
             </Box>
@@ -193,10 +210,13 @@ const Dialogue: React.FC<IFetchedDialogue> = ({ title, dialogues }) => {
                         </HStack>
                     );
                 })}
+                <Button isLoading={content.isGenerating} colorScheme="blue" mt="4">Listen Dialogue</Button>
+                <Button isLoading={content.isGenerating} colorScheme="blue" mt="4"
+                    onClick={() => handleSubmit()}>Next</Button>
             </VStack>
         </Box>
     )
 }
 
 
-export default Dialogue;
+export default DialoguePage;

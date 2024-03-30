@@ -1,5 +1,6 @@
 import React from 'react';
 import { useFormik } from 'formik';
+import { useRouter } from 'next/router';
 import { Button, Box, FormControl, FormLabel, Textarea } from '@chakra-ui/react';
 import Select from 'react-select';
 import { level, ageGroup, listeningTaskOptions, listeningCategoriesMap, TaskOptionType, numberOfWordsOptions } from './constant';
@@ -13,6 +14,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 function Form() {
+    const router = useRouter();
     const dispatch = useAppDispatch();
     const contentForm = useAppSelector((store) => store.form);
     const content = useAppSelector((store) => store.content);
@@ -73,6 +75,7 @@ function Form() {
                 },
             }),
         );
+        router.push('/dialogue');
     }
 
     const handleGenerateIdeaClick = async () => {
@@ -81,7 +84,7 @@ function Form() {
 
     return (
         <Box bg="gray.200" minHeight="100vh" py="20">
-            <Box maxW="md" mx="auto" p="4" borderWidth="1px" borderRadius="lg" bg="white" boxShadow="md">
+            <Box maxW="lg" mx="auto" p="4" borderWidth="1px" borderRadius="lg" bg="white" boxShadow="md">
                 <form >
                     <FormControl mb="4">
                         <FormLabel>Level</FormLabel>
