@@ -13,6 +13,7 @@ const signUp = catchAsync(async (req: Request, res: Response) => {
 const signIn = catchAsync(async (req: Request, res: Response) => {
   const attrs: Pick<IUserAttributes, "email" | "password"> = req.body;
   const user = await authService.signIn(attrs);
+  req.session.userID = user._id;
   res.status(httpStatus.CREATED).send(user);
 });
 

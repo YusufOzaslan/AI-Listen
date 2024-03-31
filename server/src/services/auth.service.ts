@@ -4,7 +4,9 @@ import httpStatus from "http-status";
 export const signUp = async (attrs: IUserAttributes) => {
   if (await User.isEmailTaken(attrs.email))
     throw new Error(`${httpStatus.BAD_REQUEST}, Email already exists`);
-  const user = await User.create(attrs);
+  const user = User.build(attrs);
+  user.role = "teacher";
+  user.save();
   return user;
 };
 

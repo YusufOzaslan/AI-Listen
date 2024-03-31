@@ -18,7 +18,7 @@ export const generateIdeas = createAsyncThunk(
   async ({ body }: { body: IBody }) => {
     try {
       const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/idea/generate-ideas`,
+        `${process.env.NEXT_PUBLIC_API_URL}/dialogue/generate-ideas`,
         body
       );
       return response.data;
