@@ -9,4 +9,4 @@ router.use("/dialogue", dialogueRouter);
 router.use("/auth", authRouter);
 router.use("/content", contentRouter);
 
-export { router as r1Router };
+export { router as v1Router };

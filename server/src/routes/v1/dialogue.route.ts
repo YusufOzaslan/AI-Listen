@@ -22,4 +22,10 @@ router.post(
   dialogueController.generateIdeasController
 );
 
+router.post(
+  "/generate-image",
+  auth(),
+  dialogueController.generateDialogueImage
+);
+
 export { router as dialogueRouter };

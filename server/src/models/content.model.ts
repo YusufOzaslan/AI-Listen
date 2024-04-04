@@ -9,6 +9,7 @@ export interface IContentAttributes {
     text: string;
   }[];
   audio: string;
+  image: string;
 }
 
 export interface IContentDocument
@@ -42,6 +43,10 @@ const contentSchema = new mongoose.Schema({
     },
   ],
   audio: {
+    type: String,
+    required: true,
+  },
+  image: {
     type: String,
     required: true,
   },

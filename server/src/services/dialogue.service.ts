@@ -1,4 +1,4 @@
-import { callChatGPTWithFunctions } from "./openAi";
+import { openAiService } from "./openAi";
 import {
   ideaPrompt,
   ideaSchema,
@@ -55,7 +55,10 @@ const generateDialogue = async ({
     ideaGenerator,
     wordsforScript,
   });
-  const completion = await callChatGPTWithFunctions(prompt, dialogueSchema);
+  const completion = await openAiService.callChatGPTWithFunctions(
+    prompt,
+    dialogueSchema
+  );
   return completion === "wrong_content"
     ? completion
     : parseAndRepair(completion);
@@ -85,7 +88,10 @@ const generateIdeas = async ({
     listeningTaskCategories,
     ideaGenerator,
   });
-  const completion = await callChatGPTWithFunctions(prompt, ideaSchema);
+  const completion = await openAiService.callChatGPTWithFunctions(
+    prompt,
+    ideaSchema
+  );
   return completion === "wrong_content"
     ? completion
     : parseAndRepair(completion);
@@ -131,8 +137,29 @@ const generateDialogueSpeech = async ({
   return filename;
 };
 
+const generateDialogueImage = async ({
+  title,
+  dialogues,
+  voice,
+}: {
+  title: string;
+  dialogues: {
+    speaker: string;
+    text: string;
+  }[];
+  voice: string[];
+}) => {
+  const prompt = dialogues
+    .map((dialogue) => {
+      return `[${dialogue.speaker}]: ${dialogue.text}`;
+    })
+    .join("\n");
+  const image = await openAiService.generateImage(prompt);
+  return image;
+};
 export const dialogueService = {
   generateDialogue,
   generateIdeas,
   generateDialogueSpeech,
+  generateDialogueImage
 };

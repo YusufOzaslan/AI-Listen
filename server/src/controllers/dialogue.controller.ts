@@ -24,8 +24,16 @@ const generateIdeasController = catchAsync(
   }
 );
 
+const generateDialogueImage = catchAsync(
+  async (req: Request, res: Response) => {
+    const image = await dialogueService.generateDialogueImage(req.body);
+    res.status(httpStatus.OK).send(image);
+  }
+);
+
 export const dialogueController = {
   generateDialogueController,
   generateDialogueSpeechController,
   generateIdeasController,
+  generateDialogueImage,
 };
