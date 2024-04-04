@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
+import { EModel } from "./enums";
+import {EUserRole} from '../types';
 
 export interface IUserAttributes {
   name: string;
@@ -9,7 +11,7 @@ export interface IUserAttributes {
 
 export interface IUserDocument extends mongoose.Document, IUserAttributes {
   isPasswordCorrect(password: string): Promise<boolean>;
-  role: string;
+  role: EUserRole;
 }
 
 interface IUserModel extends mongoose.Model<IUserDocument> {
@@ -33,8 +35,8 @@ const userSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ["student", "teacher", "admin"],
-    default: "student",
+    enum: EUserRole,
+    default: EUserRole.USER
   },
 });
 
@@ -58,6 +60,6 @@ userSchema.pre("save", async function (next) {
 });
 
 export const User = mongoose.model<IUserDocument, IUserModel>(
-  "User",
+  EModel.USER,
   userSchema
 );

@@ -2,15 +2,34 @@ import { Request, Response, NextFunction } from "express";
 import httpStatus from "http-status";
 import { catchAsync } from "../utils";
 import { User } from "../models";
+import { EUserRole, ICurrentUser } from "../types";
+import { tokenService } from "../services";
 
-const auth = () =>
-  catchAsync(async (req: Request, _: Response, next: NextFunction) => {
-    const user = await User.findById(req.session.userID);
-    if (!user) throw new Error(`${httpStatus.BAD_REQUEST}, User not found`);
-
-    if (user.role != ("teacher" || "admin")) {
-      throw new Error(`${httpStatus.BAD_REQUEST}, FORBIDDEN`);
+declare global {
+  namespace Express {
+    interface Request {
+      currentUser?: ICurrentUser;
     }
+  }
+}
+
+const auth = (...requiredRole: EUserRole[]) =>
+  catchAsync(async (req: Request, _: Response, next: NextFunction) => {
+    if (!req.headers.authorization) {
+      throw new Error(`${httpStatus.UNAUTHORIZED}, Authentication required`);
+    }
+
+    const token = req.headers.authorization.replace("Bearer ", "");
+    const { id, role } = await tokenService.verifyAccessToken(token);
+    console.log(id)
+    const user = await User.findOne({ _id: id, role });
+    if (!user)
+      throw new Error(`${httpStatus.UNAUTHORIZED}, Invalid access token`);
+
+    if (requiredRole.length && !requiredRole.includes(role)) {
+      throw new Error(`${httpStatus.UNAUTHORIZED}, Forbidden`);
+    }
+    req.currentUser = user;
     next();
   });
 

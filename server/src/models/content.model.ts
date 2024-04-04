@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { EModel } from "./enums";
 
 export interface IContentAttributes {
   user: mongoose.Schema.Types.ObjectId;
@@ -21,7 +22,7 @@ interface IContentModel extends mongoose.Model<IContentDocument> {
 const contentSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
+    ref: EModel.USER,
     required: true,
   },
   title: {
@@ -60,6 +61,6 @@ contentSchema.post("init", (doc: any) => {
 });
 
 export const Content = mongoose.model<IContentDocument, IContentModel>(
-  "content",
+  EModel.CONTENT,
   contentSchema
 );

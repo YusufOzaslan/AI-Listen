@@ -9,4 +9,6 @@ router.post("/sign-up", validate(authValidation.signUp), authController.signUp);
 
 router.post("/sign-in", validate(authValidation.signIn), authController.signIn);
 
+router.delete("/sign-out", authController.signOut);
+
 export { router as authRouter };
