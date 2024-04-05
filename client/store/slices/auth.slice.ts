@@ -1,11 +1,16 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { signIn, signUp, signOut } from "@/store/thunks";
-
+import { signIn, signUp, signOut, refresh } from "@/store/thunks";
+interface IToken {
+  value: string;
+  expiryDate: string;
+}
 export interface IAuth {
+  _id: string;
   name: string;
   email: string;
   role: string;
+  accessToken: IToken;
 }
 
 interface IState {
@@ -70,6 +75,16 @@ export const authSlice = createSlice({
       state.error = null;
       state.user = null;
     });
+
+    // refresh
+    build.addCase(
+      refresh.fulfilled,
+      (state, { payload }: PayloadAction<IAuth>) => {
+        state.isLoading = false;
+        state.error = null;
+        state.user = payload;
+      }
+    );
   },
 });
 

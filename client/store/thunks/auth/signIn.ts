@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import { handleApiError } from "./handleApiError";
+import { handleApiError } from "../handleApiError";
 
 interface IBody {
   email: string;
