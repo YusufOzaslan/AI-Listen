@@ -31,7 +31,6 @@ const signOut = async (refreshToken: string) => {
     type: ETokenType.REFRESH,
     value: refreshToken,
   });
-
   if (!token) return;
   await token.deleteOne();
 };

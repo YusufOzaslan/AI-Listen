@@ -21,7 +21,6 @@ const auth = (...requiredRole: EUserRole[]) =>
 
     const token = req.headers.authorization.replace("Bearer ", "");
     const { id, role } = await tokenService.verifyAccessToken(token);
-    console.log(id)
     const user = await User.findOne({ _id: id, role });
     if (!user)
       throw new Error(`${httpStatus.UNAUTHORIZED}, Invalid access token`);

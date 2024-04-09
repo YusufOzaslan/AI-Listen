@@ -11,4 +11,6 @@ router.post("/sign-in", validate(authValidation.signIn), authController.signIn);
 
 router.delete("/sign-out", authController.signOut);
 
+router.get('/refresh', authController.refresh);
+
 export { router as authRouter };
