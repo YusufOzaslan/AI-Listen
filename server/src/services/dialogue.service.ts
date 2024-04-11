@@ -12,8 +12,9 @@ import { replacePromptPlaceholders } from "../utils/promptUtil";
 import { parseAndRepair } from "../utils/repairUtil";
 import { ICurrentUser } from "../types";
 import { contentService } from "./content.service";
+import axios from "axios";
 
-const createMissingDirectories = async () => {
+const createMissingDirectories = async (folder_name: string) => {
   const assetsDir = path.join(__dirname, "..", "..", "assets");
 
   try {
@@ -22,7 +23,7 @@ const createMissingDirectories = async () => {
     await fs.promises.mkdir(assetsDir, { recursive: true });
   }
 
-  const audioDir = path.join(assetsDir, "audio");
+  const audioDir = path.join(assetsDir, folder_name);
   try {
     await fs.promises.access(audioDir, fs.constants.F_OK);
   } catch (error) {
@@ -123,7 +124,7 @@ const generateDialogueSpeech = async (
   user: ICurrentUser,
   body: { voice: string[] }
 ) => {
-  await createMissingDirectories();
+  await createMissingDirectories("audio");
 
   const content = await contentService.getContentByIdOne(contentId, user);
 
@@ -151,20 +152,46 @@ const generateDialogueSpeech = async (
   await fs.promises.rename(audioPath, targetPath);
 
   content.set({ audio: audioPath });
+  await content.save();
 
   return content;
 };
 
 const generateDialogueImage = async (contentId: string, user: ICurrentUser) => {
   const content = await contentService.getContentByIdOne(contentId, user);
+
+  await createMissingDirectories("images");
+
   const prompt = content.dialogues
     .map((dialogue) => {
       return `[${dialogue.speaker}]: ${dialogue.text}`;
     })
     .join("\n");
-  const image = await openAiService.generateImage(prompt);
-  return image;
+
+  const image_url = await openAiService.generateImage(prompt);
+
+  const image = await axios.get(image_url!, { responseType: "stream" });
+  const imagePath = path.join(
+    __dirname,
+    "..",
+    "..",
+    "assets",
+    "images",
+    `${contentId}.png`
+  );
+  const writer = fs.createWriteStream(imagePath);
+  image.data.pipe(writer);
+  await new Promise((resolve, reject) => {
+    writer.on("finish", resolve);
+    writer.on("error", reject);
+  });
+
+  content.set({ image: imagePath });
+  await content.save();
+
+  return content;
 };
+
 export const dialogueService = {
   generateDialogue,
   generateIdeas,
