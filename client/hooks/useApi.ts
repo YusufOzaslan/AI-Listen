@@ -9,7 +9,7 @@ export const useApi = () => {
     const requestIntercept = appApiPrivate.interceptors.request.use(
       (config) => {
         if (!config.headers["Authorization"]) {
-          config.headers["Authorization"] = `Bearer test`;
+          config.headers["Authorization"] = `Bearer ${accessToken?.value}`;
         }
         return config;
       },

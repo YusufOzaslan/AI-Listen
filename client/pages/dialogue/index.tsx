@@ -14,7 +14,9 @@ import {
     Button
 } from '@chakra-ui/react';
 import { SpeechSample } from '@/components/SpeechSample';
-import { IFetchedDialogue } from "@/store/slices/content.slice"
+import { IContentDialogue } from "@/store/slices/content.slice"
+import { generateDialogueSpeech, generateImage } from '@/store/thunks';
+import { useApi } from '@/hooks';
 import {
     useAppDispatch,
     useAppSelector,
@@ -47,7 +49,6 @@ import AndrewAudio from "@/statics/audio/AndrewAudio.mp3";
 import AiGenerateFemaleAudio from "@/statics/audio/AiGenerateFemaleAudio.mp3";
 // @ts-ignore
 import AiGenerateMaleAudio from "@/statics/audio/AiGenerateMaleAudio.mp3";
-
 
 interface SelectOption {
     label: string;
@@ -129,10 +130,11 @@ const selectOptions: SelectOption[] = [
 ];
 
 
-const DialoguePage: React.FC<IFetchedDialogue> = () => {
+const DialoguePage: React.FC<IContentDialogue> = () => {
     const router = useRouter();
     const dispatch = useAppDispatch();
     const contentForm = useAppSelector((store) => store.form);
+    const appApi = useApi();
     const content = useAppSelector((store) => store.content);
     const title = content.data?.title
     const dialogues = content.data?.dialogues
@@ -150,7 +152,22 @@ const DialoguePage: React.FC<IFetchedDialogue> = () => {
         }]);
 
     const handleSubmit = async () => {
-        console.log("test")
+        await dispatch(
+            generateDialogueSpeech({
+                axios: appApi,
+                contentId: content.data?._id!,
+                body: {
+                    voice: [voice[0].voice, voice[1].voice]
+                }
+            })
+        );
+        await dispatch(
+            generateImage({
+                axios: appApi,
+                contentId: content.data?._id!
+            })
+        );
+        router.push('/image');
     }
 
     const handleVoice = (option: SelectOption, index: number) => {
@@ -217,6 +234,5 @@ const DialoguePage: React.FC<IFetchedDialogue> = () => {
         </Box>
     )
 }
-
 
 export default DialoguePage;

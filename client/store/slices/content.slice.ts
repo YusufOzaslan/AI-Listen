@@ -1,27 +1,26 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { generateDialogue } from "@/store/thunks";
+import { generateDialogue, generateImage } from "@/store/thunks";
+import { generateDialogueSpeech } from "../thunks/generateDialogueSpeech";
 
-export interface IFetchedDialogue {
-  user: string;
+export interface IContentDialogue {
+  _id: string;
   title: string;
   dialogues: Array<{
     speaker: string;
     text: string;
   }>;
+  audio: string | null;
+  image: string | null;
 }
 interface IState {
   isGenerating: boolean;
-  data: IFetchedDialogue | null;
-  audio: string | null;
-  image: string | null;
+  data: IContentDialogue | null;
 }
 
 const initialState: IState = {
   isGenerating: false,
   data: null,
-  audio: null,
-  image: null,
 };
 
 export const content = createSlice({
@@ -29,18 +28,47 @@ export const content = createSlice({
   initialState,
   reducers: {},
   extraReducers(build) {
-    // Generate  dialogue
+    // Generate  Dialogue Text
     build.addCase(generateDialogue.pending, (state) => {
       state.isGenerating = true;
     });
     build.addCase(
       generateDialogue.fulfilled,
-      (state, { payload }: PayloadAction<IFetchedDialogue>) => {
+      (state, { payload }: PayloadAction<IContentDialogue>) => {
+        state.isGenerating = false;
+        state.data = payload;
+        console.log(state.data)
+      }
+    );
+    build.addCase(generateDialogue.rejected, (state, { error }) => {
+      state.isGenerating = false;
+    });
+    // Generate  Speech
+    build.addCase(generateDialogueSpeech.pending, (state) => {
+      state.isGenerating = true;
+    });
+    build.addCase(
+      generateDialogueSpeech.fulfilled,
+      (state, { payload }: PayloadAction<IContentDialogue>) => {
         state.isGenerating = false;
         state.data = payload;
       }
     );
-    build.addCase(generateDialogue.rejected, (state, { error }) => {
+    build.addCase(generateDialogueSpeech.rejected, (state, { error }) => {
+      state.isGenerating = false;
+    });
+    // Generate  Image
+    build.addCase(generateImage.pending, (state) => {
+      state.isGenerating = true;
+    });
+    build.addCase(
+      generateImage.fulfilled,
+      (state, { payload }: PayloadAction<IContentDialogue>) => {
+        state.isGenerating = false;
+        state.data = payload;
+      }
+    );
+    build.addCase(generateImage.rejected, (state, { error }) => {
       state.isGenerating = false;
     });
   },

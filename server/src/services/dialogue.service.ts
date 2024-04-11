@@ -170,23 +170,24 @@ const generateDialogueImage = async (contentId: string, user: ICurrentUser) => {
 
   const image_url = await openAiService.generateImage(prompt);
 
-  const image = await axios.get(image_url!, { responseType: "stream" });
-  const imagePath = path.join(
-    __dirname,
-    "..",
-    "..",
-    "assets",
-    "images",
-    `${contentId}.png`
-  );
-  const writer = fs.createWriteStream(imagePath);
-  image.data.pipe(writer);
-  await new Promise((resolve, reject) => {
-    writer.on("finish", resolve);
-    writer.on("error", reject);
-  });
+  // const image = await axios.get(image_url!, { responseType: "stream" });
+  // const imagePath = path.join(
+  //   __dirname,
+  //   "..",
+  //   "..",
+  //   "assets",
+  //   "images",
+  //   `${contentId}.png`
+  // );
+  // const writer = fs.createWriteStream(imagePath);
+  // image.data.pipe(writer);
+  // await new Promise((resolve, reject) => {
+  //   writer.on("finish", resolve);
+  //   writer.on("error", reject);
+  // });
 
-  content.set({ image: imagePath });
+  // content.set({ image: imagePath });
+  content.set({ image: image_url });
   await content.save();
 
   return content;
