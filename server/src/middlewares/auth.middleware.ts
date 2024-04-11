@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import httpStatus from "http-status";
-import { catchAsync } from "../utils";
+import { catchAsync, AppError } from "../utils";
 import { User } from "../models";
-import { EUserRole, ICurrentUser } from "../types";
+import { EUserRole, ICurrentUser, EAppError } from "../types";
 import { tokenService } from "../services";
 
 declare global {
@@ -16,17 +16,20 @@ declare global {
 const auth = (...requiredRole: EUserRole[]) =>
   catchAsync(async (req: Request, _: Response, next: NextFunction) => {
     if (!req.headers.authorization) {
-      throw new Error(`${httpStatus.UNAUTHORIZED}, Authentication required`);
+      throw new AppError(httpStatus.UNAUTHORIZED, EAppError.UNAUTHORIZED);
     }
 
     const token = req.headers.authorization.replace("Bearer ", "");
     const { id, role } = await tokenService.verifyAccessToken(token);
     const user = await User.findOne({ _id: id, role });
     if (!user)
-      throw new Error(`${httpStatus.UNAUTHORIZED}, Invalid access token`);
+      throw new AppError(
+        httpStatus.UNAUTHORIZED,
+        EAppError.INVALID_ACCESS_TOKEN
+      );
 
     if (requiredRole.length && !requiredRole.includes(role)) {
-      throw new Error(`${httpStatus.UNAUTHORIZED}, Forbidden`);
+      throw new AppError(httpStatus.UNAUTHORIZED, EAppError.FORBIDDEN);
     }
     req.currentUser = user;
     next();

@@ -1,12 +1,11 @@
 import express from "express";
 import cors from "cors";
 import helmet from "helmet";
-import cookieParser from 'cookie-parser';
+import cookieParser from "cookie-parser";
 import mongoSanitize from "express-mongo-sanitize";
 import { v1Router } from "./routes";
 import { appConfig } from "./configs";
-import { ENodeEnvironment } from "./types";
-import { errorConverter, requestLogger } from "./middlewares";
+import { errorHandler, errorConverter, requestLogger } from "./middlewares";
 
 const app = express();
 
@@ -18,7 +17,7 @@ app.use(mongoSanitize());
 app.use(
   cors({
     origin: [appConfig.origin],
-    credentials: true
+    credentials: true,
   })
 );
 app.use(requestLogger());
@@ -27,4 +26,5 @@ app.all("*", (req, res) => {
   res.status(404).send("404");
 });
 app.use(errorConverter);
+app.use(errorHandler);
 export { app };
