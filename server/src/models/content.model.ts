@@ -53,15 +53,15 @@ const contentSchema = new mongoose.Schema({
 contentSchema.statics.build = (attrs: IContentAttributes): IContentDocument =>
   new Content(attrs);
 
-contentSchema.post("init", (doc: any) => {
-  doc.toJSON = () => {
-    let obj = doc.toObject();
-    obj.id = obj._id;
-    delete obj._id;
-    delete obj.__v;
-    return obj;
-  };
-});
+// contentSchema.post("init", (doc: any) => {
+//   doc.toJSON = () => {
+//     let obj = doc.toObject();
+//     obj.id = obj._id;
+//     delete obj._id;
+//     delete obj.__v;
+//     return obj;
+//   };
+// });
 
 export const Content = mongoose.model<IContentDocument, IContentModel>(
   EModel.CONTENT,

@@ -10,8 +10,8 @@ export interface IContentDialogue {
     speaker: string;
     text: string;
   }>;
-  audio: string | null;
-  image: string | null;
+  audio: string;
+  image: string;
 }
 interface IState {
   isGenerating: boolean;

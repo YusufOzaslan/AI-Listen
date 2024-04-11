@@ -153,15 +153,6 @@ const DialoguePage: React.FC<IContentDialogue> = () => {
 
     const handleSubmit = async () => {
         await dispatch(
-            generateDialogueSpeech({
-                axios: appApi,
-                contentId: content.data?._id!,
-                body: {
-                    voice: [voice[0].voice, voice[1].voice]
-                }
-            })
-        );
-        await dispatch(
             generateImage({
                 axios: appApi,
                 contentId: content.data?._id!
@@ -170,6 +161,17 @@ const DialoguePage: React.FC<IContentDialogue> = () => {
         router.push('/image');
     }
 
+    const handleAddNarration = async () => {
+        await dispatch(
+            generateDialogueSpeech({
+                axios: appApi,
+                contentId: content.data?._id!,
+                body: {
+                    voice: [voice[0].voice, voice[1].voice]
+                }
+            })
+        );
+    }
     const handleVoice = (option: SelectOption, index: number) => {
         const updatedVoice = [...voice];
         updatedVoice[index].voice = option.value;
@@ -227,8 +229,9 @@ const DialoguePage: React.FC<IContentDialogue> = () => {
                         </HStack>
                     );
                 })}
-                <Button isLoading={content.isGenerating} colorScheme="blue" mt="4">Add Narration</Button>
                 <Button isLoading={content.isGenerating} colorScheme="blue" mt="4"
+                    onClick={() => handleAddNarration()}>Add Narration</Button>
+                <Button isLoading={content.isGenerating} isDisabled={content.data?.audio === "" || content.data?.audio == undefined || content.data?.audio == null} colorScheme="blue" mt="4"
                     onClick={() => handleSubmit()}>Next</Button>
             </VStack>
         </Box>
