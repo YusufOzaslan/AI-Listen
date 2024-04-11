@@ -44,9 +44,9 @@ const SignInPage = () => {
             body: { email, password }
         }));
 
-        console.log('name:', auth.user?.name);
-        console.log('Email:', auth.user?.email);
-        console.log('role:', auth.user?.role);
+        // console.log('name:', auth.user?.name);
+        // console.log('Email:', auth.user?.email);
+        // console.log('role:', auth.user?.role);
     };
 
     return (

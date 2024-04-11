@@ -15,7 +15,12 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(mongoSanitize());
-app.use(cors());
+app.use(
+  cors({
+    origin: [appConfig.origin],
+    credentials: true
+  })
+);
 app.use(requestLogger());
 app.use("/v1", v1Router);
 app.all("*", (req, res) => {

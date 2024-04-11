@@ -1,6 +1,6 @@
 import { useAuth } from '@/hooks';
 import { FC, ReactNode, useEffect, useState } from 'react';
-import { BarLoader } from 'react-spinners';
+import { Center, Spinner } from '@chakra-ui/react';
 
 interface IProps {
   children: ReactNode;
@@ -24,7 +24,17 @@ const PersistLogin: FC<IProps> = ({ children }) => {
     !accessToken ? verifyRefreshToken() : setIsLoading(false);
   }, []);
 
-  return <>{isLoading ? <BarLoader color="#36D7B7" loading={isLoading} /> : children}</>;
+  return (
+    <>
+      {isLoading ? (
+        <Center h="100vh">
+          <Spinner size="xl" color="blue.400" />
+        </Center>
+      ) : (
+        children
+      )}
+    </>
+  );
 };
 
 export { PersistLogin };

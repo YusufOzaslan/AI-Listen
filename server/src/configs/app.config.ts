@@ -8,6 +8,7 @@ const envVariablesSchema = Joi.object()
   .keys({
     NODE_ENV: Joi.string().valid(...Object.values(ENodeEnvironment)),
     HOST: Joi.string().required(),
+    ORIGIN: Joi.string().required(),
     PORT: Joi.number().required(),
     MONGODB_URI: Joi.string().required(),
     OPENAI_API_KEY: Joi.string().required(),
@@ -35,6 +36,7 @@ if (error) {
 export const appConfig = {
   env: envVariables.NODE_ENV,
   host: envVariables.HOST,
+  origin: envVariables.ORIGIN,
   port: envVariables.PORT,
 
   openAiKey: envVariables.OPENAI_API_KEY,

@@ -6,6 +6,7 @@ import Select from 'react-select';
 import { level, ageGroup, listeningTaskOptions, listeningCategoriesMap, TaskOptionType, numberOfWordsOptions } from './constant';
 import { formValidation } from '@/validations';
 import { generateIdeas, generateDialogue } from '@/store/thunks';
+import { useApi } from '@/hooks';
 import {
     useAppDispatch,
     useAppSelector,
@@ -18,6 +19,7 @@ function Form() {
     const dispatch = useAppDispatch();
     const contentForm = useAppSelector((store) => store.form);
     const content = useAppSelector((store) => store.content);
+    const appApi = useApi();
     const initialValues = {
         level: '',
         ageGroup: '',
@@ -57,6 +59,7 @@ function Form() {
                     listeningTaskCategories: values.listeningTaskCategory!,
                     ideaGenerator: values.idea!
                 },
+                axios: appApi
             }),
         );
     };
@@ -73,6 +76,7 @@ function Form() {
                     ideaGenerator: values.idea!,
                     wordsforScript: values.wordsForScript!,
                 },
+                axios: appApi
             }),
         );
         router.push('/dialogue');

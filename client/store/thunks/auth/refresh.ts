@@ -1,15 +1,11 @@
-import {createAsyncThunk} from '@reduxjs/toolkit';
-import { handleApiError } from "../handleApiError";
-import axios from "axios";
+import { createAsyncThunk } from "@reduxjs/toolkit";
+import { handleApiError, appApi } from "@/api";
 
-export const refresh = createAsyncThunk(
-  "refresh",
-  async () => {
-    try {
-      const response = await axios.get('/auth/refresh');
-      return response.data;
-    } catch (err: any) {
-      throw new Error(handleApiError(err).message);
-    }
+export const refresh = createAsyncThunk("refresh", async () => {
+  try {
+    const response = await appApi().get("/auth/refresh");
+    return response.data;
+  } catch (err: any) {
+    throw new Error(handleApiError(err).message);
   }
-);
+});

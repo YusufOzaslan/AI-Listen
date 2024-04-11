@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
-import { handleApiError } from "./handleApiError";
+import { AxiosInstance } from "axios";
+import { handleApiError } from "@/api";
 
 interface IBody {
   level: string;
@@ -14,12 +14,9 @@ interface IBody {
 
 export const generateDialogue = createAsyncThunk(
   "generateDialogue",
-  async ({ body }: { body: IBody }) => {
+  async ({ body, axios }: { body: IBody; axios: AxiosInstance }) => {
     try {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/dialogue/generate-dialogue`,
-        body
-      );
+      const response = await axios.post("/dialogue/generate-dialogue", body);
       return response.data;
     } catch (err: any) {
       throw new Error(handleApiError(err).message);
