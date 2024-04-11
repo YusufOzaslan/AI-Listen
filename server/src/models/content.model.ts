@@ -44,11 +44,9 @@ const contentSchema = new mongoose.Schema({
   ],
   audio: {
     type: String,
-    required: true,
   },
   image: {
     type: String,
-    required: true,
   },
 });
 

@@ -11,7 +11,7 @@ router.post(
 );
 
 router.post(
-  "/generate-dialogue-speech",
+  "/:id/generate-dialogue-speech",
   auth(),
   dialogueController.generateDialogueSpeechController
 );
@@ -23,7 +23,7 @@ router.post(
 );
 
 router.post(
-  "/generate-image",
+  "/:id/generate-image",
   auth(),
   dialogueController.generateDialogueImage
 );

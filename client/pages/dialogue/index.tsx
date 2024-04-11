@@ -210,7 +210,7 @@ const DialoguePage: React.FC<IFetchedDialogue> = () => {
                         </HStack>
                     );
                 })}
-                <Button isLoading={content.isGenerating} colorScheme="blue" mt="4">Listen Dialogue</Button>
+                <Button isLoading={content.isGenerating} colorScheme="blue" mt="4">Add Narration</Button>
                 <Button isLoading={content.isGenerating} colorScheme="blue" mt="4"
                     onClick={() => handleSubmit()}>Next</Button>
             </VStack>

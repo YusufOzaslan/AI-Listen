@@ -1,9 +1,21 @@
+import httpStatus from "http-status";
 import { Content, IContentAttributes } from "../models";
+import { AppError } from "../utils";
+import { EAppError, ICurrentUser } from "../types";
 
-export const createOne = async (attrs: IContentAttributes) => {
+const createOne = async (attrs: IContentAttributes) => {
   const content = Content.build(attrs);
   await content.save();
   return content;
 };
 
-export const contentService = { createOne };
+const getContentByIdOne = async (id: string, user: ICurrentUser) => {
+  const content = await Content.findOne({ _id: id }).exec();
+  if (!content) throw new AppError(httpStatus.NOT_FOUND, EAppError.NOT_FOUND);
+
+  if (content.user.toString() !== user.id.toString())
+    throw new AppError(httpStatus.FORBIDDEN, EAppError.FORBIDDEN);
+  return content;
+};
+
+export const contentService = { createOne, getContentByIdOne };

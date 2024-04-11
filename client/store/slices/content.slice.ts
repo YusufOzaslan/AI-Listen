@@ -3,6 +3,7 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 import { generateDialogue } from "@/store/thunks";
 
 export interface IFetchedDialogue {
+  user: string;
   title: string;
   dialogues: Array<{
     speaker: string;
@@ -12,11 +13,15 @@ export interface IFetchedDialogue {
 interface IState {
   isGenerating: boolean;
   data: IFetchedDialogue | null;
+  audio: string | null;
+  image: string | null;
 }
 
 const initialState: IState = {
   isGenerating: false,
   data: null,
+  audio: null,
+  image: null,
 };
 
 export const content = createSlice({

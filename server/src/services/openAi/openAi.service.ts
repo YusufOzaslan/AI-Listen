@@ -43,7 +43,7 @@ const generateImage = async (content: string) => {
     size: "1024x1024",
   });
   const image_url = response.data[0].url;
-  console.log(image_url);
+  return image_url;
 };
 
 export const openAiService = {

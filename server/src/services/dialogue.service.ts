@@ -10,6 +10,8 @@ import path from "path";
 import { azureSpeechService } from "./azure";
 import { replacePromptPlaceholders } from "../utils/promptUtil";
 import { parseAndRepair } from "../utils/repairUtil";
+import { ICurrentUser } from "../types";
+import { contentService } from "./content.service";
 
 const createMissingDirectories = async () => {
   const assetsDir = path.join(__dirname, "..", "..", "assets");
@@ -28,23 +30,26 @@ const createMissingDirectories = async () => {
   }
 };
 
-const generateDialogue = async ({
-  level,
-  ageGroup,
-  numberOfWords,
-  listeningTaskOptions,
-  listeningTaskCategories,
-  ideaGenerator,
-  wordsforScript,
-}: {
-  level: string;
-  ageGroup: string;
-  numberOfWords: number;
-  listeningTaskOptions: string;
-  listeningTaskCategories: string;
-  ideaGenerator: string;
-  wordsforScript: string;
-}) => {
+const generateDialogue = async (
+  {
+    level,
+    ageGroup,
+    numberOfWords,
+    listeningTaskOptions,
+    listeningTaskCategories,
+    ideaGenerator,
+    wordsforScript,
+  }: {
+    level: string;
+    ageGroup: string;
+    numberOfWords: number;
+    listeningTaskOptions: string;
+    listeningTaskCategories: string;
+    ideaGenerator: string;
+    wordsforScript: string;
+  },
+  user: ICurrentUser
+) => {
   const promptTemplate = dialoguePrompt;
   const prompt = replacePromptPlaceholders(promptTemplate, {
     level,
@@ -55,13 +60,29 @@ const generateDialogue = async ({
     ideaGenerator,
     wordsforScript,
   });
+
   const completion = await openAiService.callChatGPTWithFunctions(
     prompt,
     dialogueSchema
   );
-  return completion === "wrong_content"
-    ? completion
-    : parseAndRepair(completion);
+
+  const data: {
+    title: string;
+    dialogues: {
+      speaker: string;
+      text: string;
+    }[];
+  } = parseAndRepair(completion);
+
+  const content = await contentService.createOne({
+    user: user._id,
+    title: data.title,
+    dialogues: data.dialogues,
+    audio: "",
+    image: "",
+  });
+
+  return content;
 };
 
 const generateIdeas = async ({
@@ -97,25 +118,20 @@ const generateIdeas = async ({
     : parseAndRepair(completion);
 };
 
-const generateDialogueSpeech = async ({
-  title,
-  dialogues,
-  voice,
-}: {
-  title: string;
-  dialogues: {
-    speaker: string;
-    text: string;
-  }[];
-  voice: string[];
-}) => {
+const generateDialogueSpeech = async (
+  contentId: string,
+  user: ICurrentUser,
+  body: { voice: string[] }
+) => {
   await createMissingDirectories();
 
-  const dialoguesTTS = dialogues.map((item, index) => {
+  const content = await contentService.getContentByIdOne(contentId, user);
+
+  const dialoguesTTS = content.dialogues.map((item, index) => {
     return {
       text: item.text.trim(),
-      language: voice[0].split("-").slice(0, -1).join("-"),
-      voice: voice[index % 2],
+      language: body.voice[0].split("-").slice(0, -1).join("-"),
+      voice: body.voice[index % 2],
     };
   });
 
@@ -134,22 +150,14 @@ const generateDialogueSpeech = async ({
   const audioPath = path.join(__dirname, "..", "..", filename);
   await fs.promises.rename(audioPath, targetPath);
 
-  return filename;
+  content.set({ audio: audioPath });
+
+  return content;
 };
 
-const generateDialogueImage = async ({
-  title,
-  dialogues,
-  voice,
-}: {
-  title: string;
-  dialogues: {
-    speaker: string;
-    text: string;
-  }[];
-  voice: string[];
-}) => {
-  const prompt = dialogues
+const generateDialogueImage = async (contentId: string, user: ICurrentUser) => {
+  const content = await contentService.getContentByIdOne(contentId, user);
+  const prompt = content.dialogues
     .map((dialogue) => {
       return `[${dialogue.speaker}]: ${dialogue.text}`;
     })
@@ -161,5 +169,5 @@ export const dialogueService = {
   generateDialogue,
   generateIdeas,
   generateDialogueSpeech,
-  generateDialogueImage
+  generateDialogueImage,
 };

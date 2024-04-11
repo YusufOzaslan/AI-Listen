@@ -45,6 +45,6 @@ export const errorHandler = async (
     }),
   };
 
-  logger.error(err);
+  logger.error(err.message);
   res.status(statusCode).send(response);
 };

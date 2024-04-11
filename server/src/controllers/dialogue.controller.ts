@@ -5,14 +5,21 @@ import { dialogueService } from "../services";
 
 const generateDialogueController = catchAsync(
   async (req: Request, res: Response) => {
-    const dialogue = await dialogueService.generateDialogue(req.body);
+    const dialogue = await dialogueService.generateDialogue(
+      req.body,
+      req.currentUser!
+    );
     res.status(httpStatus.OK).send(dialogue);
   }
 );
 
 const generateDialogueSpeechController = catchAsync(
   async (req: Request, res: Response) => {
-    const dialogue = await dialogueService.generateDialogueSpeech(req.body);
+    const dialogue = await dialogueService.generateDialogueSpeech(
+      req.params.id,
+      req.currentUser!,
+      req.body
+    );
     res.status(httpStatus.OK).send(dialogue);
   }
 );
@@ -26,7 +33,10 @@ const generateIdeasController = catchAsync(
 
 const generateDialogueImage = catchAsync(
   async (req: Request, res: Response) => {
-    const image = await dialogueService.generateDialogueImage(req.body);
+    const image = await dialogueService.generateDialogueImage(
+      req.params.id,
+      req.currentUser!
+    );
     res.status(httpStatus.OK).send(image);
   }
 );
