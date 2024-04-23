@@ -8,6 +8,7 @@
     "dev": "cross-env NODE_ENV=development ts-node-dev --files src/index.ts"
   },
   "dependencies": {
+    "@azure/storage-blob": "^12.17.0",
     "@types/bcrypt": "^5.0.2",
     "@types/cookie-parser": "^1.4.7",
     "@types/cors": "^2.8.17",

@@ -14,6 +14,9 @@ const envVariablesSchema = Joi.object()
     OPENAI_API_KEY: Joi.string().required(),
     AZURE_SPEECH_KEY: Joi.string().required(),
     AZURE_SPEECH_REGION: Joi.string().required(),
+    AZURE_CONNECTION_STRING: Joi.string().required(),
+    AZURE_CONTAINER_NAME: Joi.string().required(),
+    AZURE_STORAGE_URI: Joi.string().required(),
     JWT_ACCESS_TOKEN_SECRET: Joi.string().required(),
     JWT_ACCESS_TOKEN_DURATION: Joi.number().required(),
     JWT_ACCESS_TOKEN_DURATION_UNIT: Joi.string().required(),
@@ -51,6 +54,12 @@ export const appConfig = {
     ttsUri: `https://${envVariables.AZURE_SPEECH_REGION}.tts.speech.microsoft.com/cognitiveservices/v1`,
   },
 
+  azureStorage: {
+    connectionString: envVariables.AZURE_CONNECTION_STRING,
+    containerName: envVariables.AZURE_CONTAINER_NAME,
+    uri: envVariables.AZURE_STORAGE_URI,
+  },
+
   jwt: {
     access: {
       secret: envVariables.JWT_ACCESS_TOKEN_SECRET,
@@ -68,8 +77,14 @@ export const appConfig = {
     name: envVariables.AUTH_COOKIE_NAME,
     config: {
       httpOnly: envVariables.NODE_ENV === ENodeEnvironment.PRODUCTION,
-      maxAge: Number(envVariables.JWT_REFRESH_TOKEN_DURATION) * 24 * 60 * 60 * 60 * 1000,
-      secure: envVariables.NODE_ENV === ENodeEnvironment.PRODUCTION
-    }
+      maxAge:
+        Number(envVariables.JWT_REFRESH_TOKEN_DURATION) *
+        24 *
+        60 *
+        60 *
+        60 *
+        1000,
+      secure: envVariables.NODE_ENV === ENodeEnvironment.PRODUCTION,
+    },
   },
 };

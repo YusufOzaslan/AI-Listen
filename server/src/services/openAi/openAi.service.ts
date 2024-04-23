@@ -1,5 +1,9 @@
 import OpenAI from "openai";
+import { v4 } from "uuid";
 import { appConfig } from "../../configs";
+import axios from "axios";
+import fs from "fs";
+import path from "path";
 
 const openai = new OpenAI({
   apiKey: appConfig.openAiKey,
@@ -37,13 +41,23 @@ const callChatGPTWithFunctions = async (
 const generateImage = async (content: string) => {
   const tempImagePrompt = `Create a picture suitable for the dialogue produced for the English listening activity. There must be two people in the picture. The faces of the people speaking must be visible in the picture. They should talk while looking at each other. Ditalogue: ${content}`;
   const response = await openai.images.generate({
-    model: "dall-e-2",
+    model: "dall-e-3",
     prompt: tempImagePrompt,
     n: 1,
     size: "1024x1024",
   });
   const image_url = response.data[0].url;
-  return image_url;
+
+  const image = await axios.get(image_url!, { responseType: "stream" });
+  const imagePath = path.join(`${v4()}.png`);
+  const writer = fs.createWriteStream(imagePath);
+  image.data.pipe(writer);
+  await new Promise((resolve, reject) => {
+    writer.on("finish", resolve);
+    writer.on("error", reject);
+  });
+
+  return imagePath;
 };
 
 export const openAiService = {

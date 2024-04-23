@@ -5,31 +5,11 @@ import {
   dialoguePrompt,
   dialogueSchema,
 } from "../prompts";
-import fs from "fs";
-import path from "path";
-import { azureSpeechService } from "./azure";
+import { azureSpeechService, azureStorageService } from "./azure";
 import { replacePromptPlaceholders } from "../utils/promptUtil";
 import { parseAndRepair } from "../utils/repairUtil";
 import { ICurrentUser } from "../types";
 import { contentService } from "./content.service";
-import axios from "axios";
-
-const createMissingDirectories = async (folder_name: string) => {
-  const assetsDir = path.join(__dirname, "..", "..", "assets");
-
-  try {
-    await fs.promises.access(assetsDir, fs.constants.F_OK);
-  } catch (error) {
-    await fs.promises.mkdir(assetsDir, { recursive: true });
-  }
-
-  const audioDir = path.join(assetsDir, folder_name);
-  try {
-    await fs.promises.access(audioDir, fs.constants.F_OK);
-  } catch (error) {
-    await fs.promises.mkdir(audioDir, { recursive: true });
-  }
-};
 
 const generateDialogue = async (
   {
@@ -124,8 +104,6 @@ const generateDialogueSpeech = async (
   user: ICurrentUser,
   body: { voice: string[] }
 ) => {
-  await createMissingDirectories("audio");
-
   const content = await contentService.getContentByIdOne(contentId, user);
 
   const dialoguesTTS = content.dialogues.map((item, index) => {
@@ -136,22 +114,12 @@ const generateDialogueSpeech = async (
     };
   });
 
-  const filename = await azureSpeechService.ttsDialogue({
+  const audioPath = await azureSpeechService.ttsDialogue({
     dialoguesTTS,
   });
 
-  const targetPath = path.join(
-    __dirname,
-    "..",
-    "..",
-    "assets",
-    "audio",
-    filename
-  );
-  const audioPath = path.join(__dirname, "..", "..", filename);
-  await fs.promises.rename(audioPath, targetPath);
-
-  content.set({ audio: audioPath });
+  const uploadedAudioUrl = await azureStorageService.uploadFile(audioPath);
+  content.set({ audio: uploadedAudioUrl });
   await content.save();
 
   return content;
@@ -160,34 +128,16 @@ const generateDialogueSpeech = async (
 const generateDialogueImage = async (contentId: string, user: ICurrentUser) => {
   const content = await contentService.getContentByIdOne(contentId, user);
 
-  await createMissingDirectories("images");
-
   const prompt = content.dialogues
     .map((dialogue) => {
       return `[${dialogue.speaker}]: ${dialogue.text}`;
     })
     .join("\n");
 
-  const image_url = await openAiService.generateImage(prompt);
+  const imagePath  = await openAiService.generateImage(prompt);
 
-  // const image = await axios.get(image_url!, { responseType: "stream" });
-  // const imagePath = path.join(
-  //   __dirname,
-  //   "..",
-  //   "..",
-  //   "assets",
-  //   "images",
-  //   `${contentId}.png`
-  // );
-  // const writer = fs.createWriteStream(imagePath);
-  // image.data.pipe(writer);
-  // await new Promise((resolve, reject) => {
-  //   writer.on("finish", resolve);
-  //   writer.on("error", reject);
-  // });
-
-  // content.set({ image: imagePath });
-  content.set({ image: image_url });
+  const uploadedImageUrl = await azureStorageService.uploadFile(imagePath);
+  content.set({ image: uploadedImageUrl  });
   await content.save();
 
   return content;
