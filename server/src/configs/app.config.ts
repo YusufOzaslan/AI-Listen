@@ -11,6 +11,7 @@ const envVariablesSchema = Joi.object()
     ORIGIN: Joi.string().required(),
     PORT: Joi.number().required(),
     MONGODB_URI: Joi.string().required(),
+    FACE_DETECTION_SERVICE_URI: Joi.string().required(),
     OPENAI_API_KEY: Joi.string().required(),
     AZURE_SPEECH_KEY: Joi.string().required(),
     AZURE_SPEECH_REGION: Joi.string().required(),
@@ -47,6 +48,8 @@ export const appConfig = {
   mongodb: {
     uri: envVariables.MONGODB_URI,
   },
+
+  faceDetectionUri: envVariables.FACE_DETECTION_SERVICE_URI,
 
   azureSpeech: {
     key: envVariables.AZURE_SPEECH_KEY,

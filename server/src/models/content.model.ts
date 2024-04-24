@@ -1,15 +1,27 @@
 import mongoose from "mongoose";
 import { EModel } from "./enums";
 
+export interface IFaceCoordinates {
+  bottom_right_x: number;
+  bottom_right_y: number;
+  top_left_x: number;
+  top_left_y: number;
+}
+
+export interface IDialogue {
+  speaker: string;
+  text: string;
+}
+
 export interface IContentAttributes {
-  user: mongoose.Schema.Types.ObjectId;
+  user: mongoose.Types.ObjectId;
   title: string;
-  dialogues: {
-    speaker: string;
-    text: string;
-  }[];
-  audio: string;
-  image: string;
+  dialogues: IDialogue[];
+  audio?: string;
+  imageData?: {
+    image: string;
+    faces: IFaceCoordinates[];
+  };
 }
 
 export interface IContentDocument
@@ -45,8 +57,16 @@ const contentSchema = new mongoose.Schema({
   audio: {
     type: String,
   },
-  image: {
-    type: String,
+  imageData: {
+    image: String,
+    faces: [
+      {
+        bottom_right_x: Number,
+        bottom_right_y: Number,
+        top_left_x: Number,
+        top_left_y: Number,
+      },
+    ],
   },
 });
 

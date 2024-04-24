@@ -10,6 +10,8 @@ import { replacePromptPlaceholders } from "../utils/promptUtil";
 import { parseAndRepair } from "../utils/repairUtil";
 import { ICurrentUser } from "../types";
 import { contentService } from "./content.service";
+import axios from "axios";
+import { appConfig } from "../configs";
 
 const generateDialogue = async (
   {
@@ -59,8 +61,6 @@ const generateDialogue = async (
     user: user._id,
     title: data.title,
     dialogues: data.dialogues,
-    audio: "",
-    image: "",
   });
 
   return content;
@@ -134,10 +134,17 @@ const generateDialogueImage = async (contentId: string, user: ICurrentUser) => {
     })
     .join("\n");
 
-  const imagePath  = await openAiService.generateImage(prompt);
+  const imagePath = await openAiService.generateImage(prompt);
 
   const uploadedImageUrl = await azureStorageService.uploadFile(imagePath);
-  content.set({ image: uploadedImageUrl  });
+
+  const response = await axios.post(appConfig.faceDetectionUri, {
+    image_url: uploadedImageUrl,
+  });
+
+  content.set({
+    imageData: { image: uploadedImageUrl, faces: response.data.faces },
+  });
   await content.save();
 
   return content;

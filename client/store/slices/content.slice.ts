@@ -2,7 +2,12 @@ import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { generateDialogue, generateImage } from "@/store/thunks";
 import { generateDialogueSpeech } from "../thunks/generateDialogueSpeech";
-
+export interface IFaceCoordinates {
+  bottom_right_x: number;
+  bottom_right_y: number;
+  top_left_x: number;
+  top_left_y: number;
+}
 export interface IContentDialogue {
   _id: string;
   title: string;
@@ -10,8 +15,11 @@ export interface IContentDialogue {
     speaker: string;
     text: string;
   }>;
-  audio: string;
-  image: string;
+  audio?: string;
+  imageData?: {
+    image: string;
+    faces: IFaceCoordinates[];
+  };
 }
 interface IState {
   isGenerating: boolean;
@@ -37,7 +45,6 @@ export const content = createSlice({
       (state, { payload }: PayloadAction<IContentDialogue>) => {
         state.isGenerating = false;
         state.data = payload;
-        console.log(state.data)
       }
     );
     build.addCase(generateDialogue.rejected, (state, { error }) => {
@@ -66,6 +73,7 @@ export const content = createSlice({
       (state, { payload }: PayloadAction<IContentDialogue>) => {
         state.isGenerating = false;
         state.data = payload;
+        console.log(state.data);
       }
     );
     build.addCase(generateImage.rejected, (state, { error }) => {
