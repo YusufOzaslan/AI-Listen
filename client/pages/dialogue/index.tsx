@@ -229,6 +229,7 @@ const DialoguePage: React.FC<IContentDialogue> = () => {
                         </HStack>
                     );
                 })}
+                {!!content.data?.audio && <SpeechSample audio={content.data?.audio} />}
                 <Button isLoading={content.isGenerating} colorScheme="blue" mt="4"
                     onClick={() => handleAddNarration()}>Add Narration</Button>
                 <Button isLoading={content.isGenerating} isDisabled={content.data?.audio === "" || content.data?.audio == undefined || content.data?.audio == null} colorScheme="blue" mt="4"
