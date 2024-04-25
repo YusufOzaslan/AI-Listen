@@ -14,7 +14,6 @@ export const useAuth = () => {
     dispatch(signOutThunk());
   };
 
-
   return {
     ...{...(auth.data && auth.data)},
     isAuthenticated: !!auth.data?.accessToken,

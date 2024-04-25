@@ -73,7 +73,6 @@ export const content = createSlice({
       (state, { payload }: PayloadAction<IContentDialogue>) => {
         state.isGenerating = false;
         state.data = payload;
-        console.log(state.data);
       }
     );
     build.addCase(generateImage.rejected, (state, { error }) => {

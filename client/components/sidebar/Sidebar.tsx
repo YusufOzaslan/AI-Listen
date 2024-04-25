@@ -1,5 +1,5 @@
 'use client'
-import React, { PropsWithChildren } from 'react';
+import React from 'react';
 import { IRoute } from '@/variables/routes';
 import {
   Box,
@@ -14,17 +14,11 @@ import { useAuth } from '@/hooks/useAuth';
 import { FiLogOut } from 'react-icons/fi';
 import Link from 'next/link';
 import logo from "@/statics/logo.svg";
-import {
-    useAppDispatch,
-    useAppSelector,
-} from '@/store';
-
 interface ISidebarProps {
   routes: IRoute[];
 }
 
 const Sidebar = ({ routes }: ISidebarProps) => {
-  const auth = useAppSelector((store) => store.auth);
   const { user, signOut, isAuthenticated } = useAuth();
   const textColor = useColorModeValue('navy.700', 'white');
   const borderColor = useColorModeValue('gray.200', 'whiteAlpha.300');
@@ -71,7 +65,7 @@ const Sidebar = ({ routes }: ISidebarProps) => {
           px="20px"
         >
           <Link href="/content-generator">
-            <img src={logo.src} alt="Logo"/>
+            <img src={logo.src} alt="Logo" />
           </Link>
           <Box my=" 8px" borderBottom="1px solid" borderColor="gray.200" />
           <Stack direction="column" mb="auto" mt="8px">
@@ -80,7 +74,7 @@ const Sidebar = ({ routes }: ISidebarProps) => {
                 <Link href={route.path}>
                   <Flex alignItems="center">
                     {route.icon && <route.icon width="20px" height="20px" color="rgb(43, 87, 70)" />}
-                    <Box ml="16px" /> 
+                    <Box ml="16px" />
                     <Text color={textColor} fontSize="larger" fontWeight="medium">
                       {route.name}
                     </Text>

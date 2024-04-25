@@ -85,7 +85,6 @@ export const authSlice = createSlice({
         state.isLoading = false;
         state.error = null;
         state.data = payload;
-        console.log(state.data);
       }
     );
   },
