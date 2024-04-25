@@ -1,8 +1,10 @@
 // @ts-nocheck
-import {routes} from '@/variables/routes';
+import { routes } from '@/variables/routes';
 import { Box, Portal, useDisclosure } from '@chakra-ui/react';
+import { usePathname } from 'next/navigation';
 import { FC, ReactNode } from 'react';
-import Sidebar from '../sidebar/Sidebar';
+import Navbar from './navbar/Navbar';
+import Sidebar from './sidebar/Sidebar';
 
 
 interface IProps {
@@ -10,6 +12,7 @@ interface IProps {
 }
 
 const PageLayout: FC<IProps> = ({ children }) => {
+    const pathname = usePathname() ? 'Dialogue Generator' : usePathname();
     return (
         <Box>
             <Sidebar routes={routes} />
@@ -27,6 +30,15 @@ const PageLayout: FC<IProps> = ({ children }) => {
                 transitionDuration=".2s, .2s, .35s"
                 transitionProperty="top, bottom, width"
                 transitionTimingFunction="linear, linear, ease">
+
+                <Portal>
+                    <Box>
+                        <Navbar
+                            logoText={''}
+                            brandText={pathname}
+                        />
+                    </Box>
+                </Portal>
                 <Box
                     mx="auto"
                     p={{ base: '20px', md: '30px' }}
