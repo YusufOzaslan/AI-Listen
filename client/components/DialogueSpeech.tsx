@@ -136,6 +136,9 @@ const selectOptions: SelectOption[] = [
 
 
 const DialogueSpeech: React.FC<IProps> = ({isGenerating, content}) => {
+    if (!content) {
+        return null; 
+    }
     const { _id, title, dialogues, audio } = content;
     const router = useRouter();
     const dispatch = useAppDispatch();

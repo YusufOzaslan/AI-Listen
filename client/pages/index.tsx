@@ -1,16 +1,13 @@
-import { Flex, Box } from '@chakra-ui/react';
-import Form from '@/components/Form';
+import { useRouter } from 'next/router';
 
 export default function Home() {
+  const router = useRouter();
+
+  const redirectToDialogueGeneratorPage = () => {
+    router.push('/dialogue-generator');
+  };
+
   return (
-    <Flex
-      justify="center"
-      gap="200px"
-      bg="gray.200"
-    >
-      <Box>
-        <Form />
-      </Box>
-    </Flex>
+    <button onClick={redirectToDialogueGeneratorPage}>Diyalog Üreteci Sayfasına Git</button>
   );
 }

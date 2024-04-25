@@ -1,7 +1,7 @@
 import React from 'react';
 import { useFormik } from 'formik';
 import { useRouter } from 'next/router';
-import { Button, Box, FormControl, FormLabel, Textarea } from '@chakra-ui/react';
+import { Button, Box, FormControl, FormLabel, Textarea, Center } from '@chakra-ui/react';
 import Select from 'react-select';
 import { level, ageGroup, listeningTaskOptions, listeningCategoriesMap, TaskOptionType, numberOfWordsOptions } from './constant';
 import { formValidation } from '@/validations';
@@ -87,8 +87,8 @@ function Form() {
     };
 
     return (
-        <Box bg="gray.200" minHeight="100vh" py="20">
-            <Box maxW="lg" mx="auto" p="4" borderWidth="1px" borderRadius="lg" bg="white" boxShadow="md">
+        <Box  alignItems="center"  height="auto" width="30%"  overflowY="auto" >
+            <Box maxW="lg" mx="auto" p="4" borderWidth="2px" borderRadius="lg" bg="white" boxShadow="md">
                 <form >
                     <FormControl mb="4">
                         <FormLabel>Level</FormLabel>
