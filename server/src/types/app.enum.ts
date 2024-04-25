@@ -10,8 +10,6 @@ export enum EAppError {
   FORBIDDEN = 'Forbidden',
   NOT_FOUND = 'Not found',
   INTERNAL_SERVER_ERROR = 'Internal server error.',
-  FORGOT_PASSWORD_INVALID_EMAIL = 'This email is not associated with any account, please enter a valid email.',
-
   // User Errors
   USERNAME_TAKEN = 'Username already exists',
   EMAIL_TAKEN = 'Email already exists',

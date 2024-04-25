@@ -5,23 +5,26 @@ interface IToken {
   value: string;
   expiryDate: string;
 }
-export interface IAuth {
+interface IUser {
   _id: string;
   name: string;
   email: string;
   role: string;
+}
+export interface IAuth {
+  user: IUser
   accessToken: IToken;
 }
 
 interface IState {
   isLoading: boolean;
-  user: IAuth | null;
+  data: IAuth | null;
   error: string | null;
 }
 
 const initialState: IState = {
   isLoading: false,
-  user: null,
+  data: null,
   error: null,
 };
 
@@ -30,7 +33,7 @@ export const authSlice = createSlice({
   initialState,
   reducers: {
     signOut(state) {
-      state.user = null;
+      state.data = null;
     },
   },
   extraReducers(build) {
@@ -43,7 +46,7 @@ export const authSlice = createSlice({
       (state, { payload }: PayloadAction<IAuth>) => {
         state.isLoading = false;
         state.error = null;
-        state.user = payload;
+        state.data = payload;
       }
     );
     build.addCase(signIn.rejected, (state, { error }) => {
@@ -61,7 +64,7 @@ export const authSlice = createSlice({
       (state, { payload }: PayloadAction<IAuth>) => {
         state.isLoading = false;
         state.error = null;
-        state.user = payload;
+        state.data = payload;
       }
     );
     build.addCase(signUp.rejected, (state, { error }) => {
@@ -72,7 +75,7 @@ export const authSlice = createSlice({
     build.addCase(signOut.fulfilled, (state) => {
       state.isLoading = false;
       state.error = null;
-      state.user = null;
+      state.data = null;
     });
 
     // refresh
@@ -81,8 +84,8 @@ export const authSlice = createSlice({
       (state, { payload }: PayloadAction<IAuth>) => {
         state.isLoading = false;
         state.error = null;
-        state.user = payload;
-        console.log(state.user);
+        state.data = payload;
+        console.log(state.data);
       }
     );
   },
