@@ -55,7 +55,7 @@ const DialogueQuestions: React.FC<IProps> = ({ isGenerating, content }) => {
   }
   const renderedQuestions = questions?.map((question, index) => {
     return (
-      <Stack key={question._id} spacing={4}>
+      <Stack key={question._id} alignItems="left" height="auto" width="100%" maxW="lg" mx="auto" p="4" borderWidth="2px" borderRadius="lg" bg="white" boxShadow="md">
         <Flex alignItems={'center'} justifyContent="space-between">
           <Text whiteSpace="pre-line" fontWeight="semibold" maxW="80%">
             <Text as="span" fontWeight="bold">{index + 1})</Text> {question.question}
@@ -74,7 +74,7 @@ const DialogueQuestions: React.FC<IProps> = ({ isGenerating, content }) => {
     );
   });
   return (<Stack>
-    <Box alignItems="center" height="auto" width="60%" maxW="lg" mx="auto" p="4" borderWidth="2px" borderRadius="lg" bg="white" boxShadow="md">
+    <Box alignItems="center" height="auto" width="100%" maxW="lg" mx="auto" p="4" borderWidth="2px" borderRadius="lg" bg="white" boxShadow="md">
       <form >
         <FormControl mb="4">
           <FormLabel>Number Of Questions</FormLabel>
@@ -93,6 +93,10 @@ const DialogueQuestions: React.FC<IProps> = ({ isGenerating, content }) => {
       <Stack spacing={4} mt={4}>
         {renderedQuestions}
       </Stack>}
+    <Box textAlign="center" width="100%" paddingBottom="50">
+      <Button isLoading={isGenerating} colorScheme="green" mt="4"
+        onClick={() => router.push('/')}>Approve Questions</Button>
+    </Box>
   </Stack>
   );
 }
