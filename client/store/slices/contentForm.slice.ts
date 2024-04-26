@@ -11,17 +11,23 @@ interface IFormFetchedThreeIdeas {
 interface IState {
   isGenerating: boolean;
   fetchedData: IFormFetchedThreeIdeas | null;
+  stepIndex: number;
 }
 
 const initialState: IState = {
   isGenerating: false,
   fetchedData: null,
+  stepIndex: 0,
 };
 
 export const contentForm = createSlice({
   name: "contentForm",
   initialState,
-  reducers: {},
+  reducers: {
+    updateStepIndex(state, { payload }: PayloadAction<number>) {
+      state.stepIndex = payload;
+    },
+  },
   extraReducers(build) {
     // Generate  Ideas
     build.addCase(generateIdeas.pending, (state) => {

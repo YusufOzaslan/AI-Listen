@@ -11,6 +11,7 @@ import {
     useAppDispatch,
     useAppSelector,
 } from '@/store';
+import { formActionCreators } from '@/store/slices';
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -79,7 +80,7 @@ function Form() {
                 axios: appApi
             }),
         );
-        router.push('/dialogue');
+        dispatch(formActionCreators.updateStepIndex(contentForm.stepIndex + 1))
     }
 
     const handleGenerateIdeaClick = async () => {
@@ -87,7 +88,7 @@ function Form() {
     };
 
     return (
-        <Box  alignItems="center"  height="auto" width="30%"  overflowY="auto" >
+        <Box alignItems="center" height="auto" width="30%" overflowY="auto" >
             <Box maxW="lg" mx="auto" p="4" borderWidth="2px" borderRadius="lg" bg="white" boxShadow="md">
                 <form >
                     <FormControl mb="4">

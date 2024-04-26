@@ -21,6 +21,7 @@ import {
     useAppDispatch,
     useAppSelector,
 } from '@/store';
+import { formActionCreators } from '@/store/slices';
 import Select from 'react-select';
 import Jeny from "@/statics/avatars/Jeny.webp"
 import Aria from "@/statics/avatars/Aria.webp"
@@ -164,7 +165,7 @@ const DialogueSpeech: React.FC<IProps> = ({isGenerating, content}) => {
                 contentId: _id
             })
         );
-        router.push('/image');
+        dispatch(formActionCreators.updateStepIndex(contentForm.stepIndex + 1))
     }
 
     const handleAddNarration = async () => {

@@ -12,6 +12,7 @@ import {
     StepTitle,
     Stepper,
     useSteps,
+    Flex,
 } from '@chakra-ui/react';
 import Form from '@/components/Form';
 import DialogueSpeech from '@/components/DialogueSpeech';
@@ -21,7 +22,7 @@ import {
 
 const DialoguePage = () => {
     const content = useAppSelector((store) => store.content);
-    const [activeComponent, setActiveComponent] = useState(<Form />);
+    const contentForm = useAppSelector((store) => store.form);
 
     const steps = [
         {
@@ -36,27 +37,17 @@ const DialoguePage = () => {
                 isGenerating={content?.isGenerating}
                 content={content?.data!} />
         },
+        {
+            title: 'Third',
+            description: 'Generate Image'
+        },
     ];
 
-    // {
-    //     title: 'Third',
-    //     description: 'Generate Image'
-    // },
 
-    const { activeStep } = useSteps({
-        index: 0,
-        count: steps.length,
-    });
-
-    React.useEffect(() => {
-        if (steps[activeStep]?.component) {
-            setActiveComponent(steps[activeStep].component);
-        }
-    }, [activeStep]);
 
     return (
         <Stack spacing={8}>
-            <Stepper colorScheme='green' index={activeStep}>
+            <Stepper colorScheme='green' index={contentForm.stepIndex}>
                 {steps.map((step, index) => (
                     <Step key={index}>
                         <StepIndicator>
@@ -75,7 +66,9 @@ const DialoguePage = () => {
                     </Step>
                 ))}
             </Stepper>
-                {activeStep === 0 && activeComponent}
+            <Flex key={contentForm.stepIndex} justifyContent="center" alignItems="center">
+                {steps[contentForm.stepIndex].component}
+            </Flex>
         </Stack>
     );
 };
