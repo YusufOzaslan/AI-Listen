@@ -167,6 +167,8 @@ const generateQuestionsByContentId = async ({
 }) => {
   const content = await contentService.getContentByIdOne(contentId, user);
 
+  await questionService.deleteQuestionsByContentId(content.id.toString());
+
   const promptTemplate = questionsPromt;
 
   const text = content.dialogues

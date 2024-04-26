@@ -18,4 +18,12 @@ const getQuestionById = async (questionId: string, user: ICurrentUser) => {
   return question;
 };
 
-export const questionService = { createOne, getQuestionById };
+const deleteQuestionsByContentId = async (content: string) => {
+  await Question.deleteMany({ content }).exec();
+};
+
+export const questionService = {
+  createOne,
+  getQuestionById,
+  deleteQuestionsByContentId,
+};

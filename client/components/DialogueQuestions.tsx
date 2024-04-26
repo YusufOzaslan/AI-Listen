@@ -64,7 +64,7 @@ const DialogueQuestions: React.FC<IProps> = ({ isGenerating, content }) => {
         <Stack>
           {question.options.map((option, optionIndex) => {
             return (
-              <Text key={index + 1}>
+              <Text key={Math.random().toString(36).substr(2, 9)}>
                 <Text as="span" fontWeight="bold">{String.fromCharCode(optionIndex + 65)})</Text> {option}
               </Text>
             );
