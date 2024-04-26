@@ -17,6 +17,7 @@ export interface IContentAttributes {
   user: mongoose.Types.ObjectId;
   title: string;
   dialogues: IDialogue[];
+  level: string;
   audio?: string;
   imageData?: {
     image: string;
@@ -54,6 +55,10 @@ const contentSchema = new mongoose.Schema({
       },
     },
   ],
+  level: {
+    type: String,
+    required: true,
+  },
   audio: {
     type: String,
   },

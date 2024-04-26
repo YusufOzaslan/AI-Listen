@@ -4,12 +4,15 @@ import {
   ideaSchema,
   dialoguePrompt,
   dialogueSchema,
+  questionsPromt,
+  questionsSchema,
 } from "../prompts";
 import { azureSpeechService, azureStorageService } from "./azure";
 import { replacePromptPlaceholders } from "../utils/promptUtil";
-import { parseAndRepair } from "../utils/repairUtil";
+import { parseAndRepair, processQuestionCompletion } from "../utils/repairUtil";
 import { ICurrentUser } from "../types";
 import { contentService } from "./content.service";
+import { questionService } from "./question.service";
 import axios from "axios";
 import { appConfig } from "../configs";
 
@@ -61,6 +64,7 @@ const generateDialogue = async (
     user: user._id,
     title: data.title,
     dialogues: data.dialogues,
+    level,
   });
 
   return content;
@@ -150,9 +154,57 @@ const generateDialogueImage = async (contentId: string, user: ICurrentUser) => {
   return content;
 };
 
+const generateQuestionsByContentId = async ({
+  contentId,
+  user,
+  body: { numberOfQuestions },
+}: {
+  contentId: string;
+  user: ICurrentUser;
+  body: {
+    numberOfQuestions: number;
+  };
+}) => {
+  const content = await contentService.getContentByIdOne(contentId, user);
+
+  const promptTemplate = questionsPromt;
+
+  const text = content.dialogues
+    .map((item) => {
+      return `[${item.speaker}]: ${item.text}`;
+    })
+    .join("\n");
+
+  const prompt = replacePromptPlaceholders(promptTemplate, {
+    text,
+    numberOfQuestions,
+    level: content.level,
+  });
+
+  const completion = await openAiService.callChatGPTWithFunctions(
+    prompt,
+    questionsSchema
+  );
+
+  const questions = processQuestionCompletion(completion);
+
+  const questionDocs = await Promise.all(
+    questions.map((question: any) => {
+      return questionService.createOne({
+        content: content._id,
+        user: user._id,
+        ...question,
+      });
+    })
+  );
+
+  return questionDocs;
+};
+
 export const dialogueService = {
   generateDialogue,
   generateIdeas,
   generateDialogueSpeech,
   generateDialogueImage,
+  generateQuestionsByContentId,
 };

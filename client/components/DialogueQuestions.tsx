@@ -1,6 +1,6 @@
 import React from 'react'
 
-function Questions() {
+function DialogueQuestions() {
   return (
     <div>
       
@@ -8,4 +8,4 @@ function Questions() {
   )
 }
 
-export default Questions
+export default DialogueQuestions

@@ -94,7 +94,7 @@ const Sidebar = ({ routes }: ISidebarProps) => {
                 p="14px"
               >
                 <Text color={textColor} fontSize="larger" fontWeight="600" me="10px">
-                  {user?.name}
+                  {user?.name.toUpperCase()}
                 </Text>
 
                 <Button

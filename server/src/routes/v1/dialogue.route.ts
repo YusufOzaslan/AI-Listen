@@ -28,4 +28,10 @@ router.post(
   dialogueController.generateDialogueImage
 );
 
+router.post(
+  "/:id/generate-questions",
+  auth(),
+  dialogueController.generateQuestionsByContentId
+);
+
 export { router as dialogueRouter };

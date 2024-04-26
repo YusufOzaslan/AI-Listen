@@ -41,9 +41,21 @@ const generateDialogueImage = catchAsync(
   }
 );
 
+const generateQuestionsByContentId = catchAsync(
+  async (req: Request, res: Response) => {
+    const questions = await dialogueService.generateQuestionsByContentId({
+      contentId: req.params.id,
+      user: req.currentUser!,
+      body: req.body,
+    });
+    res.status(httpStatus.OK).send(questions);
+  }
+);
+
 export const dialogueController = {
   generateDialogueController,
   generateDialogueSpeechController,
   generateIdeasController,
   generateDialogueImage,
+  generateQuestionsByContentId,
 };
