@@ -16,6 +16,7 @@ import {
 import Form from '@/components/Form';
 import DialogueSpeech from '@/components/DialogueSpeech';
 import { DialogueImage } from '@/components/DialogueImage';
+import DialogueQuestions from '@/components/DialogueQuestions';
 import { useAppDispatch, useAppSelector, } from '@/store';
 import { formActionCreators } from '@/store/slices';
 import { generateImage } from '@/store/thunks';
@@ -75,9 +76,9 @@ const DialoguePage = () => {
         {
             title: 'Fourth',
             description: 'Generate Questions',
-            component: <DialogueImage
-                image={content.data?.imageData?.image!}
-                faces={content.data?.imageData?.faces!} />
+            component: <DialogueQuestions
+                isGenerating={content?.isGenerating}
+                content={content?.data!} />
         },
     ];
 
