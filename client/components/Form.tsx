@@ -88,7 +88,7 @@ function Form() {
     };
 
     return (
-        <Box alignItems="center" height="auto" width="30%" overflowY="auto" >
+        <Box alignItems="center" height="auto" width="60%" overflowY="auto" >
             <Box maxW="lg" mx="auto" p="4" borderWidth="2px" borderRadius="lg" bg="white" boxShadow="md">
                 <form >
                     <FormControl mb="4">
@@ -140,7 +140,7 @@ function Form() {
                             name="listeningTopic" />
                     </FormControl>
                     <Box textAlign="right">
-                        <Button isLoading={contentForm.isGenerating} colorScheme="blue" mt="4" onClick={handleGenerateIdeaClick}>Generate Ideas</Button>
+                        <Button isLoading={contentForm.isGenerating} colorScheme="green" mt="4" onClick={handleGenerateIdeaClick}>Generate Ideas</Button>
                     </Box>
                     <Box textAlign="center">
                         <FormControl mb="4" textAlign="left">
@@ -164,7 +164,7 @@ function Form() {
                                 value={formik.values.wordsForScript}
                                 name="wordsForScript" />
                         </FormControl>
-                        <Button isLoading={content.isGenerating} colorScheme="blue" mt="4"
+                        <Button isLoading={content.isGenerating} colorScheme="green" mt="4"
                             onClick={() => handleSubmit(formik.values)}>Next</Button>
                     </Box>
                 </form>

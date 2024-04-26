@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import { useRouter } from 'next/router';
+import React from 'react';
 import {
     Stack, Box,
     Step,
@@ -11,11 +10,11 @@ import {
     StepStatus,
     StepTitle,
     Stepper,
-    useSteps,
     Flex,
 } from '@chakra-ui/react';
 import Form from '@/components/Form';
 import DialogueSpeech from '@/components/DialogueSpeech';
+import { DialogueImage } from '@/components/DialogueImage';
 import {
     useAppSelector,
 } from '@/store';
@@ -39,11 +38,12 @@ const DialoguePage = () => {
         },
         {
             title: 'Third',
-            description: 'Generate Image'
+            description: 'Generate Image',
+            component: <DialogueImage
+                image={content.data?.imageData?.image!}
+                faces={content.data?.imageData?.faces!} />
         },
     ];
-
-
 
     return (
         <Stack spacing={8}>
@@ -57,7 +57,6 @@ const DialoguePage = () => {
                                 active={<StepNumber />}
                             />
                         </StepIndicator>
-
                         <Box flexShrink='0'>
                             <StepTitle>{step.title}</StepTitle>
                             <StepDescription>{step.description}</StepDescription>

@@ -10,6 +10,9 @@ interface IProps {
 }
 
 const DialogueImage: FC<IProps> = ({ image, faces }) => {
+    if (!image || !faces) {
+        return <>Image not found</>;
+      }
     // Coordinates for the first person
     let leftX = faces[0].bottom_right_x - 50;
     let leftY = faces[0].top_left_y - 150;

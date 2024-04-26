@@ -189,7 +189,7 @@ const DialogueSpeech: React.FC<IProps> = ({isGenerating, content}) => {
     const color = useColorModeValue('gray.100', 'gray.700');
 
     return (
-        <Box maxW="lg" mx="auto" p="4" borderWidth="1px" borderRadius="lg" bg="gray.200" boxShadow="md">
+        <Box maxW="lg" mx="auto" p="4" borderWidth="2px" borderRadius="lg" bg="white" boxShadow="md" alignItems="center" height="auto" width="60%" overflowY="auto" >
             <Box mb={5}>
                 <Heading textAlign="center">{title}</Heading>
             </Box>
@@ -237,9 +237,9 @@ const DialogueSpeech: React.FC<IProps> = ({isGenerating, content}) => {
                     );
                 })}
                 {!!audio && <SpeechSample audio={audio} />}
-                <Button isLoading={isGenerating} colorScheme="blue" mt="4"
+                <Button isLoading={isGenerating} colorScheme="green" mt="4"
                     onClick={() => handleAddNarration()}>Add Narration</Button>
-                <Button isLoading={isGenerating} isDisabled={audio === "" || audio == undefined || audio == null} colorScheme="blue" mt="4"
+                <Button isLoading={isGenerating} isDisabled={audio === "" || audio == undefined || audio == null} colorScheme="green" mt="4"
                     onClick={() => handleSubmit()}>Next</Button>
             </VStack>
         </Box>
