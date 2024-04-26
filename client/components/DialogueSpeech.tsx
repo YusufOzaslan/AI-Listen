@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useRouter } from 'next/router';
 import {
     Avatar,
     WrapItem,
@@ -141,7 +140,6 @@ const DialogueSpeech: React.FC<IProps> = ({isGenerating, content}) => {
         return null; 
     }
     const { _id, title, dialogues, audio } = content;
-    const router = useRouter();
     const dispatch = useAppDispatch();
     const contentForm = useAppSelector((store) => store.form);
     const appApi = useApi();

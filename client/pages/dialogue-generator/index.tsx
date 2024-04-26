@@ -11,17 +11,41 @@ import {
     StepTitle,
     Stepper,
     Flex,
+    Button
 } from '@chakra-ui/react';
 import Form from '@/components/Form';
 import DialogueSpeech from '@/components/DialogueSpeech';
 import { DialogueImage } from '@/components/DialogueImage';
-import {
-    useAppSelector,
-} from '@/store';
+import { useAppDispatch, useAppSelector, } from '@/store';
+import { formActionCreators } from '@/store/slices';
+import { generateImage } from '@/store/thunks';
+import { useApi } from '@/hooks';
 
 const DialoguePage = () => {
     const content = useAppSelector((store) => store.content);
     const contentForm = useAppSelector((store) => store.form);
+    const dispatch = useAppDispatch();
+    const appApi = useApi();
+
+    const handleOnclick = async () => {
+        await dispatch(
+            generateImage({
+                axios: appApi,
+                contentId: content?.data?._id!
+            })
+        );
+    }
+
+    const renderGenerateImageButton = () => {
+        return (
+            <Flex flexDirection="row" justifyContent="space-between" width="100%">
+                <Button isLoading={content.isGenerating} flex="1" colorScheme="green" mt="4"
+                    onClick={handleOnclick}>Regenerate Image</Button>
+                <Button isLoading={content.isGenerating} flex="1" colorScheme="green" mt="4"
+                    onClick={() => dispatch(formActionCreators.updateStepIndex(contentForm.stepIndex + 1))}>Next</Button>
+            </Flex>
+        );
+    }
 
     const steps = [
         {
@@ -39,6 +63,18 @@ const DialoguePage = () => {
         {
             title: 'Third',
             description: 'Generate Image',
+            component:
+                <Flex flexDirection="column" alignItems="center">
+                    {renderGenerateImageButton()}
+                    <DialogueImage
+                        image={content.data?.imageData?.image!}
+                        faces={content.data?.imageData?.faces!}
+                    />
+                </Flex>
+        },
+        {
+            title: 'Fourth',
+            description: 'Generate Questions',
             component: <DialogueImage
                 image={content.data?.imageData?.image!}
                 faces={content.data?.imageData?.faces!} />
