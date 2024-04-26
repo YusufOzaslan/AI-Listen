@@ -12,7 +12,7 @@ export interface IRoute {
 export const routes: IRoute[] = [
     {
         name: 'Dialogue Generator',
-        path: '/content-generator',
+        path: '/dialogue-generator',
         icon: MdHome,
         collapse: false
     },

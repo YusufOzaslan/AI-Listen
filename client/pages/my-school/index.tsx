@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 
-export default function MyContent() {
+export default function MySchool() {
   const router = useRouter();
 
   const redirectToDialogueGeneratorPage = () => {
