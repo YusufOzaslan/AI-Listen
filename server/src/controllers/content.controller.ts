@@ -3,17 +3,11 @@ import httpStatus from "http-status";
 import { catchAsync } from "../utils";
 import { contentService } from "../services";
 
-const createContent = catchAsync(async (req: Request, res: Response) => {
-  
-  // const content = await contentService.createOne({
-  //   user: req.session.userID!,
-  //   title: req.body.title,
-  //   dialogues: req.body.dialogues,
-  //   audio: req.body.audio,
-  // });
-  // res.status(httpStatus.CREATED).send(content);
+const getContents = catchAsync(async (req: Request, res: Response) => {
+  const contents = await contentService.getMany(req.currentUser!);
+  res.status(httpStatus.OK).send(contents);
 });
 
 export const contentController = {
-  createContent,
+  getContents,
 };

@@ -18,4 +18,9 @@ const getContentByIdOne = async (id: string, user: ICurrentUser) => {
   return content;
 };
 
-export const contentService = { createOne, getContentByIdOne };
+const getMany = async (user: ICurrentUser) => {
+  const contents = await Content.find({ user: user.id }).exec();
+  return contents;
+};
+
+export const contentService = { createOne, getContentByIdOne, getMany };

@@ -5,6 +5,6 @@ import {} from "../../validations";
 
 const router = express.Router();
 
-router.post("/", auth(), contentController.createContent);
+router.get("/", auth(), contentController.getContents);
 
 export { router as contentRouter };

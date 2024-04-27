@@ -60,7 +60,6 @@ const SignInPage = () => {
                 justifyContent="center"
                 alignItems="center"
             >
-                <Avatar bg="teal.500" />
                 <Heading color="teal.400">Welcome</Heading>
                 <Box minW={{ base: "90%", md: "468px" }}>
                     <form onSubmit={handleSubmit}>
