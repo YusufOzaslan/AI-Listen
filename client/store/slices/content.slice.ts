@@ -1,8 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { generateDialogue, generateImage } from "@/store/thunks";
-import { generateDialogueSpeech } from "../thunks/generateDialogueSpeech";
-import { generateQuestions } from "@/store/thunks";
+import {
+  generateDialogue,
+  generateDialogueSpeech,
+  generateImage,
+  generateQuestions,
+  getContents,
+} from "@/store/thunks";
 export interface IFaceCoordinates {
   bottom_right_x: number;
   bottom_right_y: number;
@@ -12,6 +16,7 @@ export interface IFaceCoordinates {
 export interface IContentDialogue {
   _id: string;
   title: string;
+  level: string;
   dialogues: Array<{
     speaker: string;
     text: string;
@@ -34,12 +39,14 @@ export interface IQuestion {
 interface IState {
   isGenerating: boolean;
   data: IContentDialogue | null;
+  myData: IContentDialogue[] | null;
   dataQuestions: IQuestion[] | null;
 }
 
 const initialState: IState = {
   isGenerating: false,
   data: null,
+  myData: null,
   dataQuestions: null,
 };
 
@@ -73,7 +80,7 @@ export const content = createSlice({
         state.data = payload;
       }
     );
-    build.addCase(generateDialogueSpeech.rejected, (state, { error }) => {
+    build.addCase(generateDialogueSpeech.rejected, (state) => {
       state.isGenerating = false;
     });
     // Generate  Image
@@ -87,7 +94,7 @@ export const content = createSlice({
         state.data = payload;
       }
     );
-    build.addCase(generateImage.rejected, (state, { error }) => {
+    build.addCase(generateImage.rejected, (state) => {
       state.isGenerating = false;
     });
 
@@ -102,7 +109,22 @@ export const content = createSlice({
         state.dataQuestions = payload;
       }
     );
-    build.addCase(generateQuestions.rejected, (state, { error }) => {
+    build.addCase(generateQuestions.rejected, (state) => {
+      state.isGenerating = false;
+    });
+
+    // Get Contents
+    build.addCase(getContents.pending, (state) => {
+      state.isGenerating = true;
+    });
+    build.addCase(
+      getContents.fulfilled,
+      (state, { payload }: PayloadAction<IContentDialogue[]>) => {
+        state.isGenerating = false;
+        state.myData = payload;
+      }
+    );
+    build.addCase(getContents.rejected, (state) => {
       state.isGenerating = false;
     });
   },

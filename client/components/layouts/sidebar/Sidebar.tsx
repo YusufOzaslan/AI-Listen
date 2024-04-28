@@ -35,7 +35,6 @@ const Sidebar = ({ routes }: ISidebarProps) => {
   let sidebarBg = useColorModeValue('white', 'navy.800');
   let sidebarRadius = '14px';
   let sidebarMargins = '0px';
-  console.log(user)
   return (
     <Box display={{ base: 'none', xl: 'block' }} position="fixed" minH="100%">
       <Box

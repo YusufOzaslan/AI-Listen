@@ -7,6 +7,6 @@ const router = express.Router();
 
 router.use("/dialogue", dialogueRouter);
 router.use("/auth", authRouter);
-router.use("/content", contentRouter);
+router.use("/contents", contentRouter);
 
 export { router as v1Router };
