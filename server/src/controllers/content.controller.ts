@@ -8,6 +8,15 @@ const getContents = catchAsync(async (req: Request, res: Response) => {
   res.status(httpStatus.OK).send(contents);
 });
 
+const getContent = catchAsync(async (req: Request, res: Response) => {
+  const contents = await contentService.getContentByIdOne(
+    req.params.id,
+    req.currentUser!
+  );
+  res.status(httpStatus.OK).send(contents);
+});
+
 export const contentController = {
   getContents,
+  getContent,
 };

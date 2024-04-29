@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createAction, createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import {
   generateDialogue,
@@ -6,6 +6,7 @@ import {
   generateImage,
   generateQuestions,
   getContents,
+  getQuestion,
 } from "@/store/thunks";
 export interface IFaceCoordinates {
   bottom_right_x: number;
@@ -49,6 +50,8 @@ const initialState: IState = {
   myData: null,
   dataQuestions: null,
 };
+
+export const resetQuestion = createAction("resetQuestion");
 
 export const content = createSlice({
   name: "contentForm",
@@ -126,6 +129,25 @@ export const content = createSlice({
     );
     build.addCase(getContents.rejected, (state) => {
       state.isGenerating = false;
+    });
+
+    // Get Questions
+    build.addCase(getQuestion.pending, (state) => {
+      state.isGenerating = true;
+    });
+    build.addCase(
+      getQuestion.fulfilled,
+      (state, { payload }: PayloadAction<IQuestion[]>) => {
+        state.isGenerating = false;
+        state.dataQuestions = payload;
+      }
+    );
+    build.addCase(getQuestion.rejected, (state) => {
+      state.isGenerating = false;
+    });
+    // Reset Question
+    build.addCase(resetQuestion, (state) => {
+      state.dataQuestions = null;
     });
   },
 });

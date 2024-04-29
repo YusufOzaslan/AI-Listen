@@ -8,3 +8,5 @@ export * from "./generateImage";
 export * from "./generateDialogueSpeech";
 export * from "./generateQuestions";
 export * from "./getContents";
+export * from "./getContent";
+export * from "./getQuestion";

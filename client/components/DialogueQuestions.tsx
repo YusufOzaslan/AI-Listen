@@ -94,7 +94,7 @@ const DialogueQuestions: React.FC<IProps> = ({ isGenerating, content }) => {
         {renderedQuestions}
       </Stack>}
     <Box textAlign="center" width="100%" paddingBottom="50">
-      <Button isLoading={isGenerating} colorScheme="green" mt="4"
+      <Button width="100%" isLoading={isGenerating} colorScheme="green" mt="4"
         onClick={() => router.push('/')}>Approve Questions</Button>
     </Box>
   </Stack>
