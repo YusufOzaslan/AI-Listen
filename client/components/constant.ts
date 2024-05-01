@@ -19,41 +19,41 @@ export const numberOfWordsOptions = ["20", "40", "60", "80", "100", "200"];
 
 export const listeningTaskOptions = [
   {
-    value: "personalNarratives",
+    value: "PersonalNarratives",
     label: "Personal Narratives",
   },
   {
-    value: "descriptiveMonologues",
+    value: "DescriptiveMonologues",
     label: "Descriptive Monologues",
   },
   {
-    value: "dialogues",
+    value: "DialoguesInSocialAndFunctionalContexts",
     label: "Dialogues in Social and Functional Contexts",
   },
   {
-    value: "workplaceInteractions",
+    value: "WorkplaceInteractionsAndProfessionalScenarios",
     label: "Workplace Interactions and Professional Scenarios",
   },
   {
-    value: "informationalContent",
+    value: "InformationalContent",
     label: "Informational Content",
   },
   {
-    value: "adventurousTravel",
+    value: "AdventurousTravelAndTravelExperiences",
     label: "Adventurous and Travel Experiences",
   },
 ];
 
 export type TaskOptionType =
-  | "personalNarratives"
-  | "descriptiveMonologues"
-  | "dialogues"
-  | "workplaceInteractions"
-  | "informationalContent"
-  | "adventurousTravel";
+  | "PersonalNarratives"
+  | "DescriptiveMonologues"
+  | "DialoguesInSocialAndFunctionalContexts"
+  | "WorkplaceInteractionsAndProfessionalScenarios"
+  | "InformationalContent"
+  | "AdventurousTravelAndTravelExperiences";
 
 export const listeningCategoriesMap: ListeningCategoriesMap = {
-  personalNarratives: [
+  PersonalNarratives: [
     "Journey of Self-Discovery",
     "Overcoming Personal Challenges",
     "Cultural Identity and Heritage",
@@ -61,7 +61,7 @@ export const listeningCategoriesMap: ListeningCategoriesMap = {
     "Achievements and Milestones",
     "Relationships and Connections",
   ],
-  descriptiveMonologues: [
+  DescriptiveMonologues: [
     "Personal Experience Monologue",
     "Historical/Cultural Narrative",
     "Imaginative Storytelling",
@@ -69,7 +69,7 @@ export const listeningCategoriesMap: ListeningCategoriesMap = {
     "Advocacy/Persuasive",
     "Expository/Analytical",
   ],
-  dialogues: [
+  DialoguesInSocialAndFunctionalContexts: [
     "Making Plans",
     "Dining Out",
     "Shopping Experiences",
@@ -86,7 +86,7 @@ export const listeningCategoriesMap: ListeningCategoriesMap = {
     "Environmental and Community Issues",
     "Technology and Gadgets",
   ],
-  workplaceInteractions: [
+  WorkplaceInteractionsAndProfessionalScenarios: [
     "Team Collaboration",
     "Professional Growth",
     "Client Meetings and Negotiations",
@@ -94,7 +94,7 @@ export const listeningCategoriesMap: ListeningCategoriesMap = {
     "Onboarding and Training",
     "Client and Communication Strategies",
   ],
-  informationalContent: [
+  InformationalContent: [
     "Scientific Discoveries and Innovations",
     "Environmental Awareness",
     "Global Issues and Current Events",
@@ -103,7 +103,7 @@ export const listeningCategoriesMap: ListeningCategoriesMap = {
     "Space Exploration and Discoveries",
     "Sustainability in Modern Living",
   ],
-  adventurousTravel: [
+  AdventurousTravelAndTravelExperiences: [
     "Solo Travel Journeys",
     "Cultural Immersion Stories",
     "Adventure Sports and Activities",

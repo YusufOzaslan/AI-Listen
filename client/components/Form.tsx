@@ -58,7 +58,7 @@ function Form() {
                     numberOfWords: values.numberOfWords!,
                     listeningTaskOptions: values.listeningTaskOption!,
                     listeningTaskCategories: values.listeningTaskCategory!,
-                    ideaGenerator: values.idea!
+                    ideaGenerator: values.listeningTopic!
                 },
                 axios: appApi
             }),

@@ -6,6 +6,7 @@ import {
 } from 'react-icons/md';
 import { useAudio } from '../hooks';
 import { Bars } from 'react-loader-spinner';
+import { useDisplayTextWithAudio } from '../hooks';
 
 const AudioLoadingSpinner = () => {
     const color = useColorModeValue('gray', 'white');
@@ -24,9 +25,14 @@ const AudioLoadingSpinner = () => {
 interface IProps {
     audio: string;
     start?: boolean;
+    dialogues?: {
+        speaker: string;
+        text: string;
+    }[];
+    onChange?(value: number): void;
 }
 
-const SpeechSample: FC<IProps> = ({ audio, start = false }) => {
+const SpeechSample: FC<IProps> = ({ audio, start = false, dialogues, onChange }) => {
     const bgColor = useColorModeValue('gray', 'white');
     const {
         audioRef,
@@ -38,6 +44,12 @@ const SpeechSample: FC<IProps> = ({ audio, start = false }) => {
         handleEnded,
     } = useAudio();
 
+    if (dialogues && onChange) {
+        const { displayedSegmentIndex } = useDisplayTextWithAudio(audioRef, dialogues);
+        useEffect(() => {
+            !isPaused && onChange(displayedSegmentIndex);
+        }, [displayedSegmentIndex, isPaused]);
+    }
 
     const handlePlay = () => {
         if (isPaused) {

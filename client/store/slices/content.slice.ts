@@ -7,6 +7,7 @@ import {
   generateQuestions,
   getContents,
   getQuestion,
+  getContent,
 } from "@/store/thunks";
 export interface IFaceCoordinates {
   bottom_right_x: number;
@@ -52,6 +53,7 @@ const initialState: IState = {
 };
 
 export const resetQuestion = createAction("resetQuestion");
+export const resetData = createAction("resetData");
 
 export const content = createSlice({
   name: "contentForm",
@@ -145,9 +147,29 @@ export const content = createSlice({
     build.addCase(getQuestion.rejected, (state) => {
       state.isGenerating = false;
     });
+
+    // Get Content
+    build.addCase(getContent.pending, (state) => {
+      state.isGenerating = true;
+    });
+    build.addCase(
+      getContent.fulfilled,
+      (state, { payload }: PayloadAction<IContentDialogue>) => {
+        state.isGenerating = false;
+        state.data = payload;
+      }
+    );
+    build.addCase(getContent.rejected, (state) => {
+      state.isGenerating = false;
+    });
+
     // Reset Question
     build.addCase(resetQuestion, (state) => {
       state.dataQuestions = null;
+    });
+    // Reset Data
+    build.addCase(resetData, (state) => {
+      state.data = null;
     });
   },
 });

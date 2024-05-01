@@ -24,7 +24,7 @@ const ttsDialogue = ({
     // Create SSML
     let ssml = `
     <speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis" xml:lang="en-US">
-      <voice name="en-US-AvaNeural"> <break time="1250ms" /> </voice>
+      <voice name="en-US-AvaNeural"> <break time="10ms" /> </voice>
       ${dialoguesTTS
         .map(
           ({ text, voice }) =>

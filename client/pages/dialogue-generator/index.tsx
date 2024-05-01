@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     Stack, Box,
     Step,
@@ -21,12 +21,21 @@ import { useAppDispatch, useAppSelector, } from '@/store';
 import { formActionCreators } from '@/store/slices';
 import { generateImage } from '@/store/thunks';
 import { useApi } from '@/hooks';
+import { SpeechSample } from '@/components/SpeechSample';
+
+export interface ISegment {
+    segmentIndex: number;
+    wordCount: number;
+    startWordIndx?: number
+    endWordIndx?: number
+}
 
 const DialoguePage = () => {
     const content = useAppSelector((store) => store.content);
     const contentForm = useAppSelector((store) => store.form);
     const dispatch = useAppDispatch();
     const appApi = useApi();
+    const [displayedSegmentIndex, setDisplayedSegmentIndex] = useState(-1);
 
     const handleOnclick = async () => {
         await dispatch(
@@ -40,6 +49,7 @@ const DialoguePage = () => {
     const renderGenerateImageButton = () => {
         return (
             <Flex flexDirection="row" justifyContent="space-between" width="100%">
+                <SpeechSample audio={content?.data?.audio!} dialogues={content.data?.dialogues}  onChange={setDisplayedSegmentIndex} />
                 <Button isLoading={content.isGenerating} flex="1" colorScheme="green" mt="4"
                     onClick={handleOnclick}>Regenerate Image</Button>
                 <Button isLoading={content.isGenerating} flex="1" colorScheme="green" mt="4"
@@ -70,6 +80,8 @@ const DialoguePage = () => {
                     <DialogueImage
                         image={content.data?.imageData?.image!}
                         faces={content.data?.imageData?.faces!}
+                        displayedSegmentIndex={displayedSegmentIndex}
+                        dialogues={content.data?.dialogues!}
                     />
                 </Flex>
         },
