@@ -6,6 +6,7 @@ import {
   dialogueSchema,
   questionsPromt,
   questionsSchema,
+  imagePrompt,
 } from "../prompts";
 import { azureSpeechService, azureStorageService } from "./azure";
 import { replacePromptPlaceholders } from "../utils/promptUtil";
@@ -106,7 +107,7 @@ const generateIdeas = async ({
 const generateDialogueSpeech = async (
   contentId: string,
   user: ICurrentUser,
-  body: { voice: string[] }
+  body: { voice: string[]; gender: string[] }
 ) => {
   const content = await contentService.getContentByIdOne(contentId, user);
 
@@ -123,7 +124,7 @@ const generateDialogueSpeech = async (
   });
 
   const uploadedAudioUrl = await azureStorageService.uploadFile(audioPath);
-  content.set({ audio: uploadedAudioUrl });
+  content.set({ audio: uploadedAudioUrl, gender: body.gender });
   await content.save();
 
   return content;
@@ -132,11 +133,21 @@ const generateDialogueSpeech = async (
 const generateDialogueImage = async (contentId: string, user: ICurrentUser) => {
   const content = await contentService.getContentByIdOne(contentId, user);
 
-  const prompt = content.dialogues
+  const text = content.dialogues
     .map((dialogue) => {
       return `[${dialogue.speaker}]: ${dialogue.text}`;
     })
     .join("\n");
+
+  const promptTemplate = imagePrompt;
+
+  const prompt = replacePromptPlaceholders(promptTemplate, {
+    content: text,
+    gender1: content.gender![0],
+    gender2: content.gender![1],
+    name1: content.dialogues[0].speaker,
+    name2: content.dialogues[1].speaker,
+  });
 
   const imagePath = await openAiService.generateImage(prompt);
 

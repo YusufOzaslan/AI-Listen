@@ -131,8 +131,8 @@ const DialogueImage: FC<IProps> = ({ image, faces, dialogues, displayedSegmentIn
             bgPosition="center"
             bgRepeat="no-repeat"
             position="relative"
-            width="1024px"
-            height="1024px"
+            width={{base:"256px", md:"512px", lg:"1024px"}}
+            height={{base:"256px", md:"512px", lg:"1024px"}}
             margin="auto"
         >
             {/* Speech bubble for the first person */}
@@ -152,9 +152,9 @@ const DialogueImage: FC<IProps> = ({ image, faces, dialogues, displayedSegmentIn
                     transform="translate(-50%, -50%)"
                     textAlign="center"
                     color="black"
-                    fontSize="16px"
+                    fontSize="14px"
                     fontWeight="bold"
-                    pb="12px"
+                    pb="16px"
                 >
                     {leftText}
                 </Box>
@@ -176,9 +176,9 @@ const DialogueImage: FC<IProps> = ({ image, faces, dialogues, displayedSegmentIn
                     transform="translate(-50%, -50%)"
                     textAlign="center"
                     color="black"
-                    fontSize="16px"
+                    fontSize="14px"
                     fontWeight="bold"
-                    pb="12px"
+                    pb="16px"
                 >
                     {rightText}
                 </Box>

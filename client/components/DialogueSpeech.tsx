@@ -55,11 +55,13 @@ interface SelectOption {
     value: string;
     avatarUrl: string;
     speechSample: string;
+    gender: string
 }
 interface IVoice {
     voice: string;
     avatar: string;
     speechSample: string;
+    gender: string;
 }
 interface IProps {
     isGenerating: boolean
@@ -68,69 +70,68 @@ interface IProps {
 
 const selectOptions: SelectOption[] = [
     {
-        // Male
         label: 'Davis',
         value: 'en-US-DavisNeural',
         avatarUrl: Davis.src,
         speechSample: DavisAudio,
+        gender: "Male"
     },
     {
-        // Female
         label: 'Emma',
         value: 'en-US-EmmaNeural',
         avatarUrl: Emma.src,
-        speechSample: EmmaAudio
+        speechSample: EmmaAudio,
+        gender: "Female"
     },
     {
-        // Female
         label: 'Ava',
         value: 'en-US-AvaNeural',
         avatarUrl: Ava.src,
-        speechSample: AvaAudio
-
+        speechSample: AvaAudio,
+        gender: "Female"
     },
     {
-        // Male
         label: 'Andrew',
         value: 'en-US-AndrewNeural',
         avatarUrl: Andrew.src,
-        speechSample: AndrewAudio
+        speechSample: AndrewAudio,
+        gender: "Male"
 
     },
     {
-        //   // Female
         label: 'Aria',
         value: 'en-US-AriaNeural',
         avatarUrl: Aria.src,
-        speechSample: AriaAudio
+        speechSample: AriaAudio,
+        gender: "Female"
     },
     {
-        // Male
         label: 'Brian',
         value: 'en-US-BrianNeural',
         avatarUrl: Brian.src,
-        speechSample: BrianAudio
+        speechSample: BrianAudio,
+        gender: "Male"
     },
     {
-        // Female
         label: 'Jeny',
         value: 'en-US-JennyNeural',
         avatarUrl: Jeny.src,
-        speechSample: JenyAudio
+        speechSample: JenyAudio,
+        gender: "Female"
     },
     {
-        // Male
         label: 'AIGenerate Male',
         value: 'en-US-AIGenerate1Neural',
         avatarUrl: AiGenerateMale.src,
-        speechSample: AiGenerateMaleAudio
+        speechSample: AiGenerateMaleAudio,
+        gender: "Male"
     },
     {
-        // Female
         label: 'AIGenerate Female',
         value: 'en-US-AIGenerate2Neural',
         avatarUrl: AiGenerateFemale.src,
-        speechSample: AiGenerateFemaleAudio
+        speechSample: AiGenerateFemaleAudio,
+        gender: "Female"
     },
 ];
 
@@ -148,12 +149,14 @@ const DialogueSpeech: React.FC<IProps> = ({isGenerating, content}) => {
         {
             voice: 'en-US-AIGenerate2Neural',
             avatar: AiGenerateFemale.src,
-            speechSample: AiGenerateMaleAudio
+            speechSample: AiGenerateMaleAudio,
+            gender: "Female"
         },
         {
             voice: 'en-US-AIGenerate1Neural',
             avatar: AiGenerateMale.src,
-            speechSample: AiGenerateMaleAudio
+            speechSample: AiGenerateMaleAudio,
+            gender: "Male"
         }]);
 
     const handleSubmit = async () => {
@@ -172,7 +175,8 @@ const DialogueSpeech: React.FC<IProps> = ({isGenerating, content}) => {
                 axios: appApi,
                 contentId: _id,
                 body: {
-                    voice: [voice[0].voice, voice[1].voice]
+                    voice: [voice[0].voice, voice[1].voice],
+                    gender:[voice[0].gender, voice[1].gender]
                 }
             })
         );
@@ -182,6 +186,7 @@ const DialogueSpeech: React.FC<IProps> = ({isGenerating, content}) => {
         updatedVoice[index].voice = option.value;
         updatedVoice[index].avatar = option.avatarUrl;
         updatedVoice[index].speechSample = option.speechSample;
+        updatedVoice[index].gender = option.gender;
         setVoice(updatedVoice);
     };
     const color = useColorModeValue('gray.100', 'gray.700');

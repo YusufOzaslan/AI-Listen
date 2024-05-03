@@ -19,6 +19,7 @@ export interface IContentAttributes {
   dialogues: IDialogue[];
   level: string;
   audio?: string;
+  gender?: string[];
   imageData?: {
     image: string;
     faces: IFaceCoordinates[];
@@ -58,6 +59,9 @@ const contentSchema = new mongoose.Schema({
   level: {
     type: String,
     required: true,
+  },
+  gender: {
+    type: [String],
   },
   audio: {
     type: String,

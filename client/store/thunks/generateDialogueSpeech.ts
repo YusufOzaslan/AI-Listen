@@ -4,6 +4,7 @@ import { handleApiError } from "@/api";
 
 interface IBody {
   voice: string[];
+  gender: string[] 
 }
 export const generateDialogueSpeech = createAsyncThunk(
   "generateDialogueSpeech",
