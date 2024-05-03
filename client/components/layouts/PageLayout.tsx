@@ -38,7 +38,7 @@ const PageLayout: FC<IProps> = ({ children }) => {
                     <Box>
                         <Navbar
                             logoText={''}
-                            brandText={formattedPathname}
+                            pathName={formattedPathname}
                         />
                     </Box>
                 </Portal>

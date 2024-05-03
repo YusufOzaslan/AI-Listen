@@ -8,10 +8,10 @@ import {
 } from '@chakra-ui/react';
 
 export default function Navbar(props: {
-    brandText: string;
+    pathName: string;
     logoText: string;
 }) {
-    const { brandText } = props;
+    const { pathName } = props;
 
     let mainText = useColorModeValue('navy.700', 'white');
     let navbarPosition = 'fixed' as const;
@@ -96,7 +96,7 @@ export default function Navbar(props: {
                         _focus={{
                             boxShadow: 'none'
                         }}>
-                        {brandText}
+                        {pathName}
                     </Link>
                 </Box>
             </Flex>

@@ -12,7 +12,6 @@ import {
   Stack,
   Text,
   Flex,
-  Image
 } from '@chakra-ui/react';
 
 export default function Home() {
@@ -22,10 +21,6 @@ export default function Home() {
   const questions = content.dataQuestions;
   const appApi = useApi();
   const [displayedSegmentIndex, setDisplayedSegmentIndex] = useState(-1);
-
-  const redirectToDialogueGeneratorPage = () => {
-    router.push('/dialogue-generator');
-  };
 
   useEffect(() => {
     const id = router.query.id as any;
