@@ -12,7 +12,10 @@ interface IProps {
 }
 
 const PageLayout: FC<IProps> = ({ children }) => {
-    const pathname = usePathname() ? 'Dialogue Generator' : usePathname();
+    const pathname = usePathname() ? usePathname() : 'Dialogue Generator';
+    const matchedRoute = routes.find(route => pathname.includes(route.path));
+    const formattedPathname = matchedRoute ? matchedRoute.name : pathname;
+
     return (
         <Box>
             <Sidebar routes={routes} />
@@ -35,7 +38,7 @@ const PageLayout: FC<IProps> = ({ children }) => {
                     <Box>
                         <Navbar
                             logoText={''}
-                            brandText={pathname}
+                            brandText={formattedPathname}
                         />
                     </Box>
                 </Portal>
