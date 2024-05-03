@@ -4,7 +4,7 @@ import { catchAsync } from "../utils";
 import { questionService } from "../services";
 
 const getQuestion = catchAsync(async (req: Request, res: Response) => {
-  const questions = await questionService.getQuestionByContentId(
+  const questions = await questionService.getQuestionsByContentId(
     req.params.id,
     req.currentUser!
   );
