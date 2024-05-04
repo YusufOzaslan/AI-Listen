@@ -9,4 +9,4 @@ const createOne = async (attrs: IStudentAttributes) => {
   return student;
 };
 
-export const examService = { createOne };
+export const studentService = { createOne };

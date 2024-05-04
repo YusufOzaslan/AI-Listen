@@ -1,13 +1,14 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { setupListeners } from "@reduxjs/toolkit/query";
 import { useSelector, useDispatch, TypedUseSelectorHook } from "react-redux";
-import { formReducer, contentReducer, authtReducer } from "./slices";
+import { formReducer, contentReducer, authtReducer, examTeacherReducer } from "./slices";
 
 const store = configureStore({
   reducer: {
     content: contentReducer,
     form: formReducer,
     auth: authtReducer,
+    examTeacher: examTeacherReducer,
   },
 });
 

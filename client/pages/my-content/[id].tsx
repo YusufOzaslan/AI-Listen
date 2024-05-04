@@ -1,23 +1,32 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { getContent, getQuestion } from '@/store/thunks';
+import { getContent, getQuestion, generateExam } from '@/store/thunks';
 import { useApi } from '@/hooks';
 import { useAppDispatch, useAppSelector, } from '@/store';
 import { resetData, resetQuestion } from '@/store/slices';
 import { SpeechSample } from '@/components/SpeechSample';
 import { DialogueImage } from '@/components/DialogueImage';
+import GenerateExam from '@/components/GenerateExam';
 import {
   HStack,
   Box,
   Stack,
   Text,
   Flex,
+  Button,
 } from '@chakra-ui/react';
-
+export interface IExamFormData {
+  examName: string;
+  school: string;
+  class: string;
+  capacity: number;
+  timeLimitInMinutes: number;
+}
 export default function Home() {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const content = useAppSelector((store) => store.content);
+  const examTeacher = useAppSelector((store) => store.examTeacher);
   const questions = content.dataQuestions;
   const appApi = useApi();
   const [displayedSegmentIndex, setDisplayedSegmentIndex] = useState(-1);
@@ -46,8 +55,19 @@ export default function Home() {
     );
   });
 
-
-
+  const handleCreateExam = async (formData: IExamFormData) => {
+    const contentId = router.query.id as any;
+    await dispatch(
+      generateExam({
+        body: formData,
+        axios: appApi,
+        contentId
+      }),
+    );
+  };
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
+  };
   const renderedQuestions = questions?.map((question, index) => {
     return (
       <Stack key={question._id} alignItems="left" height="auto" width="100%" maxW="lg" mx="auto" p="4" borderWidth="2px" borderRadius="lg" bg="white" boxShadow="md">
@@ -94,8 +114,24 @@ export default function Home() {
           )}
           {!!content.data.audio && (
             <>
+              {!!examTeacher.examUrl && (
+                <Flex mt={4} mb={2} alignItems="center" justifyContent="center">
+                  <Box>
+                    <Button variant="outline" onClick={() => examTeacher.examUrl && copyToClipboard(examTeacher.examUrl)}>
+                      Copy Exam URL
+                    </Button>
+                  </Box>
+                  <Box ml={2}>
+                    <Text border="1px solid #ccc" borderRadius="md" p={2} whiteSpace="nowrap" >
+                      {examTeacher.examUrl}
+                    </Text>
+                  </Box>
+                </Flex>
+              )}
+
               <Box mt={4} mb={2}>
                 <SpeechSample audio={content.data.audio} dialogues={content.data.dialogues} onChange={setDisplayedSegmentIndex} />
+                <GenerateExam onCreateExam={handleCreateExam} />
               </Box>
               <Box textAlign="center" borderRadius="lg" maxWidth="100%" p={3} borderWidth="2px" borderColor="gray.200">
 

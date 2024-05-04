@@ -3,15 +3,15 @@ import { EModel } from "./enums";
 
 export interface IExamAttributes {
   user: string;
-  title: string;
+  examName: string;
   content: string;
-  sharingURL: string;
+  sharingURL?: string;
   school: string;
   capacity: number;
-  classes: string[];
+  class: string;
   hasFinished?: boolean;
   timeLimitInMinutes?: number;
-  students: string[];
+  students?: string[];
 }
 
 export interface IExamDocument extends mongoose.Document, IExamAttributes {}
@@ -27,7 +27,7 @@ const examSchema = new mongoose.Schema(
       ref: EModel.USER,
       required: true,
     },
-    title: {
+    examName: {
       type: String,
       required: true,
     },
@@ -38,7 +38,7 @@ const examSchema = new mongoose.Schema(
     },
     sharingURL: {
       type: String,
-      required: true,
+      required: false,
     },
     school: {
       type: String,
@@ -48,8 +48,8 @@ const examSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    classes: {
-      type: [String],
+    class: {
+      type: String,
       required: true,
     },
     hasFinished: {
@@ -63,7 +63,7 @@ const examSchema = new mongoose.Schema(
     students: {
       type: [mongoose.Schema.Types.ObjectId],
       ref: EModel.STUDENT,
-      required: true,
+      required: false,
     },
   },
   { timestamps: true }
