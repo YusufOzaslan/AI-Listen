@@ -1,12 +1,14 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 import { EModel } from "./enums";
-import {EUserRole} from '../types';
+import { EUserRole } from "../types";
 
 export interface IUserAttributes {
   name: string;
   email: string;
   password: string;
+  school?: string;
+  classes?: string[];
 }
 
 export interface IUserDocument extends mongoose.Document, IUserAttributes {
@@ -32,12 +34,20 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true,
-    private: true
+    private: true,
   },
   role: {
     type: String,
     enum: EUserRole,
-    default: EUserRole.USER
+    default: EUserRole.USER,
+  },
+  school:{
+    type: String,
+    default: false,
+  },
+  classes: {
+    type: [String],
+    default: false,
   },
 });
 
