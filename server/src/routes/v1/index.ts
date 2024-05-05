@@ -11,6 +11,6 @@ router.use("/dialogue", dialogueRouter);
 router.use("/auth", authRouter);
 router.use("/contents", contentRouter);
 router.use("/questions", questionRouter);
-router.use("/exam", examRouter);
+router.use("/exams", examRouter);
 
 export { router as v1Router };

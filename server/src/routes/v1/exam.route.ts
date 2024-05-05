@@ -5,4 +5,6 @@ const router = express.Router();
 
 router.post("/:id", auth(), examController.createExam);
 
+router.post("/:code/start", examController.start);
+
 export { router as examRouter };

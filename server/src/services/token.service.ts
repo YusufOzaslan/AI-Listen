@@ -1,7 +1,7 @@
 import jwt, { JwtPayload } from "jsonwebtoken";
 import httpStatus from "http-status";
 import moment from "moment";
-import { ETokenType, ITokenPayload, EAppError } from "../types";
+import { ETokenType, ITokenPayload, EAppError, EUserRole } from "../types";
 import { appConfig } from "../configs";
 import { Token } from "../models";
 import { AppError } from "../utils";
@@ -77,6 +77,33 @@ const generateRefreshToken = async ({
   };
 };
 
+const generateExamToken = async (
+  { id }: { id: ITokenPayload["id"] },
+  duration?: {
+    value: number;
+    unit: "s" | "m" | "h";
+  }
+) => {
+  const examTokenExpiration = moment().add(
+    duration?.value || appConfig.jwt.exam.duration,
+    duration?.unit || appConfig.jwt.exam.durationUnit
+  );
+  const token = generateToken(
+    {
+      id,
+      role: EUserRole.USER,
+      expiryDate: examTokenExpiration,
+      type: ETokenType.EXAM,
+    },
+    appConfig.jwt.exam.secret
+  );
+
+  return {
+    value: token,
+    expiryDate: examTokenExpiration,
+  };
+};
+
 const verifyToken = async (value: string, type: ETokenType, secret: string) => {
   try {
     const payload = jwt.verify(value, secret) as JwtPayload;
@@ -101,4 +128,5 @@ export const tokenService = {
   generateRefreshToken,
   verifyAccessToken,
   verifyRefreshToken,
+  generateExamToken,
 };

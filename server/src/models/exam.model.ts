@@ -11,10 +11,12 @@ export interface IExamAttributes {
   class: string;
   hasFinished?: boolean;
   timeLimitInMinutes?: number;
-  students?: string[];
+  students: string[];
 }
 
-export interface IExamDocument extends mongoose.Document, IExamAttributes {}
+export interface IExamDocument extends mongoose.Document, IExamAttributes {
+  isSharingUrlValid(value: string): boolean;
+}
 
 interface IExamModel extends mongoose.Model<IExamDocument> {
   build(attrs: IExamAttributes): IExamDocument;
@@ -64,6 +66,7 @@ const examSchema = new mongoose.Schema(
       type: [mongoose.Schema.Types.ObjectId],
       ref: EModel.STUDENT,
       required: false,
+      default: [],
     },
   },
   { timestamps: true }
@@ -71,6 +74,10 @@ const examSchema = new mongoose.Schema(
 
 examSchema.statics.build = (attrs: IExamAttributes): IExamDocument =>
   new Exam(attrs);
+
+examSchema.methods.isSharingUrlValid = function (value: string) {
+  return this.sharingURL?.split("/").at(-1)?.trim() === value;
+};
 
 export const Exam = mongoose.model<IExamDocument, IExamModel>(
   EModel.EXAM,

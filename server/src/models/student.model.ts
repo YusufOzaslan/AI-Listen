@@ -7,7 +7,7 @@ interface IScore {
 }
 export interface IStudentAttributes {
   name: string;
-  number: string;
+  studentNumber: string;
   school: string;
   class: string;
   score?: IScore;
@@ -27,7 +27,7 @@ const studentSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    number: {
+    studentNumber: {
       type: String,
       required: true,
     },

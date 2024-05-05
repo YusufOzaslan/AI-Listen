@@ -24,7 +24,11 @@ const envVariablesSchema = Joi.object()
     JWT_REFRESH_TOKEN_SECRET: Joi.string().required(),
     JWT_REFRESH_TOKEN_DURATION: Joi.number().required(),
     JWT_REFRESH_TOKEN_DURATION_UNIT: Joi.string().required(),
+    JWT_EXAM_TOKEN_SECRET: Joi.string().required(),
+    JWT_EXAM_TOKEN_DURATION: Joi.number().required(),
+    JWT_EXAM_TOKEN_DURATION_UNIT: Joi.string().required(),
     AUTH_COOKIE_NAME: Joi.string().required(),
+    EXAM_COOKIE_NAME: Joi.string().required(),
   })
   .unknown();
 
@@ -33,6 +37,8 @@ const { value: envVariables, error } = envVariablesSchema
     errors: { label: "key" },
   })
   .validate(process.env);
+
+const DAY_IN_MS = 24 * 60 * 60 * 60 * 1000;
 
 if (error) {
   throw new Error(`Config validation error: ${error.message}`);
@@ -74,8 +80,12 @@ export const appConfig = {
       duration: envVariables.JWT_REFRESH_TOKEN_DURATION,
       durationUnit: envVariables.JWT_REFRESH_TOKEN_DURATION_UNIT,
     },
+    exam: {
+      secret: envVariables.JWT_EXAM_TOKEN_SECRET,
+      duration: envVariables.JWT_EXAM_TOKEN_DURATION,
+      durationUnit: envVariables.JWT_EXAM_TOKEN_DURATION_UNIT,
+    },
   },
-
   authCookie: {
     name: envVariables.AUTH_COOKIE_NAME,
     config: {
@@ -88,6 +98,18 @@ export const appConfig = {
         60 *
         1000,
       secure: envVariables.NODE_ENV === ENodeEnvironment.PRODUCTION,
+    },
+  },
+
+  examCookie: {
+    name: envVariables.EXAM_COOKIE_NAME,
+    config: {
+      httpOnly: [ENodeEnvironment.PRODUCTION].includes(envVariables.NODE_ENV),
+      maxAge: Number(envVariables.JWT_EXAM_TOKEN_DURATION) * DAY_IN_MS,
+      secure: [ENodeEnvironment.PRODUCTION].includes(envVariables.NODE_ENV),
+      domain: [ENodeEnvironment.PRODUCTION].includes(envVariables.NODE_ENV)
+        ? envVariables.ORIGIN.replace("https://", ".")
+        : "localhost",
     },
   },
 };

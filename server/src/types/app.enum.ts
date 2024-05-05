@@ -20,4 +20,9 @@ export enum EAppError {
   INVALID_TOKEN = 'Invalid Token',
   INVALID_ACCESS_TOKEN = 'Invalid access token',
   EXPIRED_ACCESS_TOKEN = 'Access token has expired',
+  
+  //Exam
+  INVALID_EXAM_URL = 'Invalid exam url',
+  EXAM_ALREADY_TAKEN = 'Exam has already been taken buy the student',
+  EXAM_OUT_OF_CAPACITY = 'The activity has reached its full capacity.',
 }

@@ -17,10 +17,20 @@ const getContentByIdOne = async (id: string, user: ICurrentUser) => {
     throw new AppError(httpStatus.FORBIDDEN, EAppError.FORBIDDEN);
   return content;
 };
+const getContentById = async (id: string) => {
+  const content = await Content.findOne({ _id: id }).exec();
+  if (!content) throw new AppError(httpStatus.NOT_FOUND, EAppError.NOT_FOUND);
+  return content;
+};
 
 const getMany = async (user: ICurrentUser) => {
   const contents = await Content.find({ user: user.id }).exec();
   return contents;
 };
 
-export const contentService = { createOne, getContentByIdOne, getMany };
+export const contentService = {
+  createOne,
+  getContentByIdOne,
+  getMany,
+  getContentById,
+};
