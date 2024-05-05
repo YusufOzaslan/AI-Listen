@@ -67,9 +67,10 @@ const start = async (
   const isStudentExist = await studentService.findOneByStudentNumber(
     body.studentNumber
   );
+
   const isExamTakenByStudent = isStudentExist
     ? exam.students.includes(isStudentExist._id)
-    : isStudentExist;
+    : false;
   if (isExamTakenByStudent) {
     throw new AppError(httpStatus.BAD_REQUEST, EAppError.EXAM_ALREADY_TAKEN);
   }
@@ -89,7 +90,7 @@ const start = async (
 
   const content = await contentService.getContentById(exam.content);
   return {
-    student,
+    studentId: student._id,
     exam,
     content,
   };

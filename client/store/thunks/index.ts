@@ -11,3 +11,4 @@ export * from "./getContents";
 export * from "./getContent";
 export * from "./getQuestion";
 export * from "./generateExam";
+export * from "./startExam";

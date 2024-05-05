@@ -3,19 +3,16 @@ import { AxiosInstance } from "axios";
 import { handleApiError } from "@/api";
 
 interface IBody {
-    examName: string;
-    school: string;
-    class: string;
-    capacity: number;
-    timeLimitInMinutes: number;
+    studentName: string;
+    studentNumber: string;
   }
 
-export const generateExam = createAsyncThunk(
-  "generateExam",
-  async ({ contentId, axios, body }: { contentId: string; axios: AxiosInstance; body: IBody; }) => {
+export const startExam = createAsyncThunk(
+  "startExam",
+  async ({ examCode, axios, body }: { examCode: string; axios: AxiosInstance; body: IBody; }) => {
     try {
       const response = await axios.post(
-        `/exams/${contentId}`,
+        `/exams/${examCode}/start`,
         body
       );
       return response.data;

@@ -14,7 +14,7 @@ const createExam = catchAsync(async (req: Request, res: Response) => {
 });
 
 const start = catchAsync(async (req: Request, res: Response) => {
-  const { exam, student, content } = await examService.start(req.params.code, req.body);
+  const { exam, studentId, content } = await examService.start(req.params.code, req.body);
   const examToken = await tokenService.generateExamToken(
     { id: exam.id },
     exam.timeLimitInMinutes
@@ -29,7 +29,7 @@ const start = catchAsync(async (req: Request, res: Response) => {
     examToken.value,
     appConfig.authCookie.config
   );
-  res.status(httpStatus.CREATED).send({student, content});
+  res.status(httpStatus.CREATED).send({content, studentId});
 });
 
 export const examController = {

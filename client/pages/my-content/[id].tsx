@@ -22,7 +22,7 @@ export interface IExamFormData {
   capacity: number;
   timeLimitInMinutes: number;
 }
-export default function Home() {
+export default function MyContent() {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const content = useAppSelector((store) => store.content);
