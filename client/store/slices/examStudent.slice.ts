@@ -7,12 +7,14 @@ interface IState {
   isGenerating: boolean;
   examData: IContentDialogue | null;
   studentId: string | null;
+  error: string | undefined;
 }
 
 const initialState: IState = {
   isGenerating: false,
   examData: null,
   studentId: null,
+  error: undefined,
 };
 
 export const examStudent = createSlice({
@@ -39,6 +41,7 @@ export const examStudent = createSlice({
     );
     build.addCase(startExam.rejected, (state, { error }) => {
       state.isGenerating = false;
+      state.error = error.message;
     });
   },
 });

@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { useState, FormEvent } from 'react';
+import { FormEvent } from 'react';
 import { useApi } from '@/hooks';
 import { useAppDispatch, useAppSelector, } from '@/store';
 import {
@@ -23,7 +23,6 @@ export default function ExamStarterPage() {
     const appApi = useApi();
     const dispatch = useAppDispatch();
     const examStudent = useAppSelector((store) => store.examStudent);
-    const [displayedSegmentIndex, setDisplayedSegmentIndex] = useState(-1);
 
     const CFaUserAlt = chakra(FaUserAlt);
     const CIoSchoolSharp = chakra(IoSchoolSharp);
@@ -35,7 +34,7 @@ export default function ExamStarterPage() {
         const formData = new FormData(e.target as HTMLFormElement);
         const studentName = formData.get('name') as string;
         const studentNumber = formData.get('studentNumber') as string;
-        await dispatch(
+        const response = await dispatch(
             startExam({
                 examCode,
                 axios: appApi,
@@ -45,6 +44,9 @@ export default function ExamStarterPage() {
                 },
             }),
         );
+
+        if (response.meta.requestStatus === 'rejected') return;
+        router.push(`exam-page`)
     };
 
     return (
@@ -103,6 +105,11 @@ export default function ExamStarterPage() {
                     </form>
                 </Box>
             </Stack>
+            {examStudent.error && (
+                <Box mt={4}>
+                    <p style={{ color: 'red' }}>{examStudent.error}</p>
+                </Box>
+            )}
         </Flex>
     );
 }

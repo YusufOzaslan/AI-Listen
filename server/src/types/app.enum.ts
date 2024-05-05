@@ -23,6 +23,6 @@ export enum EAppError {
   
   //Exam
   INVALID_EXAM_URL = 'Invalid exam url',
-  EXAM_ALREADY_TAKEN = 'Exam has already been taken buy the student',
+  EXAM_ALREADY_TAKEN = 'Exam has already been taken by the student',
   EXAM_OUT_OF_CAPACITY = 'The activity has reached its full capacity.',
 }

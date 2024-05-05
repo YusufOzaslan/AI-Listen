@@ -58,7 +58,7 @@ const SignInPage = () => {
                 justifyContent="center"
                 alignItems="center"
             >
-                <Heading color="teal.400">Welcome</Heading>
+                <Heading color="teal.400">Welcome to AI Listen</Heading>
                 <Box minW={{ base: "90%", md: "468px" }}>
                     <form onSubmit={handleSubmit}>
                         <Stack
