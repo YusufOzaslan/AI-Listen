@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createAction, createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { startExam, examRefresh } from "@/store/thunks";
 import { IContentDialogue } from "./content.slice";
@@ -29,6 +29,7 @@ const initialState: IState = {
   error: undefined,
   examStepIndex: 0,
 };
+export const resetExamData = createAction("resetExamData");
 
 export const examStudent = createSlice({
   name: "examStudent",
@@ -68,6 +69,10 @@ export const examStudent = createSlice({
     build.addCase(examRefresh.rejected, (state, { error }) => {
       state.isGenerating = false;
       state.error = error.message;
+    });
+    // Reset Data
+    build.addCase(resetExamData, (state) => {
+      state.examData = null;
     });
   },
 });

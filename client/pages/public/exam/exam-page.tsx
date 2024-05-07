@@ -23,9 +23,10 @@ import {
     StepStatus,
     StepTitle,
     Stepper,
-    FormControl,
+    Text,
 } from "@chakra-ui/react";
 import { examRefresh } from '@/store/thunks';
+import { resetExamData } from '@/store/slices';
 
 export default function ExamStarterPage() {
     const dispatch = useAppDispatch();
@@ -33,34 +34,36 @@ export default function ExamStarterPage() {
     const [displayedSegmentIndex, setDisplayedSegmentIndex] = useState(-1);
     const [remainingTime, setRemainingTime] = useState(0);
 
-    
-    const steps = [
+    const steps = examStudent.examData?.questions.map((question, index) => {
+        return (
+            <Stack key={question.id} alignItems="left" height="auto" width="100%" maxW="lg" mx="auto" p="4" borderWidth="2px" borderRadius="lg" bg="white" boxShadow="md">
+                <Flex alignItems={'center'} justifyContent="space-between">
+                    <Text whiteSpace="pre-line" fontWeight="semibold" maxW="80%">
+                        <Text as="span" fontWeight="bold">{index + 1})</Text> {question.question}
+                    </Text>
+                </Flex>
+                <Stack>
+                    {question.options.map((option, optionIndex) => {
+                        return (
+                            <Text key={Math.random().toString(36).substr(2, 9)}>
+                                <Text as="span" fontWeight="bold">{String.fromCharCode(optionIndex + 65)})</Text> {option}
+                            </Text>
+                        );
+                    })}
+                </Stack>
+            </Stack>
+        );
+    });
+
+    const steps1 = [
         {
             title: 'First',
             description: 'Listening Dialogue',
-            component: <>
-                <SpeechSample audio={examStudent.examData?.content.audio!} dialogues={examStudent.examData?.content.dialogues} onChange={setDisplayedSegmentIndex} />
-                <DialogueImage
-                    image={examStudent.examData?.content.imageData?.image!}
-                    faces={examStudent.examData?.content.imageData?.faces!}
-                    displayedSegmentIndex={displayedSegmentIndex}
-                    dialogues={examStudent.examData?.content.dialogues!}
-                /></>
-        },
-        {
-            title: 'Second',
-            description: 'Add Narration',
-            component: <></>
-        },
-        {
-            title: 'Third',
-            description: 'Generate Image',
             component: <></>
         },
     ];
 
     useEffect(() => {
-        console.log(examStudent.examData)
         if (examStudent.examData) {
             const currentTime = Math.floor(Date.now() / 1000);
             const elapsedTime = currentTime - examStudent.examData.startTime;
@@ -71,6 +74,7 @@ export default function ExamStarterPage() {
                 setRemainingTime((prevTime) => {
                     if (prevTime <= 0) {
                         clearInterval(timer);
+                        dispatch(resetExamData());
                         return 0;
                     }
                     return prevTime - 1;
@@ -86,7 +90,7 @@ export default function ExamStarterPage() {
     const seconds = Math.floor(remainingTime % 60);
 
     return (
-        <>{examStudent.examData || remainingTime === 0 ? (<>
+        <>{examStudent.examData ? (<>
             <Flex justifyContent="flex-end">
                 <Box p="2" bg="gray.200">
                     <Heading as="h3" size="md">Remaining Time: {minutes} : {seconds}</Heading>
@@ -94,8 +98,16 @@ export default function ExamStarterPage() {
             </Flex>
 
             <Stack spacing={8}>
+                <DialogueImage
+                    image={examStudent.examData?.content.imageData?.image!}
+                    faces={examStudent.examData?.content.imageData?.faces!}
+                    displayedSegmentIndex={displayedSegmentIndex}
+                    dialogues={examStudent.examData?.content.dialogues!}
+                />
+                <SpeechSample audio={examStudent.examData?.content.audio!} dialogues={examStudent.examData?.content.dialogues} onChange={setDisplayedSegmentIndex} />
+
                 <Stepper colorScheme='green' index={examStudent.examStepIndex}>
-                    {steps.map((step, index) => (
+                    {examStudent.examData.questions.map((step, index) => (
                         <Step key={index}>
                             <StepIndicator>
                                 <StepStatus
@@ -104,16 +116,12 @@ export default function ExamStarterPage() {
                                     active={<StepNumber />}
                                 />
                             </StepIndicator>
-                            <Box flexShrink='0'>
-                                <StepTitle>{step.title}</StepTitle>
-                                <StepDescription>{step.description}</StepDescription>
-                            </Box>
                             <StepSeparator />
                         </Step>
                     ))}
                 </Stepper>
                 <Flex key={examStudent.examStepIndex} justifyContent="center" alignItems="center">
-                    {steps[examStudent.examStepIndex].component}
+                    {steps![examStudent.examStepIndex]}
                 </Flex>
             </Stack>
         </>) : (<>Exam Is Over</>)
