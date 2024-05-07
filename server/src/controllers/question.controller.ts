@@ -5,8 +5,7 @@ import { questionService } from "../services";
 
 const getQuestion = catchAsync(async (req: Request, res: Response) => {
   const questions = await questionService.getQuestionsByContentId(
-    req.params.id,
-    req.currentUser!
+    req.params.id
   );
   res.status(httpStatus.OK).send(questions);
 });

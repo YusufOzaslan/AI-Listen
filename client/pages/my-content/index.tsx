@@ -11,12 +11,16 @@ import {
   Button,
   Stack
 } from '@chakra-ui/react';
-
 export default function MyContent() {
   const content = useAppSelector((store) => store.content);
   const dispatch = useAppDispatch();
   const appApi = useApi();
   const router = useRouter();
+
+  const textColor = useColorModeValue('gray.800', 'white');
+  const secondaryTextColor = useColorModeValue('gray.600', 'gray.400');
+  const bgColor = useColorModeValue('gray.100', 'gray.800');
+  const borderColor = useColorModeValue('gray.200', 'gray.700');
 
   useEffect(() => {
     dispatch(getContents(appApi));
@@ -31,16 +35,16 @@ export default function MyContent() {
       key={item?._id}
       id={item?._id}
       p={4}
-      bg={useColorModeValue('gray.100', 'gray.800')}
+      bg={bgColor}
       borderRadius="md"
       borderWidth="1px"
-      borderColor={useColorModeValue('gray.200', 'gray.700')}
+      borderColor={borderColor}
       position="relative"
     >
-      <Text fontSize="xl" fontWeight="semibold" color={useColorModeValue('gray.800', 'white')}>
+      <Text fontSize="xl" fontWeight="semibold" color={textColor}>
         {item?.title}
       </Text>
-      <Text mt={2} color={useColorModeValue('gray.600', 'gray.400')}>
+      <Text mt={2} color={secondaryTextColor}>
         Level: {item?.level}
       </Text>
       <Button
@@ -63,7 +67,7 @@ export default function MyContent() {
         <SimpleGrid columns={{ base: 1, md: 2, lg: 3, xl: 4 }} spacing="20px">
           {renderContents}
         </SimpleGrid>
-      )}\
+      )}
     </Stack>
   );
 };

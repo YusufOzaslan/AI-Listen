@@ -10,7 +10,7 @@ export interface IExamAttributes {
   capacity: number;
   class: string;
   hasFinished?: boolean;
-  timeLimitInMinutes?: number;
+  timeLimitInMinutes: number;
   students: string[];
 }
 

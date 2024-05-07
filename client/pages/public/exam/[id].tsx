@@ -29,7 +29,7 @@ export default function ExamStarterPage() {
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
         const examCode = router.query.id as any;
-        console.log(examCode)
+        
         e.preventDefault();
         const formData = new FormData(e.target as HTMLFormElement);
         const studentName = formData.get('name') as string;
@@ -77,7 +77,7 @@ export default function ExamStarterPage() {
                                 <InputGroup>
                                     <InputLeftElement
                                         pointerEvents="none"
-                                        children={<CFaUserAlt color="gray.300" />}
+                                        //children={<CFaUserAlt color="gray.300" />}
                                     />
                                     <Input type="text" placeholder="Name" name="name" />
                                 </InputGroup>
@@ -87,7 +87,7 @@ export default function ExamStarterPage() {
                                     <InputLeftElement
                                         pointerEvents="none"
                                         color="gray.300"
-                                        children={<CIoSchoolSharp color="gray.300" />}
+                                        //children={<CIoSchoolSharp color="gray.300" />}
                                     />
                                     <Input type="text" placeholder="Student ID" name="studentNumber" />
                                 </InputGroup>

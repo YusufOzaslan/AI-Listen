@@ -4,8 +4,25 @@ import { AppError } from "../utils";
 import { EAppError, ICurrentUser } from "../types";
 import { contentService } from "./content.service";
 import { studentService } from "./student.service";
+import { tokenService } from "./token.service";
 import { appConfig } from "../configs";
+import { questionService } from "./question.service";
+import { IContentAttributes } from "../models";
+import mongoose from "mongoose";
 
+interface IExamQuestion {
+  id: string;
+  question: string;
+  options: string[];
+}
+interface IExamInfo {
+  examId: mongoose.Schema.Types.ObjectId;
+  questions: IExamQuestion[];
+  startTime: number;
+  timeLimit: number;
+  studentId: string;
+  content: IContentAttributes;
+}
 const encodeBase64 = (data: string) => {
   return Buffer.from(data, "utf-8").toString("base64");
 };
@@ -83,17 +100,67 @@ const start = async (
     studentNumber: body.studentNumber,
     school: exam.school,
     class: exam.class,
+    startTime: Math.floor(Date.now() / 1000)
   });
 
   exam.students.push(student._id);
   await exam.save();
 
   const content = await contentService.getContentById(exam.content);
-  return {
-    studentId: student._id,
-    exam,
-    content,
+  const questions = await questionService.getQuestionsByContentId(content._id);
+
+  const examQuestions: IExamQuestion[] = questions.map((question) => ({
+    id: question._id,
+    question: question.question,
+    options: question.options,
+  }));
+
+  const examInfo: IExamInfo = {
+    examId: exam._id,
+    questions: examQuestions,
+    studentId: student.studentNumber,
+    content: content,
+    timeLimit: exam.timeLimitInMinutes,
+    startTime: student.startTime,
   };
+  return examInfo;
 };
 
-export const examService = { createExam, start };
+const examRefresh = async (examToken: string | undefined) => {
+  if (!examToken)
+    throw new AppError(httpStatus.UNAUTHORIZED, EAppError.UNAUTHORIZED);
+
+  const { id, studentId } = await tokenService.verifyExamToken(examToken);
+
+  const exam: any = await Exam.findOne({
+    _id: id,
+  });
+
+  if (!exam || !studentId)
+    throw new AppError(httpStatus.UNAUTHORIZED, EAppError.UNAUTHORIZED);
+
+  const content = await contentService.getContentById(exam.content);
+  const questions = await questionService.getQuestionsByContentId(content._id);
+  const student = await studentService.findOneByStudentNumber(studentId);
+
+  if (!student || !questions || !content)
+    throw new AppError(httpStatus.NOT_FOUND, EAppError.NOT_FOUND);
+
+  const examQuestions: IExamQuestion[] = questions.map((question) => ({
+    id: question._id,
+    question: question.question,
+    options: question.options,
+  }));
+
+  const examInfo: IExamInfo = {
+    examId: exam._id,
+    questions: examQuestions,
+    studentId: student.studentNumber,
+    content: content,
+    timeLimit: exam.timeLimitInMinutes,
+    startTime: student.startTime,
+  };
+  return examInfo;
+};
+
+export const examService = { createExam, start, examRefresh };

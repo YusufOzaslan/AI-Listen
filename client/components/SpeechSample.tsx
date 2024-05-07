@@ -44,12 +44,10 @@ const SpeechSample: FC<IProps> = ({ audio, start = false, dialogues, onChange })
         handleEnded,
     } = useAudio();
 
-    if (dialogues && onChange) {
-        const { displayedSegmentIndex } = useDisplayTextWithAudio(audioRef, dialogues);
-        useEffect(() => {
-            !isPaused && onChange(displayedSegmentIndex);
-        }, [displayedSegmentIndex, isPaused]);
-    }
+    const { displayedSegmentIndex } = useDisplayTextWithAudio(audioRef, dialogues || []);
+    useEffect(() => {
+        !isPaused && onChange && onChange(displayedSegmentIndex);
+    }, [displayedSegmentIndex, isPaused]);
 
     const handlePlay = () => {
         if (isPaused) {

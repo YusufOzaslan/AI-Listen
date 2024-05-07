@@ -7,11 +7,11 @@ import { Token } from "../models";
 import { AppError } from "../utils";
 
 const generateToken = (
-  { id, role, expiryDate, type }: ITokenPayload,
+  { id, studentId, role, expiryDate, type }: ITokenPayload,
   secret: string
 ) => {
   const payload = {
-    user: { id, role },
+    user: { id, role, studentId },
     iat: moment().unix(),
     exp: expiryDate.unix(),
     type,
@@ -78,7 +78,10 @@ const generateRefreshToken = async ({
 };
 
 const generateExamToken = async (
-  { id }: { id: ITokenPayload["id"] },
+  {
+    id,
+    studentId,
+  }: { id: ITokenPayload["id"]; studentId: ITokenPayload["studentId"] },
   duration?: {
     value: number;
     unit: "s" | "m" | "h";
@@ -91,7 +94,8 @@ const generateExamToken = async (
   const token = generateToken(
     {
       id,
-      role: EUserRole.USER,
+      studentId,
+      role: EUserRole.STUDENT,
       expiryDate: examTokenExpiration,
       type: ETokenType.EXAM,
     },
@@ -111,7 +115,7 @@ const verifyToken = async (value: string, type: ETokenType, secret: string) => {
     if (payload.type !== type)
       throw new AppError(httpStatus.UNAUTHORIZED, " Invalid Token");
 
-    return payload.user as Pick<ITokenPayload, "id" | "role">;
+    return payload.user as Pick<ITokenPayload, "id" | "role" | "studentId">;
   } catch (err) {
     throw new AppError(httpStatus.UNAUTHORIZED, EAppError.UNAUTHORIZED);
   }
@@ -123,10 +127,14 @@ const verifyAccessToken = async (value: string) =>
 const verifyRefreshToken = async (value: string) =>
   verifyToken(value, ETokenType.REFRESH, appConfig.jwt.refresh.secret);
 
+const verifyExamToken = async (value: string) =>
+  verifyToken(value, ETokenType.EXAM, appConfig.jwt.exam.secret);
+
 export const tokenService = {
   generateAccessToken,
   generateRefreshToken,
   verifyAccessToken,
   verifyRefreshToken,
   generateExamToken,
+  verifyExamToken,
 };

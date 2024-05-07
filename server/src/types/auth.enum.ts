@@ -6,5 +6,6 @@ export enum ETokenType {
 export enum EUserRole {
   ADMIN = "admin",
   USER = "user",
+  STUDENT = "student",
 }
 //["student", "teacher", "admin"]

@@ -7,4 +7,6 @@ router.post("/:id", auth(), examController.createExam);
 
 router.post("/:code/start", examController.start);
 
+router.get('/refresh', examController.examRefresh);
+
 export { router as examRouter };

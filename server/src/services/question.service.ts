@@ -18,12 +18,9 @@ const getQuestionById = async (questionId: string, user: ICurrentUser) => {
   return question;
 };
 
-const getQuestionsByContentId = async (contentId: string, user: ICurrentUser) => {
+const getQuestionsByContentId = async (contentId: string) => {
   const questions = await Question.find({ content: contentId }).exec();
   if (!questions) throw new AppError(httpStatus.NOT_FOUND, EAppError.NOT_FOUND);
-  if (questions[0].user.toString() !== user.id.toString())
-    throw new AppError(httpStatus.FORBIDDEN, EAppError.FORBIDDEN);
-
   return questions;
 };
 

@@ -54,7 +54,7 @@ const SignUpPage = () => {
                                 <InputGroup>
                                     <InputLeftElement
                                         pointerEvents="none"
-                                        children={<CFaUserAlt color="gray.300" />}
+                                        //children={<CFaUserAlt color="gray.300" />}
                                     />
                                     <Input type="email" placeholder="email address" />
                                 </InputGroup>
@@ -64,7 +64,7 @@ const SignUpPage = () => {
                                     <InputLeftElement
                                         pointerEvents="none"
                                         color="gray.300"
-                                        children={<CFaLock color="gray.300" />}
+                                        //children={<CFaLock color="gray.300" />}
                                     />
                                     <Input
                                         type={showPassword ? "text" : "password"}

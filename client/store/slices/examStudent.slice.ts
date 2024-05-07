@@ -1,26 +1,43 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { startExam } from "@/store/thunks";
+import { startExam, examRefresh } from "@/store/thunks";
 import { IContentDialogue } from "./content.slice";
 
+interface IExamQuestion {
+  id: string;
+  question: string;
+  options: string[];
+}
+interface IExamInfo {
+  examId: string;
+  questions: IExamQuestion[];
+  startTime: number;
+  timeLimit: number;
+  studentId: string;
+  content: IContentDialogue;
+}
 interface IState {
   isGenerating: boolean;
-  examData: IContentDialogue | null;
-  studentId: string | null;
+  examData: IExamInfo | null;
   error: string | undefined;
+  examStepIndex: number;
 }
 
 const initialState: IState = {
   isGenerating: false,
   examData: null,
-  studentId: null,
   error: undefined,
+  examStepIndex: 0,
 };
 
 export const examStudent = createSlice({
   name: "examStudent",
   initialState,
-  reducers: {},
+  reducers: {
+    updateExamStepIndex(state, { payload }: PayloadAction<number>) {
+      state.examStepIndex = payload;
+    },
+  },
   extraReducers(build) {
     // Generate  Exam
     build.addCase(startExam.pending, (state) => {
@@ -28,18 +45,27 @@ export const examStudent = createSlice({
     });
     build.addCase(
       startExam.fulfilled,
-      (
-        state,
-        {
-          payload,
-        }: PayloadAction<{ content: IContentDialogue; studentId: string }>
-      ) => {
+      (state, { payload }: PayloadAction<IExamInfo>) => {
         state.isGenerating = false;
-        state.examData = payload.content;
-        state.studentId = payload.studentId;
+        state.examData = payload;
       }
     );
     build.addCase(startExam.rejected, (state, { error }) => {
+      state.isGenerating = false;
+      state.error = error.message;
+    });
+    // Refresh  Exam
+    build.addCase(examRefresh.pending, (state) => {
+      state.isGenerating = true;
+    });
+    build.addCase(
+      examRefresh.fulfilled,
+      (state, { payload }: PayloadAction<IExamInfo>) => {
+        state.isGenerating = false;
+        state.examData = payload;
+      }
+    );
+    build.addCase(examRefresh.rejected, (state, { error }) => {
       state.isGenerating = false;
       state.error = error.message;
     });

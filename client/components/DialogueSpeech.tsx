@@ -137,9 +137,6 @@ const selectOptions: SelectOption[] = [
 
 
 const DialogueSpeech: React.FC<IProps> = ({isGenerating, content}) => {
-    if (!content) {
-        return null; 
-    }
     const { _id, title, dialogues, audio } = content;
     const dispatch = useAppDispatch();
     const contentForm = useAppSelector((store) => store.form);
@@ -191,6 +188,9 @@ const DialogueSpeech: React.FC<IProps> = ({isGenerating, content}) => {
     };
     const color = useColorModeValue('gray.100', 'gray.700');
 
+    if (!content) {
+        return null; 
+    }
     return (
         <Box maxW="lg" mx="auto" p="4" borderWidth="2px" borderRadius="lg" bg="white" boxShadow="md" alignItems="center" height="auto" width="60%" overflowY="auto" >
             <Box mb={5}>
