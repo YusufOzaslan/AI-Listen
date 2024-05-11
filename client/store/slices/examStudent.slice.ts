@@ -24,25 +24,19 @@ interface IState {
   isGenerating: boolean;
   examData: IExamInfo | null;
   error: string | undefined;
-  examStepIndex: number;
 }
 
 const initialState: IState = {
   isGenerating: false,
   examData: null,
   error: undefined,
-  examStepIndex: 0,
 };
 export const resetExamData = createAction("resetExamData");
 
 export const examStudent = createSlice({
   name: "examStudent",
   initialState,
-  reducers: {
-    updateExamStepIndex(state, { payload }: PayloadAction<number>) {
-      state.examStepIndex = payload;
-    },
-  },
+  reducers: {},
   extraReducers(build) {
     // Generate  Exam
     build.addCase(startExam.pending, (state) => {
