@@ -172,4 +172,33 @@ const examRefresh = async (examToken: string | undefined) => {
   return examInfo;
 };
 
-export const examService = { createExam, start, examRefresh };
+const saveAnswer = async (
+  examToken: string | undefined,
+  body: IStudentAnswers[]
+) => {
+  if (!examToken)
+    throw new AppError(httpStatus.UNAUTHORIZED, EAppError.UNAUTHORIZED);
+
+  const { id, studentId } = await tokenService.verifyExamToken(examToken);
+
+  const exam: any = await Exam.findOne({
+    _id: id,
+  });
+
+  if (!exam || !studentId)
+    throw new AppError(httpStatus.UNAUTHORIZED, EAppError.UNAUTHORIZED);
+
+  const content = await contentService.getContentById(exam.content);
+  const questions = await questionService.getQuestionsByContentId(content._id);
+  const student = await studentService.findOneByStudentNumber(studentId);
+
+  if (!student || !questions || !content)
+    throw new AppError(httpStatus.NOT_FOUND, EAppError.NOT_FOUND);
+
+
+  const updatedStudentAnswers = studentService.saveAnswer(student._id, body);
+
+  return updatedStudentAnswers;
+};
+
+export const examService = { createExam, start, examRefresh, saveAnswer };

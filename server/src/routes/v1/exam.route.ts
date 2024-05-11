@@ -9,4 +9,6 @@ router.post("/:code/start", examController.start);
 
 router.get('/refresh', examController.examRefresh);
 
+router.patch('/save-answer', examController.saveAnswer);
+
 export { router as examRouter };

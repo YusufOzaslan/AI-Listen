@@ -14,7 +14,7 @@ const createExam = catchAsync(async (req: Request, res: Response) => {
 });
 
 const start = catchAsync(async (req: Request, res: Response) => {
-  const examInfo  = await examService.start(req.params.code, req.body);
+  const examInfo = await examService.start(req.params.code, req.body);
   const examToken = await tokenService.generateExamToken(
     { id: examInfo.examId, studentId: examInfo.studentId },
     examInfo.timeLimit
@@ -34,12 +34,24 @@ const start = catchAsync(async (req: Request, res: Response) => {
 
 const examRefresh = catchAsync(async (req: Request, res: Response) => {
   const cookies = req.cookies;
-  const result = await examService.examRefresh(cookies[appConfig.examCookie.name]);
+  const result = await examService.examRefresh(
+    cookies[appConfig.examCookie.name]
+  );
   res.status(httpStatus.OK).send(result);
+});
+
+const saveAnswer = catchAsync(async (req: Request, res: Response) => {
+  const cookies = req.cookies;
+  const updatedStudentAnswers = await examService.saveAnswer(
+    cookies[appConfig.examCookie.name],
+    req.body
+  );
+  res.status(httpStatus.CREATED).send(updatedStudentAnswers);
 });
 
 export const examController = {
   createExam,
   start,
-  examRefresh
+  examRefresh,
+  saveAnswer,
 };

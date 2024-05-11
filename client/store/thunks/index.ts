@@ -13,3 +13,4 @@ export * from "./getQuestion";
 export * from "./generateExam";
 export * from "./startExam";
 export * from "./examRefresh";
+export * from "./examSaveAnswer";

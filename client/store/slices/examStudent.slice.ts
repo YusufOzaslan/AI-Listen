@@ -1,6 +1,6 @@
 import { createAction, createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { startExam, examRefresh } from "@/store/thunks";
+import { startExam, examRefresh, examSaveAnswer } from "@/store/thunks";
 import { IContentDialogue } from "./content.slice";
 export interface IStudentAnswers {
   questionId: string;
@@ -71,6 +71,21 @@ export const examStudent = createSlice({
       }
     );
     build.addCase(examRefresh.rejected, (state, { error }) => {
+      state.isGenerating = false;
+      state.error = error.message;
+    });
+    // Save Answer
+    build.addCase(examSaveAnswer.pending, (state) => {
+      state.isGenerating = true;
+    });
+    build.addCase(
+      examSaveAnswer.fulfilled,
+      (state, { payload }: PayloadAction<IStudentAnswers[]>) => {
+        state.isGenerating = false;
+        state.examData!.studentAnswers = payload;
+      }
+    );
+    build.addCase(examSaveAnswer.rejected, (state, { error }) => {
       state.isGenerating = false;
       state.error = error.message;
     });

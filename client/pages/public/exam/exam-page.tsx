@@ -22,10 +22,12 @@ import {
 import { examRefresh } from '@/store/thunks';
 import { resetExamData } from '@/store/slices';
 import { IStudentAnswers } from '@/store/slices';
+import { examSaveAnswer } from '@/store/thunks';
 
 export default function ExamStarterPage() {
     const dispatch = useAppDispatch();
     const examStudent = useAppSelector((store) => store.examStudent);
+    const appApi = useApi();
     const [displayedSegmentIndex, setDisplayedSegmentIndex] = useState(-1);
     const [remainingTime, setRemainingTime] = useState(0);
     const [answers, setAnswers] = useState<IStudentAnswers[]>([]);
@@ -56,6 +58,18 @@ export default function ExamStarterPage() {
         }
         else { dispatch(examRefresh()); }
     }, [examStudent.examData?.examId]);
+
+    useEffect(() => {
+        if (answers.length === 0) return;
+        if (examStudent.examData) {
+            dispatch(
+                examSaveAnswer({
+                    axios: appApi,
+                    body: answers,
+                }),
+            );
+        }
+    }, [answers]);
 
     const questions = examStudent.examData?.questions.map((question, index) => {
         return (
