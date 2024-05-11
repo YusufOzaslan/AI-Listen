@@ -49,9 +49,15 @@ const saveAnswer = catchAsync(async (req: Request, res: Response) => {
   res.status(httpStatus.CREATED).send(updatedStudentAnswers);
 });
 
+const getExamUrl = catchAsync(async (req: Request, res: Response) => {
+  const examUrl = await examService.getExamUrl(req.params.id, req.currentUser!);
+  res.status(httpStatus.OK).send(examUrl);
+});
+
 export const examController = {
   createExam,
   start,
   examRefresh,
   saveAnswer,
+  getExamUrl,
 };

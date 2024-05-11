@@ -1,7 +1,6 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createAction, createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { generateExam } from "@/store/thunks";
-
+import { generateExam, getExamUrl } from "@/store/thunks";
 
 interface IState {
   isGenerating: boolean;
@@ -13,17 +12,19 @@ const initialState: IState = {
   examUrl: null,
 };
 
+export const resetExamUrl = createAction("resetExamUrl");
+
 export const examTeacher = createSlice({
   name: "examTeacher",
   initialState,
-  reducers: { },
+  reducers: {},
   extraReducers(build) {
     // Generate  Exam
     build.addCase(generateExam.pending, (state) => {
       state.isGenerating = true;
     });
     build.addCase(
-        generateExam.fulfilled,
+      generateExam.fulfilled,
       (state, { payload }: PayloadAction<string>) => {
         state.isGenerating = false;
         state.examUrl = payload;
@@ -31,6 +32,24 @@ export const examTeacher = createSlice({
     );
     build.addCase(generateExam.rejected, (state, { error }) => {
       state.isGenerating = false;
+    });
+    // Get Exam Url
+    build.addCase(getExamUrl.pending, (state) => {
+      state.isGenerating = true;
+    });
+    build.addCase(
+      getExamUrl.fulfilled,
+      (state, { payload }: PayloadAction<string>) => {
+        state.isGenerating = false;
+        state.examUrl = payload;
+      }
+    );
+    build.addCase(getExamUrl.rejected, (state, { error }) => {
+      state.isGenerating = false;
+    });
+    // Reset Data
+    build.addCase(resetExamUrl, (state) => {
+      state.examUrl = null;
     });
   },
 });

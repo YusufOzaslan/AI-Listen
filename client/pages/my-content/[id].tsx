@@ -1,9 +1,9 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { getContent, getQuestion, generateExam } from '@/store/thunks';
+import { getContent, getQuestion, generateExam, getExamUrl } from '@/store/thunks';
 import { useApi } from '@/hooks';
 import { useAppDispatch, useAppSelector, } from '@/store';
-import { resetData, resetQuestion } from '@/store/slices';
+import { resetData, resetExamUrl, resetQuestion } from '@/store/slices';
 import { SpeechSample } from '@/components/SpeechSample';
 import { DialogueImage } from '@/components/DialogueImage';
 import GenerateExam from '@/components/GenerateExam';
@@ -36,10 +36,12 @@ export default function MyContent() {
     if (id) {
       dispatch(getContent({ axios: appApi, contentId: id }));
       dispatch(getQuestion({ axios: appApi, contentId: id }));
+      dispatch(getExamUrl({ axios: appApi, contentId: id }));
     }
     return () => {
       dispatch(resetQuestion());
       dispatch(resetData());
+      dispatch(resetExamUrl());
     };
   }, []);
 

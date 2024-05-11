@@ -47,6 +47,15 @@ const createExam = async ({
     timeLimitInMinutes?: number;
   };
 }) => {
+  const existingExam = await Exam.findOne({
+    content: contentId,
+    user: user._id,
+  });
+
+  if (existingExam) {
+    return existingExam.sharingURL;
+  }
+
   const exam = new Exam({
     user,
     content: contentId,
@@ -195,10 +204,25 @@ const saveAnswer = async (
   if (!student || !questions || !content)
     throw new AppError(httpStatus.NOT_FOUND, EAppError.NOT_FOUND);
 
-
   const updatedStudentAnswers = studentService.saveAnswer(student._id, body);
 
   return updatedStudentAnswers;
 };
 
-export const examService = { createExam, start, examRefresh, saveAnswer };
+const getExamUrl = async (contentId: string, user: ICurrentUser) => {
+  const exam = await Exam.findOne({ content: contentId, user: user.id });
+
+  if (!exam) throw new AppError(httpStatus.NOT_FOUND, EAppError.NOT_FOUND);
+
+  if (exam.user.toString() !== user.id.toString())
+    throw new AppError(httpStatus.FORBIDDEN, EAppError.FORBIDDEN);
+  return exam.sharingURL;
+};
+
+export const examService = {
+  createExam,
+  start,
+  examRefresh,
+  saveAnswer,
+  getExamUrl,
+};

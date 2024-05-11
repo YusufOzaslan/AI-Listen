@@ -11,4 +11,6 @@ router.get('/refresh', examController.examRefresh);
 
 router.patch('/save-answer', examController.saveAnswer);
 
+router.get('/:id/url', auth(), examController.getExamUrl);
+
 export { router as examRouter };

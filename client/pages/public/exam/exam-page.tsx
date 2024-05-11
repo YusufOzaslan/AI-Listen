@@ -14,7 +14,6 @@ import {
     StepIcon,
     StepIndicator,
     StepNumber,
-    StepSeparator,
     StepStatus,
     Stepper,
     Text,
@@ -73,16 +72,16 @@ export default function ExamStarterPage() {
 
     const questions = examStudent.examData?.questions.map((question, index) => {
         return (
-            <Stack key={question.id} alignItems="left" height="auto" width="100%" maxW="lg" mx="auto" p="4" borderWidth="2px" borderRadius="lg" bg="white" boxShadow="md">
+            <Stack key={question.id} alignItems="left" height="auto" width="60%" maxW="xlg" mx="auto" p="4" borderWidth="2px" borderRadius="lg" bg="white" boxShadow="md">
                 <Flex alignItems={'center'} justifyContent="space-between">
-                    <Text whiteSpace="pre-line" fontWeight="semibold" maxW="80%">
+                    <Text whiteSpace="pre-line" fontSize={'xxx-large'}>
                         <Text as="span" fontWeight="bold">{index + 1})</Text> {question.question}
                     </Text>
                 </Flex>
                 <Stack>
                     {question.options.map((option, optionIndex) => {
                         return (
-                            <Text key={optionIndex}>
+                            <Text key={optionIndex} fontSize={'xx-large'}>
                                 <Checkbox
                                     isChecked={answers.some(answer => answer.questionId === question.id && answer.answer === question.options[optionIndex])}
                                     onChange={(e) => {
@@ -121,7 +120,7 @@ export default function ExamStarterPage() {
                 />
                 <SpeechSample audio={examStudent.examData?.content.audio!} dialogues={examStudent.examData?.content.dialogues} onChange={setDisplayedSegmentIndex} />
 
-                <Stepper colorScheme='green' index={examStudent.examStepIndex}>
+                <Stepper colorScheme='green' index={examStudent.examStepIndex} flexWrap="wrap"  alignItems="left" height="auto" width="100%" maxW="60%" mx="auto" p="4" borderWidth="2px" borderRadius="lg" bg="white" boxShadow="md">
                     {examStudent.examData.questions.map((step, index) => (
                         <Step key={index}>
                             <StepIndicator>
@@ -131,11 +130,10 @@ export default function ExamStarterPage() {
                                     active={<StepNumber />}
                                 />
                             </StepIndicator>
-                            <StepSeparator />
                         </Step>
                     ))}
                 </Stepper>
-                <Flex key={examStudent.examStepIndex} justifyContent="center" alignItems="center">
+                <Flex paddingBottom={"30%"} key={examStudent.examStepIndex} justifyContent="center" alignItems="center">
                     {questions![examStudent.examStepIndex]}
                 </Flex>
             </Stack>

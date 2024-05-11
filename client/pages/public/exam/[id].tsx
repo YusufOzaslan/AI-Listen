@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import { FormEvent } from 'react';
 import { useApi } from '@/hooks';
-import { useAppDispatch, useAppSelector, } from '@/store';
+import { useAppDispatch, useAppSelector } from '@/store';
 import {
     Flex,
     Heading,
@@ -29,11 +29,12 @@ export default function ExamStarterPage() {
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
         const examCode = router.query.id as any;
-        
+
         e.preventDefault();
         const formData = new FormData(e.target as HTMLFormElement);
         const studentName = formData.get('name') as string;
         const studentNumber = formData.get('studentNumber') as string;
+        console.log(examCode)
         const response = await dispatch(
             startExam({
                 examCode,
@@ -77,7 +78,7 @@ export default function ExamStarterPage() {
                                 <InputGroup>
                                     <InputLeftElement
                                         pointerEvents="none"
-                                        //children={<CFaUserAlt color="gray.300" />}
+                                    //children={<CFaUserAlt color="gray.300" />}
                                     />
                                     <Input type="text" placeholder="Name" name="name" />
                                 </InputGroup>
@@ -87,7 +88,7 @@ export default function ExamStarterPage() {
                                     <InputLeftElement
                                         pointerEvents="none"
                                         color="gray.300"
-                                        //children={<CIoSchoolSharp color="gray.300" />}
+                                    //children={<CIoSchoolSharp color="gray.300" />}
                                     />
                                     <Input type="text" placeholder="Student ID" name="studentNumber" />
                                 </InputGroup>
