@@ -1,10 +1,14 @@
 import mongoose from "mongoose";
 import { EModel } from "./enums";
-import { number } from "joi";
+import { number, string } from "joi";
 
 interface IScore {
   trueCount: number;
   falseCount: number;
+}
+export interface IStudentAnswers {
+  questionId:  mongoose.Schema.Types.ObjectId;
+  answer: string;
 }
 export interface IStudentAttributes {
   name: string;
@@ -12,6 +16,7 @@ export interface IStudentAttributes {
   school: string;
   class: string;
   startTime: number;
+  studentAnswers: IStudentAnswers[];
   score?: IScore;
 }
 
@@ -45,6 +50,19 @@ const studentSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    studentAnswers: [
+      {
+        questionId: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: EModel.QUESTION,
+          required: false,
+        },
+        answer: {
+          type: String,
+          required: false,
+        },
+      },
+    ],
     score: {
       type: {
         trueCount: Number,

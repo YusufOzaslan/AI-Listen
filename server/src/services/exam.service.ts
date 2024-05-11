@@ -7,7 +7,7 @@ import { studentService } from "./student.service";
 import { tokenService } from "./token.service";
 import { appConfig } from "../configs";
 import { questionService } from "./question.service";
-import { IContentAttributes } from "../models";
+import { IContentAttributes, IStudentAnswers } from "../models";
 import mongoose from "mongoose";
 
 interface IExamQuestion {
@@ -22,6 +22,7 @@ interface IExamInfo {
   timeLimit: number;
   studentId: string;
   content: IContentAttributes;
+  studentAnswers: IStudentAnswers[];
 }
 const encodeBase64 = (data: string) => {
   return Buffer.from(data, "utf-8").toString("base64");
@@ -95,17 +96,6 @@ const start = async (
   if (exam.students.length >= exam.capacity) {
     throw new AppError(httpStatus.BAD_REQUEST, EAppError.EXAM_OUT_OF_CAPACITY);
   }
-  const student = await studentService.createOne({
-    name: body.studentName,
-    studentNumber: body.studentNumber,
-    school: exam.school,
-    class: exam.class,
-    startTime: Math.floor(Date.now() / 1000)
-  });
-
-  exam.students.push(student._id);
-  await exam.save();
-
   const content = await contentService.getContentById(exam.content);
   const questions = await questionService.getQuestionsByContentId(content._id);
 
@@ -115,6 +105,23 @@ const start = async (
     options: question.options,
   }));
 
+  const studentAnswers: IStudentAnswers[] = questions.map((question) => ({
+    questionId: question._id,
+    answer: "",
+  }));
+
+  const student = await studentService.createOne({
+    name: body.studentName,
+    studentNumber: body.studentNumber,
+    school: exam.school,
+    class: exam.class,
+    startTime: Math.floor(Date.now() / 1000),
+    studentAnswers,
+  });
+
+  exam.students.push(student._id);
+  await exam.save();
+
   const examInfo: IExamInfo = {
     examId: exam._id,
     questions: examQuestions,
@@ -122,6 +129,7 @@ const start = async (
     content: content,
     timeLimit: exam.timeLimitInMinutes,
     startTime: student.startTime,
+    studentAnswers,
   };
   return examInfo;
 };
@@ -159,6 +167,7 @@ const examRefresh = async (examToken: string | undefined) => {
     content: content,
     timeLimit: exam.timeLimitInMinutes,
     startTime: student.startTime,
+    studentAnswers: student.studentAnswers,
   };
   return examInfo;
 };

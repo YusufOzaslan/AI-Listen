@@ -2,7 +2,10 @@ import { createAction, createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { startExam, examRefresh } from "@/store/thunks";
 import { IContentDialogue } from "./content.slice";
-
+export interface IStudentAnswers {
+  questionId: string;
+  answer: string;
+}
 interface IExamQuestion {
   id: string;
   question: string;
@@ -15,6 +18,7 @@ interface IExamInfo {
   timeLimit: number;
   studentId: string;
   content: IContentDialogue;
+  studentAnswers: IStudentAnswers[];
 }
 interface IState {
   isGenerating: boolean;

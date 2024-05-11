@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useApi } from '@/hooks';
 import { useAppDispatch, useAppSelector } from '@/store';
 import { DialogueImage } from '@/components/DialogueImage';
@@ -7,64 +7,36 @@ import { SpeechSample } from '@/components/SpeechSample';
 import {
     Flex,
     Heading,
-    Input,
-    Button,
-    InputGroup,
+    Checkbox,
     Stack,
-    InputLeftElement,
-    chakra,
     Box,
     Step,
-    StepDescription,
     StepIcon,
     StepIndicator,
     StepNumber,
     StepSeparator,
     StepStatus,
-    StepTitle,
     Stepper,
     Text,
 } from "@chakra-ui/react";
 import { examRefresh } from '@/store/thunks';
 import { resetExamData } from '@/store/slices';
+import { IStudentAnswers } from '@/store/slices';
 
 export default function ExamStarterPage() {
     const dispatch = useAppDispatch();
     const examStudent = useAppSelector((store) => store.examStudent);
     const [displayedSegmentIndex, setDisplayedSegmentIndex] = useState(-1);
     const [remainingTime, setRemainingTime] = useState(0);
+    const [answers, setAnswers] = useState<IStudentAnswers[]>([]);
 
-    const steps = examStudent.examData?.questions.map((question, index) => {
-        return (
-            <Stack key={question.id} alignItems="left" height="auto" width="100%" maxW="lg" mx="auto" p="4" borderWidth="2px" borderRadius="lg" bg="white" boxShadow="md">
-                <Flex alignItems={'center'} justifyContent="space-between">
-                    <Text whiteSpace="pre-line" fontWeight="semibold" maxW="80%">
-                        <Text as="span" fontWeight="bold">{index + 1})</Text> {question.question}
-                    </Text>
-                </Flex>
-                <Stack>
-                    {question.options.map((option, optionIndex) => {
-                        return (
-                            <Text key={Math.random().toString(36).substr(2, 9)}>
-                                <Text as="span" fontWeight="bold">{String.fromCharCode(optionIndex + 65)})</Text> {option}
-                            </Text>
-                        );
-                    })}
-                </Stack>
-            </Stack>
-        );
-    });
+    const minutes = Math.floor(remainingTime / 60);
+    const seconds = Math.floor(remainingTime % 60);
 
-    const steps1 = [
-        {
-            title: 'First',
-            description: 'Listening Dialogue',
-            component: <></>
-        },
-    ];
 
     useEffect(() => {
         if (examStudent.examData) {
+            setAnswers(examStudent.examData.studentAnswers)
             const currentTime = Math.floor(Date.now() / 1000);
             const elapsedTime = currentTime - examStudent.examData.startTime;
             const remainingTime = Math.max(0, examStudent.examData.timeLimit * 60 - elapsedTime);
@@ -85,9 +57,38 @@ export default function ExamStarterPage() {
         else { dispatch(examRefresh()); }
     }, [examStudent.examData?.examId]);
 
-
-    const minutes = Math.floor(remainingTime / 60);
-    const seconds = Math.floor(remainingTime % 60);
+    const questions = examStudent.examData?.questions.map((question, index) => {
+        return (
+            <Stack key={question.id} alignItems="left" height="auto" width="100%" maxW="lg" mx="auto" p="4" borderWidth="2px" borderRadius="lg" bg="white" boxShadow="md">
+                <Flex alignItems={'center'} justifyContent="space-between">
+                    <Text whiteSpace="pre-line" fontWeight="semibold" maxW="80%">
+                        <Text as="span" fontWeight="bold">{index + 1})</Text> {question.question}
+                    </Text>
+                </Flex>
+                <Stack>
+                    {question.options.map((option, optionIndex) => {
+                        return (
+                            <Text key={optionIndex}>
+                                <Checkbox
+                                    isChecked={answers.some(answer => answer.questionId === question.id && answer.answer === question.options[optionIndex])}
+                                    onChange={(e) => {
+                                        const updatedAnswers = answers.map(answer => {
+                                            if (answer.questionId === question.id) {
+                                                return { ...answer, answer: question.options[optionIndex] };
+                                            }
+                                            return answer;
+                                        });
+                                        setAnswers(updatedAnswers);
+                                    }}
+                                />
+                                <Text as="span" fontWeight="bold">{String.fromCharCode(optionIndex + 65)})</Text> {option}
+                            </Text>
+                        );
+                    })}
+                </Stack>
+            </Stack>
+        );
+    });
 
     return (
         <>{examStudent.examData ? (<>
@@ -121,7 +122,7 @@ export default function ExamStarterPage() {
                     ))}
                 </Stepper>
                 <Flex key={examStudent.examStepIndex} justifyContent="center" alignItems="center">
-                    {steps![examStudent.examStepIndex]}
+                    {questions![examStudent.examStepIndex]}
                 </Flex>
             </Stack>
         </>) : (<>Exam Is Over</>)
