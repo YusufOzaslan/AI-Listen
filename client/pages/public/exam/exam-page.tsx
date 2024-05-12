@@ -5,6 +5,8 @@ import { useAppDispatch, useAppSelector } from '@/store';
 import { DialogueImage } from '@/components/DialogueImage';
 import { SpeechSample } from '@/components/SpeechSample';
 import {
+    Alert,
+    AlertIcon,
     Flex,
     Heading,
     Checkbox,
@@ -33,6 +35,15 @@ export default function ExamStarterPage() {
 
     const minutes = Math.floor(remainingTime / 60);
     const seconds = Math.floor(remainingTime % 60);
+    const [isSaved, setIsSaved] = useState(false);
+
+    useEffect(() => {
+        if (answers.length > 0) {
+            setIsSaved(true);
+            const timeout = setTimeout(() => setIsSaved(false), 3000);
+            return () => clearTimeout(timeout);
+        }
+    }, [answers]);
 
 
     useEffect(() => {
@@ -123,49 +134,56 @@ export default function ExamStarterPage() {
     });
 
     return (
-        <>{examStudent.examData ? (<>
-            <Flex justifyContent="flex-end">
-                <Box p="2" bg="gray.200">
-                    <Heading as="h3" size="md">Remaining Time: {minutes} : {seconds}</Heading>
-                </Box>
-            </Flex>
-
-            <Stack spacing={8}>
-                <DialogueImage
-                    image={examStudent.examData?.content.imageData?.image!}
-                    faces={examStudent.examData?.content.imageData?.faces!}
-                    displayedSegmentIndex={displayedSegmentIndex}
-                    dialogues={examStudent.examData?.content.dialogues!}
-                />
-                <SpeechSample audio={examStudent.examData?.content.audio!} dialogues={examStudent.examData?.content.dialogues} onChange={setDisplayedSegmentIndex} />
-
-                <Flex alignItems="center" justifyContent="center" flexDirection="row">
-                    <Box paddingLeft={"5%"} />
-                    <Button onClick={previousQuestion} width="10%" disabled={stepIndex === 0} marginRight="1px">Previous</Button>
-                    <Stepper colorScheme='green' index={stepIndex} flexWrap="wrap" alignItems="left" height="auto" width="100%" maxW="60%" mx="auto" p="4" borderWidth="2px" borderRadius="lg" bg="white" boxShadow="md">
-                        {examStudent.examData.questions.map((step, index) => (
-                            <Step key={index}>
-                                <StepIndicator>
-                                    <StepStatus
-                                        complete={<StepIcon />}
-                                        incomplete={<StepNumber />}
-                                        active={<StepNumber />}
-                                    />
-                                </StepIndicator>
-                            </Step>
-                        ))}
-                    </Stepper>
-                    <Button onClick={nextQuestion} width="10%" disabled={stepIndex === examStudent.examData.questions.length - 1} marginLeft="1px">Next</Button>
-                    <Box paddingLeft={"5%"} />
+        <>{examStudent.examData ? (
+            <>
+                {isSaved && (
+                    <Alert width="10%" status="success" position="fixed" bottom="20px" right="20px">
+                        <AlertIcon />
+                        Your answer have been saved!
+                    </Alert>
+                )}
+                <Flex justifyContent="flex-end">
+                    <Box p="2" bg="gray.200">
+                        <Heading as="h3" size="md">Remaining Time: {minutes} : {seconds}</Heading>
+                    </Box>
                 </Flex>
 
-                <Flex paddingBottom={"30%"} key={stepIndex} flexDirection="column" justifyContent="center" alignItems="center">
-                    {questions![stepIndex]}
-                    <Box paddingTop={"2%"} />
-                    <Button onClick={handleFinishExam} width="10%" >Finish Exam</Button>
-                </Flex>
-            </Stack>
-        </>) : (<>Exam Is Over</>)
+                <Stack spacing={8}>
+                    <DialogueImage
+                        image={examStudent.examData?.content.imageData?.image!}
+                        faces={examStudent.examData?.content.imageData?.faces!}
+                        displayedSegmentIndex={displayedSegmentIndex}
+                        dialogues={examStudent.examData?.content.dialogues!}
+                    />
+                    <SpeechSample audio={examStudent.examData?.content.audio!} dialogues={examStudent.examData?.content.dialogues} onChange={setDisplayedSegmentIndex} />
+
+                    <Flex alignItems="center" justifyContent="center" flexDirection="row">
+                        <Box paddingLeft={"5%"} />
+                        <Button onClick={previousQuestion} width="10%" disabled={stepIndex === 0} marginRight="1px">Previous</Button>
+                        <Stepper colorScheme='green' index={stepIndex} flexWrap="wrap" alignItems="left" height="auto" width="100%" maxW="60%" mx="auto" p="4" borderWidth="2px" borderRadius="lg" bg="white" boxShadow="md">
+                            {examStudent.examData.questions.map((step, index) => (
+                                <Step key={index}>
+                                    <StepIndicator>
+                                        <StepStatus
+                                            complete={<StepIcon />}
+                                            incomplete={<StepNumber />}
+                                            active={<StepNumber />}
+                                        />
+                                    </StepIndicator>
+                                </Step>
+                            ))}
+                        </Stepper>
+                        <Button onClick={nextQuestion} width="10%" disabled={stepIndex === examStudent.examData.questions.length - 1} marginLeft="1px">Next</Button>
+                        <Box paddingLeft={"5%"} />
+                    </Flex>
+
+                    <Flex paddingBottom={"30%"} key={stepIndex} flexDirection="column" justifyContent="center" alignItems="center">
+                        {questions![stepIndex]}
+                        <Box paddingTop={"2%"} />
+                        <Button onClick={handleFinishExam} width="10%" >Finish Exam</Button>
+                    </Flex>
+                </Stack>
+            </>) : (<>Exam Is Over</>)
         }
         </>
     );
