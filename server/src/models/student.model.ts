@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import { EModel } from "./enums";
 
-interface IScore {
+export interface IScore {
   trueCount: number;
   falseCount: number;
 }
@@ -15,6 +15,7 @@ export interface IStudentAttributes {
   school: string;
   class: string;
   startTime: number;
+  finishTime?: number;
   studentAnswers: IStudentAnswers[];
   score?: IScore;
   hasFinished?: boolean;
@@ -49,6 +50,10 @@ const studentSchema = new mongoose.Schema(
     startTime: {
       type: Number,
       required: true,
+    },
+    finishTime: {
+      type: Number,
+      required: false,
     },
     hasFinished: {
       type: Boolean,

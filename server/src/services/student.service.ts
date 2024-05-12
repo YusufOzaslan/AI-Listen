@@ -1,10 +1,5 @@
 import httpStatus from "http-status";
-import {
-  Student,
-  IStudentAttributes,
-  IStudentAnswers,
-  IQuestionDocument,
-} from "../models";
+import { Student, IStudentAttributes, IStudentAnswers } from "../models";
 import { AppError } from "../utils";
 import { EAppError } from "../types";
 import { questionService } from "./question.service";
@@ -17,6 +12,10 @@ const createOne = async (attrs: IStudentAttributes) => {
 
 const findOneByStudentNumber = async (studentNumber: string) => {
   return await Student.findOne({ studentNumber }).exec();
+};
+
+const findOneByCollectionId = async (id: string) => {
+  return await Student.findOne({ _id: id }).exec();
 };
 
 const saveAnswer = async (
@@ -51,4 +50,9 @@ const saveAnswer = async (
   await student.save();
   return answers;
 };
-export const studentService = { createOne, findOneByStudentNumber, saveAnswer };
+export const studentService = {
+  findOneByCollectionId,
+  createOne,
+  findOneByStudentNumber,
+  saveAnswer,
+};

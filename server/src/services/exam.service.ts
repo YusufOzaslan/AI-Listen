@@ -7,7 +7,7 @@ import { studentService } from "./student.service";
 import { tokenService } from "./token.service";
 import { appConfig } from "../configs";
 import { questionService } from "./question.service";
-import { IContentAttributes, IStudentAnswers } from "../models";
+import { IContentAttributes, IStudentAnswers, IScore } from "../models";
 import mongoose from "mongoose";
 
 interface IExamQuestion {
@@ -23,6 +23,22 @@ interface IExamInfo {
   studentId: string;
   content: IContentAttributes;
   studentAnswers: IStudentAnswers[];
+}
+interface IStudentResult {
+  name: string;
+  studentNumber: string;
+  score: IScore;
+  startTime: number;
+  finishTime?: number;
+}
+interface IExamResult {
+  examName: string;
+  contentTitle: string;
+  school: string;
+  class: string;
+  timeLimitInMinutes: number;
+  capacity: number;
+  students: IStudentResult[];
 }
 const encodeBase64 = (data: string) => {
   return Buffer.from(data, "utf-8").toString("base64");
@@ -210,7 +226,11 @@ const saveAnswer = async (
   if (student.hasFinished)
     throw new AppError(httpStatus.UNAUTHORIZED, EAppError.EXAM_IS_OVER);
 
-  const updatedStudentAnswers = studentService.saveAnswer(student._id, body, exam.content);
+  const updatedStudentAnswers = studentService.saveAnswer(
+    student._id,
+    body,
+    exam.content
+  );
 
   return updatedStudentAnswers;
 };
@@ -235,7 +255,7 @@ const finishExam = async (examToken: string | undefined) => {
   if (student.hasFinished)
     throw new AppError(httpStatus.UNAUTHORIZED, EAppError.EXAM_IS_OVER);
 
-  student.set({ hasFinished: true });
+  student.set({ hasFinished: true, finishTime: Math.floor(Date.now() / 1000) });
   student.save();
   return;
 };
@@ -250,6 +270,45 @@ const getExamUrl = async (contentId: string, user: ICurrentUser) => {
   return exam.sharingURL;
 };
 
+const getExamResults = async (user: ICurrentUser) => {
+  const exams = await Exam.find({ user: user.id });
+
+  if (!exams) throw new AppError(httpStatus.NOT_FOUND, EAppError.NOT_FOUND);
+
+  if (exams[0].user.toString() !== user.id.toString())
+    throw new AppError(httpStatus.FORBIDDEN, EAppError.FORBIDDEN);
+
+  const examResults: IExamResult[] = [];
+  for (const exam of exams) {
+    const content = await contentService.getContentById(exam.content);
+    const contentTitle = content.title;
+
+    const students: IStudentResult[] = [];
+    for (const studentId of exam.students) {
+      const student = await studentService.findOneByCollectionId(studentId);
+      if (!student) continue;
+      students.push({
+        name: student.name,
+        studentNumber: student.studentNumber,
+        score: student.score!,
+        startTime: student.startTime,
+        finishTime: student.finishTime,
+      });
+    }
+
+    examResults.push({
+      examName: exam.examName,
+      contentTitle,
+      school: exam.school,
+      class: exam.class,
+      timeLimitInMinutes: exam.timeLimitInMinutes,
+      capacity: exam.capacity,
+      students,
+    });
+  }
+  return examResults;
+};
+
 export const examService = {
   createExam,
   start,
@@ -257,4 +316,5 @@ export const examService = {
   saveAnswer,
   getExamUrl,
   finishExam,
+  getExamResults,
 };

@@ -8,6 +8,6 @@ export default function MySchool() {
   };
 
   return (
-    <button onClick={redirectToDialogueGeneratorPage}>Diyalog Üreteci Sayfasına Git</button>
+    <button onClick={redirectToDialogueGeneratorPage}>Go to dialogue generator page</button>
   );
 }

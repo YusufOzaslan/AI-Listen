@@ -60,6 +60,11 @@ const finishExam = catchAsync(async (req: Request, res: Response) => {
   res.status(httpStatus.OK).send();
 });
 
+const getExamResults = catchAsync(async (req: Request, res: Response) => {
+  const examResults = await examService.getExamResults(req.currentUser!);
+  res.status(httpStatus.OK).send(examResults);
+});
+
 export const examController = {
   createExam,
   start,
@@ -67,4 +72,5 @@ export const examController = {
   saveAnswer,
   getExamUrl,
   finishExam,
+  getExamResults,
 };

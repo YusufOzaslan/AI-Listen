@@ -7,12 +7,14 @@ router.post("/:id", auth(), examController.createExam);
 
 router.post("/:code/start", examController.start);
 
-router.get('/refresh', examController.examRefresh);
+router.get("/refresh", examController.examRefresh);
 
-router.patch('/save-answer', examController.saveAnswer);
+router.patch("/save-answer", examController.saveAnswer);
 
-router.get('/:id/url', auth(), examController.getExamUrl);
+router.get("/:id/url", auth(), examController.getExamUrl);
 
-router.patch('/finish-exam', examController.finishExam);
+router.patch("/finish-exam", examController.finishExam);
+
+router.get("/exam-results", auth(), examController.getExamResults);
 
 export { router as examRouter };
