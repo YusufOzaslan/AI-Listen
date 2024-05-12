@@ -63,15 +63,6 @@ const createExam = async ({
     timeLimitInMinutes?: number;
   };
 }) => {
-  const existingExam = await Exam.findOne({
-    content: contentId,
-    user: user._id,
-  });
-
-  if (existingExam) {
-    return existingExam.sharingURL;
-  }
-
   const exam = new Exam({
     user,
     content: contentId,
