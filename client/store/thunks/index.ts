@@ -16,3 +16,4 @@ export * from "./examRefresh";
 export * from "./examSaveAnswer";
 export * from "./getExamUrl";
 export * from "./finishExam";
+export * from "./getExamResults";
