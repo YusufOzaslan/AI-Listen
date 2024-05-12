@@ -149,7 +149,7 @@ const examRefresh = async (examToken: string | undefined) => {
 
   const { id, studentId } = await tokenService.verifyExamToken(examToken);
 
-  const exam: any = await Exam.findOne({
+  const exam = await Exam.findOne({
     _id: id,
   });
 
@@ -162,6 +162,9 @@ const examRefresh = async (examToken: string | undefined) => {
 
   if (!student || !questions || !content)
     throw new AppError(httpStatus.NOT_FOUND, EAppError.NOT_FOUND);
+
+  if (student.hasFinished)
+    throw new AppError(httpStatus.UNAUTHORIZED, EAppError.EXAM_IS_OVER);
 
   const examQuestions: IExamQuestion[] = questions.map((question) => ({
     id: question._id,
@@ -204,9 +207,37 @@ const saveAnswer = async (
   if (!student || !questions || !content)
     throw new AppError(httpStatus.NOT_FOUND, EAppError.NOT_FOUND);
 
+  if (student.hasFinished)
+    throw new AppError(httpStatus.UNAUTHORIZED, EAppError.EXAM_IS_OVER);
+
   const updatedStudentAnswers = studentService.saveAnswer(student._id, body);
 
   return updatedStudentAnswers;
+};
+
+const finishExam = async (examToken: string | undefined) => {
+  if (!examToken)
+    throw new AppError(httpStatus.UNAUTHORIZED, EAppError.UNAUTHORIZED);
+
+  const { id, studentId } = await tokenService.verifyExamToken(examToken);
+
+  const exam: any = await Exam.findOne({
+    _id: id,
+  });
+
+  if (!exam || !studentId)
+    throw new AppError(httpStatus.UNAUTHORIZED, EAppError.UNAUTHORIZED);
+
+  const student = await studentService.findOneByStudentNumber(studentId);
+
+  if (!student) throw new AppError(httpStatus.NOT_FOUND, EAppError.NOT_FOUND);
+
+  if (student.hasFinished)
+    throw new AppError(httpStatus.UNAUTHORIZED, EAppError.EXAM_IS_OVER);
+
+  student.set({ hasFinished: true });
+  student.save();
+  return;
 };
 
 const getExamUrl = async (contentId: string, user: ICurrentUser) => {
@@ -225,4 +256,5 @@ export const examService = {
   examRefresh,
   saveAnswer,
   getExamUrl,
+  finishExam,
 };

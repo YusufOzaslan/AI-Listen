@@ -54,10 +54,17 @@ const getExamUrl = catchAsync(async (req: Request, res: Response) => {
   res.status(httpStatus.OK).send(examUrl);
 });
 
+const finishExam = catchAsync(async (req: Request, res: Response) => {
+  const cookies = req.cookies;
+  await examService.finishExam(cookies[appConfig.examCookie.name]);
+  res.status(httpStatus.OK).send();
+});
+
 export const examController = {
   createExam,
   start,
   examRefresh,
   saveAnswer,
   getExamUrl,
+  finishExam,
 };

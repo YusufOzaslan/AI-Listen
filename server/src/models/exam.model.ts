@@ -9,7 +9,6 @@ export interface IExamAttributes {
   school: string;
   capacity: number;
   class: string;
-  hasFinished?: boolean;
   timeLimitInMinutes: number;
   students: string[];
 }
@@ -53,10 +52,6 @@ const examSchema = new mongoose.Schema(
     class: {
       type: String,
       required: true,
-    },
-    hasFinished: {
-      type: Boolean,
-      default: false,
     },
     timeLimitInMinutes: {
       type: Number,

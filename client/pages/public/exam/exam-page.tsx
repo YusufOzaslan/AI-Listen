@@ -20,7 +20,7 @@ import {
     Button,
 } from "@chakra-ui/react";
 import { resetExamData, IStudentAnswers } from '@/store/slices';
-import { examSaveAnswer, examRefresh } from '@/store/thunks';
+import { examSaveAnswer, examRefresh, finishExam } from '@/store/thunks';
 
 export default function ExamStarterPage() {
     const dispatch = useAppDispatch();
@@ -82,8 +82,8 @@ export default function ExamStarterPage() {
         }
     };
 
-    const finishExam = () => {
-        
+    const handleFinishExam = () => {
+        dispatch(finishExam());
     };
 
     const questions = examStudent.examData?.questions.map((question, index) => {
@@ -162,7 +162,7 @@ export default function ExamStarterPage() {
                 <Flex paddingBottom={"30%"} key={stepIndex} flexDirection="column" justifyContent="center" alignItems="center">
                     {questions![stepIndex]}
                     <Box paddingTop={"2%"} />
-                    <Button onClick={finishExam} width="10%" >Finish Exam</Button>
+                    <Button onClick={handleFinishExam} width="10%" >Finish Exam</Button>
                 </Flex>
             </Stack>
         </>) : (<>Exam Is Over</>)

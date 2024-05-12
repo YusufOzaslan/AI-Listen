@@ -7,7 +7,7 @@ interface IScore {
   falseCount: number;
 }
 export interface IStudentAnswers {
-  questionId:  mongoose.Schema.Types.ObjectId;
+  questionId: mongoose.Schema.Types.ObjectId;
   answer: string;
 }
 export interface IStudentAttributes {
@@ -18,6 +18,7 @@ export interface IStudentAttributes {
   startTime: number;
   studentAnswers: IStudentAnswers[];
   score?: IScore;
+  hasFinished?: boolean;
 }
 
 export interface IStudentDocument
@@ -49,6 +50,10 @@ const studentSchema = new mongoose.Schema(
     startTime: {
       type: Number,
       required: true,
+    },
+    hasFinished: {
+      type: Boolean,
+      default: false,
     },
     studentAnswers: [
       {

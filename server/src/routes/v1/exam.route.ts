@@ -13,4 +13,6 @@ router.patch('/save-answer', examController.saveAnswer);
 
 router.get('/:id/url', auth(), examController.getExamUrl);
 
+router.patch('/finish-exam', examController.finishExam);
+
 export { router as examRouter };

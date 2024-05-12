@@ -15,3 +15,4 @@ export * from "./startExam";
 export * from "./examRefresh";
 export * from "./examSaveAnswer";
 export * from "./getExamUrl";
+export * from "./finishExam";
