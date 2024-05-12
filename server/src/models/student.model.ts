@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 import { EModel } from "./enums";
-import { number, string } from "joi";
 
 interface IScore {
   trueCount: number;
@@ -70,10 +69,15 @@ const studentSchema = new mongoose.Schema(
     ],
     score: {
       type: {
-        trueCount: Number,
-        falseCount: Number,
+        trueCount: {
+          type: Number,
+          default: 0,
+        },
+        falseCount: {
+          type: Number,
+          default: 0,
+        },
       },
-      default: {},
     },
   },
   {

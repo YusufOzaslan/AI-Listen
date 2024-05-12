@@ -34,7 +34,6 @@ export default function ExamStarterPage() {
         const formData = new FormData(e.target as HTMLFormElement);
         const studentName = formData.get('name') as string;
         const studentNumber = formData.get('studentNumber') as string;
-        console.log(examCode)
         const response = await dispatch(
             startExam({
                 examCode,

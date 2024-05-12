@@ -210,7 +210,7 @@ const saveAnswer = async (
   if (student.hasFinished)
     throw new AppError(httpStatus.UNAUTHORIZED, EAppError.EXAM_IS_OVER);
 
-  const updatedStudentAnswers = studentService.saveAnswer(student._id, body);
+  const updatedStudentAnswers = studentService.saveAnswer(student._id, body, exam.content);
 
   return updatedStudentAnswers;
 };
