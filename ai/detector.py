@@ -1,8 +1,7 @@
-import cv2
-import numpy as np
 import requests
+from PIL import Image
+from io import BytesIO
 from ultralytics import YOLO
-
 
 def download_image(image_url):
     response = requests.get(image_url)
@@ -23,11 +22,10 @@ def detect_faces(image_url):
     if image_data is None:
         return {'error': 'Failed to download image'}
     
-    nparr = np.frombuffer(image_data, np.uint8)
-    image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+    img = Image.open(BytesIO(image_data))
     
     model = YOLO("yolov8m-face.pt")
-    results = model(image)
+    results = model(img)
     
     boxes = results[0].boxes.xyxy.tolist()
     sorted_boxes = sorted(boxes, key=calculate_area, reverse=True)
@@ -45,12 +43,5 @@ def detect_faces(image_url):
         faces_json.append(face)
         
     faces_json.sort(key=lambda x: x['top_left_x'])
-    
-    """
-    for box in top_two_boxes:
-        top_left_x, top_left_y, bottom_right_x, bottom_right_y = map(int, box)
-        cv2.rectangle(image, (top_left_x, top_left_y), (bottom_right_x, bottom_right_y), (50, 200, 129), 2)
-    cv2.imwrite("test.png", image)
-    """
-     
     return faces_json
+

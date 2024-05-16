@@ -14,7 +14,7 @@ interface IProps {
 const PageLayout: FC<IProps> = ({ children }) => {
     const pathname = usePathname();
     const matchedRoute = routes.find(route => pathname.includes(route.path));
-    const formattedPathname = matchedRoute ? matchedRoute.name : pathname;
+    const formattedPathname = matchedRoute ? matchedRoute.name : 'Home';
 
     return (
         <Box>
