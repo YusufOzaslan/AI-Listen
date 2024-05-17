@@ -47,9 +47,9 @@ import BrianAudio from "@/statics/audio/BrianAudio.mp3";
 // @ts-ignore
 import AndrewAudio from "@/statics/audio/AndrewAudio.mp3";
 // @ts-ignore
-import AiGenerateFemaleAudio from "@/statics/audio/AiGenerateFemaleAudio.mp3";
+import AiGenerateFemaleAudio from "@/statics/audio/AIGenerateFemaleAudio.mp3";
 // @ts-ignore
-import AiGenerateMaleAudio from "@/statics/audio/AiGenerateMaleAudio.mp3";
+import AiGenerateMaleAudio from "@/statics/audio/AIGenerateMaleAudio.mp3";
 
 interface SelectOption {
     label: string;
