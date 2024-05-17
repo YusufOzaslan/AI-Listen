@@ -140,6 +140,7 @@ const DialogueImage: FC<IProps> = ({ image, faces, dialogues, displayedSegmentIn
             width={{ base: "256px", md: "512px", lg: "1024px" }}
             height={{ base: "256px", md: "512px", lg: "1024px" }}
             margin="auto"
+            maxWidth={{ base: "256px", md: "512px", lg: "1024px" }}
         >
             {isLeftVisible && (
                 /* Speech bubble for the first person */

@@ -91,71 +91,81 @@ export default function MyContent() {
     );
   })
   return (
-    <Stack>
+    <Box>
       {!!content.data && content.dataQuestions && (
-        <Box mr={2} textAlign="center">
-          <Text
-            display="inline"
-            fontSize={24}
-            fontWeight="bold"
-            mr={2}
-          >
-            {content.data?.title}
-          </Text>
-          {content.data?.level && (
-            <Flex
-              alignItems="center"
-              justifyContent="center"
-              fontWeight={800}
-              fontSize={14}
-              display={'inline'}
-              ml={2}
+        <>
+          <Box mr={2} textAlign="center">
+            <Text
+              display="inline"
+              fontSize={24}
+              fontWeight="bold"
+              mr={2}
             >
-              {content.data?.level}
-            </Flex>
-          )}
-          {!!content.data.audio && (
-            <>
-              {!!examTeacher.examUrl && (
-                <Flex mt={4} mb={2} alignItems="center" justifyContent="center">
-                  <Box>
-                    <Button variant="outline" onClick={() => examTeacher.examUrl && copyToClipboard(examTeacher.examUrl)}>
-                      Copy Exam URL
-                    </Button>
-                  </Box>
-                  <Box ml={2}>
-                    <Text border="1px solid #ccc" borderRadius="md" p={2} whiteSpace="nowrap" >
-                      {examTeacher.examUrl}
-                    </Text>
-                  </Box>
-                </Flex>
-              )}
+              {content.data?.title}
+            </Text>
+            {content.data?.level && (
+              <Flex
+                alignItems="center"
+                justifyContent="center"
+                fontWeight={800}
+                fontSize={14}
+                display={'inline'}
+                ml={2}
+              >
+                {content.data?.level}
+              </Flex>
+            )}
+            {!!content.data.audio && (
+              <>
+                {!!examTeacher.examUrl && (
+                  <Flex mt={4} mb={2} alignItems="center" justifyContent="center">
+                    <Box>
+                      <Button variant="outline" onClick={() => examTeacher.examUrl && copyToClipboard(examTeacher.examUrl)}>
+                        Copy Exam URL
+                      </Button>
+                    </Box>
+                    <Box ml={2}>
+                      <Text border="1px solid #ccc" borderRadius="md" p={2} whiteSpace="nowrap" >
+                        {examTeacher.examUrl}
+                      </Text>
+                    </Box>
+                  </Flex>
+                )}
 
+                <Box mt={4} mb={2}>
+                  <GenerateExam onCreateExam={handleCreateExam} />
+                </Box>
+              </>
+            )}
+          </Box>
+
+          <Flex>
+            <Box flex="1" textAlign="center" borderRadius="lg" maxWidth="100%" p={3} borderWidth="2px" borderColor="gray.200">
+              <DialogueImage
+                image={content.data?.imageData?.image!}
+                faces={content.data?.imageData?.faces!}
+                displayedSegmentIndex={displayedSegmentIndex}
+                dialogues={content.data?.dialogues!}
+              />
+            </Box>
+            <Box flex="1" borderRadius="lg" maxWidth="100%" p={3} borderWidth="2px" borderColor="gray.200">
               <Box mt={4} mb={2}>
-                <SpeechSample audio={content.data.audio} dialogues={content.data.dialogues} onChange={setDisplayedSegmentIndex} />
-                <GenerateExam onCreateExam={handleCreateExam} />
+                <SpeechSample audio={content.data.audio!} dialogues={content.data.dialogues} onChange={setDisplayedSegmentIndex} />
               </Box>
-              <Box textAlign="center" borderRadius="lg" maxWidth="100%" p={3} borderWidth="2px" borderColor="gray.200">
+              {renderedContent}
+            </Box>
+          </Flex>
 
-                <DialogueImage
-                  image={content.data?.imageData?.image!}
-                  faces={content.data?.imageData?.faces!}
-                  displayedSegmentIndex={displayedSegmentIndex}
-                  dialogues={content.data?.dialogues!}
-                />
-              </Box></>
-          )}
-        </Box>
+          <Flex flexWrap="wrap">
+            {renderedQuestions!.map((question, index) => (
+              <Box  key={index} flex={{ base: '100%', md: '50%', lg: '33.33%' }} p={3}>
+                {question}
+              </Box>
+            ))}
+          </Flex>
+        </>
       )}
-      <Flex>
-        <Box flex="1" borderRadius="lg" maxWidth="100%" p={3} borderWidth="2px" borderColor="gray.200">
-          {renderedContent}
-        </Box>
-        <Box flex="1">
-          {renderedQuestions}
-        </Box>
-      </Flex>
-    </Stack>
+    </Box>
   );
 
 }
