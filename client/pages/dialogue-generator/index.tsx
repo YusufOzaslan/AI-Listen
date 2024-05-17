@@ -45,18 +45,34 @@ const DialoguePage = () => {
             })
         );
     }
-
     const renderGenerateImageButton = () => {
         return (
-            <Flex flexDirection="row" justifyContent="space-between" width="100%">
-                <SpeechSample audio={content?.data?.audio!} dialogues={content.data?.dialogues}  onChange={setDisplayedSegmentIndex} />
-                <Button isLoading={content.isGenerating} flex="1" colorScheme="green" mt="4"
-                    onClick={handleOnclick}>Regenerate Image</Button>
-                <Button isLoading={content.isGenerating} flex="1" colorScheme="green" mt="4"
-                    onClick={() => dispatch(formActionCreators.updateStepIndex(contentForm.stepIndex + 1))}>Next</Button>
+            <Flex flexDirection="column" alignItems="center" width="100%" mb={4}>
+                <SpeechSample audio={content?.data?.audio!} dialogues={content.data?.dialogues} onChange={setDisplayedSegmentIndex} />
+                <Flex justifyContent="space-between" width="100%" mt={4}>
+                    <Button
+                        isLoading={content.isGenerating}
+                        flex="1"
+                        colorScheme="green"
+                        mr={2}
+                        onClick={handleOnclick}
+                    >
+                        Regenerate Image
+                    </Button>
+                    <Button
+                        isDisabled={content.isGenerating}
+                        flex="1"
+                        colorScheme="green"
+                        ml={2}
+                        onClick={() => dispatch(formActionCreators.updateStepIndex(contentForm.stepIndex + 1))}
+                    >
+                        Next
+                    </Button>
+                </Flex>
             </Flex>
         );
-    }
+    };
+
 
     const steps = [
         {

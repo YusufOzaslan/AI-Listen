@@ -46,8 +46,8 @@ export default function MySchool() {
                   <Tr key={i}>
                     <Td>{student.name}</Td>
                     <Td>{student.studentNumber}</Td>
-                    <Td>{student.score.trueCount}</Td>
-                    <Td>{student.score.falseCount}</Td>
+                    <Td>{student.score?.trueCount}</Td>
+                    <Td>{student.score?.falseCount}</Td>
                     <Td>{new Date(student.startTime * 1000).toLocaleString()}</Td>
                     <Td>{student.finishTime ? new Date(student.finishTime * 1000).toLocaleString() : '-'}</Td>
                   </Tr>

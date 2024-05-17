@@ -68,7 +68,9 @@ export default function MyContent() {
     );
   };
   const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text);
+    if (text) {
+      navigator.clipboard.writeText(text);
+    }
   };
   const renderedQuestions = questions?.map((question, index) => {
     return (
@@ -158,7 +160,7 @@ export default function MyContent() {
 
           <Flex flexWrap="wrap">
             {renderedQuestions!.map((question, index) => (
-              <Box  key={index} flex={{ base: '100%', md: '50%', lg: '33.33%' }} p={3}>
+              <Box key={index} flex={{ base: '100%', md: '50%', lg: '33.33%' }} p={3}>
                 {question}
               </Box>
             ))}
