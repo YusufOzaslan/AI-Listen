@@ -8,7 +8,6 @@ import {
   Text,
   SimpleGrid,
   useColorModeValue,
-  Button,
   Stack
 } from '@chakra-ui/react';
 export default function MyContent() {
@@ -42,7 +41,7 @@ export default function MyContent() {
       position="relative"
       onClick={() => router.push(`/my-content/${item?._id}`)}
       _hover={{
-        bg: useColorModeValue('green.50', 'gray.600'),
+        bg: 'green.50',
         cursor: 'pointer',
         boxShadow: 'md'
       }}
