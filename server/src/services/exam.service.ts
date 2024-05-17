@@ -1,5 +1,5 @@
 import httpStatus from "http-status";
-import { Exam } from "../models";
+import { Content, Exam } from "../models";
 import { AppError } from "../utils";
 import { EAppError, ICurrentUser } from "../types";
 import { contentService } from "./content.service";
@@ -11,7 +11,7 @@ import { IContentAttributes, IStudentAnswers, IScore } from "../models";
 import mongoose from "mongoose";
 
 interface IExamQuestion {
-  id: string;
+  id: mongoose.Schema.Types.ObjectId;
   question: string;
   options: string[];
 }
@@ -104,7 +104,7 @@ const start = async (
   );
 
   const isExamTakenByStudent = isStudentExist
-    ? exam.students.includes(isStudentExist._id)
+    ? exam.students.includes(isStudentExist._id as string)
     : false;
   if (isExamTakenByStudent) {
     throw new AppError(httpStatus.BAD_REQUEST, EAppError.EXAM_ALREADY_TAKEN);
@@ -113,17 +113,21 @@ const start = async (
   if (exam.students.length >= exam.capacity) {
     throw new AppError(httpStatus.BAD_REQUEST, EAppError.EXAM_OUT_OF_CAPACITY);
   }
-  const content = await contentService.getContentById(exam.content);
-  const questions = await questionService.getQuestionsByContentId(content._id);
+
+  const content = await Content.findOne({ _id: exam.content }).exec();
+  if (!content) throw new AppError(httpStatus.NOT_FOUND, EAppError.NOT_FOUND);
+  const questions = await questionService.getQuestionsByContentId(
+    content._id as string
+  );
 
   const examQuestions: IExamQuestion[] = questions.map((question) => ({
-    id: question._id,
+    id: question._id as mongoose.Schema.Types.ObjectId,
     question: question.question,
     options: question.options,
   }));
 
   const studentAnswers: IStudentAnswers[] = questions.map((question) => ({
-    questionId: question._id,
+    questionId: question._id as mongoose.Schema.Types.ObjectId,
     answer: "",
   }));
 
@@ -136,11 +140,11 @@ const start = async (
     studentAnswers,
   });
 
-  exam.students.push(student._id);
+  exam.students.push(student._id as string);
   await exam.save();
 
   const examInfo: IExamInfo = {
-    examId: exam._id,
+    examId: exam._id as mongoose.Schema.Types.ObjectId,
     questions: examQuestions,
     studentId: student.studentNumber,
     content: content,
@@ -159,15 +163,19 @@ const examRefresh = async (examToken: string | undefined) => {
   const { id, studentId } = await tokenService.verifyExamToken(examToken);
 
   const exam = await Exam.findOne({
-    _id: id,
+    _id: id as mongoose.Schema.Types.ObjectId,
   });
 
   if (!exam || !studentId)
     throw new AppError(httpStatus.UNAUTHORIZED, EAppError.UNAUTHORIZED);
 
-  const content = await contentService.getContentById(exam.content);
-  const questions = await questionService.getQuestionsByContentId(content._id);
-  const student = await studentService.findOneByStudentNumber(studentId);
+  const content = await contentService.getContentById(exam.content as string);
+  const questions = await questionService.getQuestionsByContentId(
+    content._id as string
+  );
+  const student = await studentService.findOneByStudentNumber(
+    studentId as string
+  );
 
   if (!student || !questions || !content)
     throw new AppError(httpStatus.NOT_FOUND, EAppError.NOT_FOUND);
@@ -176,13 +184,13 @@ const examRefresh = async (examToken: string | undefined) => {
     throw new AppError(httpStatus.UNAUTHORIZED, EAppError.EXAM_IS_OVER);
 
   const examQuestions: IExamQuestion[] = questions.map((question) => ({
-    id: question._id,
+    id: question._id as mongoose.Schema.Types.ObjectId,
     question: question.question,
     options: question.options,
   }));
 
   const examInfo: IExamInfo = {
-    examId: exam._id,
+    examId: exam._id as mongoose.Schema.Types.ObjectId,
     questions: examQuestions,
     studentId: student.studentNumber,
     content: content,
@@ -211,8 +219,12 @@ const saveAnswer = async (
     throw new AppError(httpStatus.UNAUTHORIZED, EAppError.UNAUTHORIZED);
 
   const content = await contentService.getContentById(exam.content);
-  const questions = await questionService.getQuestionsByContentId(content._id);
-  const student = await studentService.findOneByStudentNumber(studentId);
+  const questions = await questionService.getQuestionsByContentId(
+    content._id as string
+  );
+  const student = await studentService.findOneByStudentNumber(
+    studentId as string
+  );
 
   if (!student || !questions || !content)
     throw new AppError(httpStatus.NOT_FOUND, EAppError.NOT_FOUND);
@@ -221,7 +233,7 @@ const saveAnswer = async (
     throw new AppError(httpStatus.UNAUTHORIZED, EAppError.EXAM_IS_OVER);
 
   const updatedStudentAnswers = studentService.saveAnswer(
-    student._id,
+    student._id as string,
     body,
     exam.content
   );
@@ -274,7 +286,7 @@ const getExamResults = async (user: ICurrentUser) => {
 
   const examResults: IExamResult[] = [];
   for (const exam of exams) {
-    const content = await contentService.getContentById(exam.content);
+    const content = await contentService.getContentById(exam.content as string);
     const contentTitle = content.title;
 
     const students: IStudentResult[] = [];

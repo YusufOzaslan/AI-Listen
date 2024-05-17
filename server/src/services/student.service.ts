@@ -28,7 +28,7 @@ const saveAnswer = async (
 
   const questions = await questionService.getQuestionsByContentId(contentId);
   const questionsAnswerKey = questions.map((question) => ({
-    qId: question._id,
+    qId: question._id as string,
     answerKey: question.answer,
   }));
 

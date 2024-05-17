@@ -16,6 +16,7 @@ import { contentService } from "./content.service";
 import { questionService } from "./question.service";
 import axios from "axios";
 import { appConfig } from "../configs";
+import mongoose from "mongoose";
 
 const generateDialogue = async (
   {
@@ -62,7 +63,7 @@ const generateDialogue = async (
   } = parseAndRepair(completion);
 
   const content = await contentService.createOne({
-    user: user._id,
+    user: user._id as mongoose.Schema.Types.ObjectId,
     title: data.title,
     dialogues: data.dialogues,
     level,

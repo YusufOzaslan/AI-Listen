@@ -14,7 +14,7 @@ export interface IDialogue {
 }
 
 export interface IContentAttributes {
-  user: mongoose.Types.ObjectId;
+  user: mongoose.Schema.Types.ObjectId;
   title: string;
   dialogues: IDialogue[];
   level: string;
