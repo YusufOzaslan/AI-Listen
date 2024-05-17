@@ -1,4 +1,3 @@
-import { useRouter } from 'next/router';
 import React, { useState, useEffect } from 'react';
 import { useApi } from '@/hooks';
 import { useAppDispatch, useAppSelector } from '@/store';
@@ -23,6 +22,7 @@ import {
 } from "@chakra-ui/react";
 import { resetExamData, IStudentAnswers } from '@/store/slices';
 import { examSaveAnswer, examRefresh, finishExam } from '@/store/thunks';
+import { AiFillFileText, AiOutlineArrowLeft, AiOutlineArrowRight } from "react-icons/ai";
 
 export default function ExamStarterPage() {
     const dispatch = useAppDispatch();
@@ -101,14 +101,14 @@ export default function ExamStarterPage() {
         return (
             <Stack key={question.id} alignItems="left" height="auto" width="60%" maxW="xlg" mx="auto" p="4" borderWidth="2px" borderRadius="lg" bg="white" boxShadow="md">
                 <Flex alignItems={'center'} justifyContent="space-between">
-                    <Text whiteSpace="pre-line" fontSize={'xxx-large'}>
+                    <Text whiteSpace="pre-line" fontSize={'xx-large'}>
                         <Text as="span" fontWeight="bold">{index + 1})</Text> {question.question}
                     </Text>
                 </Flex>
                 <Stack>
                     {question.options.map((option, optionIndex) => {
                         return (
-                            <Flex key={optionIndex} fontSize={'xx-large'} alignItems="center">
+                            <Flex key={optionIndex} fontSize={'x-large'} alignItems="center">
                                 <Checkbox
                                     size="lg"
                                     colorScheme='green'
@@ -133,58 +133,93 @@ export default function ExamStarterPage() {
         );
     });
 
-    return (
-        <>{examStudent.examData ? (
-            <>
-                {isSaved && (
-                    <Alert width="10%" status="success" position="fixed" bottom="20px" right="20px">
-                        <AlertIcon />
-                        Your answer have been saved!
-                    </Alert>
-                )}
-                <Flex justifyContent="flex-end">
-                    <Box p="2" bg="gray.200">
-                        <Heading as="h3" size="md">Remaining Time: {minutes} : {seconds}</Heading>
-                    </Box>
+    const Navbar = () => {
+        return (
+            <Flex
+                as="nav"
+                align="center"
+                justify="space-between"
+                wrap="wrap"
+                padding="1.5rem"
+                bg="#1A202C"
+                color="white"
+            >
+                <Flex align="center" mr="auto">
+                    <AiFillFileText fontSize="2rem" />
+                    <Text ml={3} fontWeight="bold" fontSize="xl">
+                        AI Listen Exam
+                    </Text>
                 </Flex>
+                <Text ml={3}>{examStudent.examData?.studentName}</Text>
+                <Text ml={3}>{examStudent.examData?.studentId}</Text>
+            </Flex>
+        );
+    };
 
-                <Stack spacing={8}>
-                    <DialogueImage
-                        image={examStudent.examData?.content.imageData?.image!}
-                        faces={examStudent.examData?.content.imageData?.faces!}
-                        displayedSegmentIndex={displayedSegmentIndex}
-                        dialogues={examStudent.examData?.content.dialogues!}
-                    />
-                    <SpeechSample audio={examStudent.examData?.content.audio!} dialogues={examStudent.examData?.content.dialogues} onChange={setDisplayedSegmentIndex} />
 
-                    <Flex alignItems="center" justifyContent="center" flexDirection="row">
-                        <Box paddingLeft={"5%"} />
-                        <Button onClick={previousQuestion} width="10%" disabled={stepIndex === 0} marginRight="1px">Previous</Button>
-                        <Stepper colorScheme='green' index={stepIndex} flexWrap="wrap" alignItems="left" height="auto" width="100%" maxW="60%" mx="auto" p="4" borderWidth="2px" borderRadius="lg" bg="white" boxShadow="md">
-                            {examStudent.examData.questions.map((step, index) => (
-                                <Step key={index}>
-                                    <StepIndicator>
-                                        <StepStatus
-                                            complete={<StepIcon />}
-                                            incomplete={<StepNumber />}
-                                            active={<StepNumber />}
-                                        />
-                                    </StepIndicator>
-                                </Step>
-                            ))}
-                        </Stepper>
-                        <Button onClick={nextQuestion} width="10%" disabled={stepIndex === examStudent.examData.questions.length - 1} marginLeft="1px">Next</Button>
-                        <Box paddingLeft={"5%"} />
+    return (
+        <>
+            <Navbar />
+            {examStudent.examData ? (
+                <>
+                    {isSaved && (
+                        <Alert width="10%" status="success" position="fixed" bottom="20px" right="20px">
+                            <AlertIcon />
+                            Your answer has been saved!
+                        </Alert>
+                    )}
+                    <Flex justifyContent="flex-end">
+                        <Box p="2" bg="gray.200">
+                            <Heading as="h3" size="md">Remaining Time: {minutes} : {seconds}</Heading>
+                        </Box>
                     </Flex>
+                    <Flex>
+                        {/* Resim */}
 
-                    <Flex paddingBottom={"30%"} key={stepIndex} flexDirection="column" justifyContent="center" alignItems="center">
-                        {questions![stepIndex]}
-                        <Box paddingTop={"2%"} />
-                        <Button onClick={handleFinishExam} width="10%" >Finish Exam</Button>
+                        <Box flexWrap="wrap" alignItems="left" height="auto" w="60%" mx="auto" p="4" borderWidth="2px" borderRadius="lg" bg="white" boxShadow="md">
+                            <DialogueImage
+                                image={examStudent.examData?.content.imageData?.image!}
+                                faces={examStudent.examData?.content.imageData?.faces!}
+                                displayedSegmentIndex={displayedSegmentIndex}
+                                dialogues={examStudent.examData?.content.dialogues!}
+                            />
+                        </Box>
+                        {/* Sorular */}
+                        <Box w="40%">
+                            <Stack spacing={8}>
+                                <SpeechSample audio={examStudent.examData?.content.audio!} dialogues={examStudent.examData?.content.dialogues} onChange={setDisplayedSegmentIndex} />
+                                <Flex alignItems="center" justifyContent="center" flexDirection="row">
+                                    <Box paddingLeft={"5%"} />
+                                    <Button onClick={previousQuestion} width="10%" disabled={stepIndex === 0} marginRight="1px"><AiOutlineArrowLeft /></Button>
+                                    <Stepper colorScheme='green' index={stepIndex} flexWrap="wrap" alignItems="left" height="auto" width="100%" maxW="60%" mx="auto" p="4" borderWidth="2px" borderRadius="lg" bg="white" boxShadow="md">
+                                        {examStudent.examData.questions.map((step, index) => (
+                                            <Step key={index}>
+                                                <StepIndicator>
+                                                    <StepStatus
+                                                        complete={<StepIcon />}
+                                                        incomplete={<StepNumber />}
+                                                        active={<StepNumber />}
+                                                    />
+                                                </StepIndicator>
+                                            </Step>
+                                        ))}
+                                    </Stepper>
+                                    <Button onClick={nextQuestion} width="10%" disabled={stepIndex === examStudent.examData.questions.length - 1} marginLeft="1px"><AiOutlineArrowRight /></Button>
+                                    <Box paddingLeft={"5%"} />
+                                </Flex>
+                                <Flex paddingBottom={"30%"} key={stepIndex} flexDirection="column" justifyContent="center" alignItems="center">
+                                    {questions![stepIndex]}
+                                    <Box paddingTop={"2%"} />
+                                    <Button onClick={handleFinishExam} width="20%" >Finish Exam</Button>
+                                </Flex>
+                            </Stack>
+                        </Box>
                     </Flex>
-                </Stack>
-            </>) : (<>Exam Is Over</>)
-        }
+                </>
+            ) : (
+                <>Exam Is Over</>
+            )}
         </>
     );
+
 }

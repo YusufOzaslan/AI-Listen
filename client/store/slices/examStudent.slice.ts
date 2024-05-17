@@ -23,6 +23,7 @@ interface IExamInfo {
   timeLimit: number;
   studentId: string;
   content: IContentDialogue;
+  studentName: string;
   studentAnswers: IStudentAnswers[];
 }
 interface IState {

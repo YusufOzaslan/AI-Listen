@@ -21,6 +21,7 @@ interface IExamInfo {
   startTime: number;
   timeLimit: number;
   studentId: string;
+  studentName: string;
   content: IContentAttributes;
   studentAnswers: IStudentAnswers[];
 }
@@ -145,6 +146,7 @@ const start = async (
     content: content,
     timeLimit: exam.timeLimitInMinutes,
     startTime: student.startTime,
+    studentName: student.name,
     studentAnswers,
   };
   return examInfo;
@@ -186,6 +188,7 @@ const examRefresh = async (examToken: string | undefined) => {
     content: content,
     timeLimit: exam.timeLimitInMinutes,
     startTime: student.startTime,
+    studentName: student.name,
     studentAnswers: student.studentAnswers,
   };
   return examInfo;
