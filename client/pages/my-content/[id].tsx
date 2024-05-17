@@ -122,7 +122,7 @@ export default function MyContent() {
                 {!!examTeacher.examUrl && (
                   <Flex mt={4} mb={2} alignItems="center" justifyContent="center">
                     <Box>
-                      <Button variant="outline" onClick={() => examTeacher.examUrl && copyToClipboard(examTeacher.examUrl)}>
+                      <Button variant="outline" onClick={() => copyToClipboard(examTeacher.examUrl!)}>
                         Copy Exam URL
                       </Button>
                     </Box>
