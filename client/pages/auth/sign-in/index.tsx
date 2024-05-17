@@ -14,11 +14,8 @@ import {
     InputRightElement
 } from "@chakra-ui/react";
 import { FaUserAlt, FaLock } from "react-icons/fa";
-import {
-    useAppDispatch,
-    useAppSelector,
-} from '@/store';
-import { signIn } from '@/store/thunks';
+import { useAppDispatch, useAppSelector } from '@/store';
+import { signIn, signUp } from '@/store/thunks';
 
 const CFaUserAlt = chakra(FaUserAlt);
 const CFaLock = chakra(FaLock);
@@ -28,6 +25,7 @@ const SignInPage = () => {
     const auth = useAppSelector((store) => store.auth);
 
     const [showPassword, setShowPassword] = useState(false);
+    const [showSignUp, setShowSignUp] = useState(false);
 
     const handleShowClick = () => setShowPassword(!showPassword);
 
@@ -37,10 +35,21 @@ const SignInPage = () => {
         const formData = new FormData(e.target as HTMLFormElement);
         const email = formData.get('email') as string;
         const password = formData.get('password') as string;
+        const name = formData.get('name') as string;
+        if (!showSignUp) {
+            dispatch(signIn({
+                body: { email, password }
+            }));
+        }
+        else {
+            dispatch(signUp({
+                body: { name, email, password }
+            }));
+        }
+    };
 
-        const res = await dispatch(signIn({
-            body: { email, password }
-        }));
+    const handleSignUpClick = () => {
+        setShowSignUp(!showSignUp);
     };
 
     return (
@@ -67,11 +76,21 @@ const SignInPage = () => {
                             backgroundColor="whiteAlpha.900"
                             boxShadow="md"
                         >
+                            {showSignUp &&
+                                <FormControl>
+                                    <InputGroup>
+                                        <InputLeftElement
+                                            pointerEvents="none"
+                                        />
+                                        <Input type="text" placeholder="User Name" name="name" />
+                                    </InputGroup>
+                                </FormControl>
+                            }
                             <FormControl>
                                 <InputGroup>
                                     <InputLeftElement
                                         pointerEvents="none"
-                                        //children={<CFaUserAlt color="gray.300" />}
+                                    //children={<CFaUserAlt color="gray.300" />}
                                     />
                                     <Input type="email" placeholder="Email address" name="email" />
                                 </InputGroup>
@@ -81,7 +100,7 @@ const SignInPage = () => {
                                     <InputLeftElement
                                         pointerEvents="none"
                                         color="gray.300"
-                                        //children={<CFaLock color="gray.300" />}
+                                    //children={<CFaLock color="gray.300" />}
                                     />
                                     <Input
                                         type={showPassword ? "text" : "password"}
@@ -102,18 +121,24 @@ const SignInPage = () => {
                                 colorScheme="teal"
                                 width="full"
                             >
-                                Login
+                                {showSignUp ? ("Sign Up") : "Login"}
                             </Button>
                         </Stack>
                     </form>
                 </Box>
             </Stack>
             <Box>
-                New to us?{" "}
-                <Link color="teal.500" href="#">
-                    Sign Up
+                {!showSignUp ? ("New to us?") : "Have an account?"}
+                {" "}
+                <Link color="teal.500" onClick={handleSignUpClick}>
+                    {showSignUp ? ("Login") : "Sign Up"}
                 </Link>
             </Box>
+
+            {auth.error &&
+                <Box textColor={"red"}>
+                    {auth.error}
+                </Box>}
         </Flex>
     );
 };

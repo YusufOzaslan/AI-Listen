@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import Joi from "joi";
 import httpStatus from "http-status";
 import lodash from "lodash";
+import { AppError } from "../utils";
 
 export const validate =
   (schema: any) => (req: Request, _: Response, next: NextFunction) => {
@@ -15,7 +16,7 @@ export const validate =
       const errorMessage = error.details
         .map((details) => details.message)
         .join(", ");
-      return next(new Error(`${httpStatus.BAD_REQUEST}, ${errorMessage}`));
+      return next(new AppError(httpStatus.BAD_REQUEST, errorMessage));
     }
     Object.assign(req, value);
     return next();
