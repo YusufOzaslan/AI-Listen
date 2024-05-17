@@ -40,6 +40,12 @@ export default function MyContent() {
       borderWidth="1px"
       borderColor={borderColor}
       position="relative"
+      onClick={() => router.push(`/my-content/${item?._id}`)}
+      _hover={{
+        bg: useColorModeValue('green.50', 'gray.600'),
+        cursor: 'pointer',
+        boxShadow: 'md'
+      }}
     >
       <Text fontSize="xl" fontWeight="semibold" color={textColor}>
         {item?.title}
@@ -47,15 +53,6 @@ export default function MyContent() {
       <Text mt={2} color={secondaryTextColor}>
         Level: {item?.level}
       </Text>
-      <Button
-        colorScheme="green"
-        onClick={() => router.push(`/my-content/${item?._id}`)}
-        position="absolute"
-        bottom={2}
-        right={2}
-      >
-        View Content
-      </Button>
     </Box>
   ));
 
