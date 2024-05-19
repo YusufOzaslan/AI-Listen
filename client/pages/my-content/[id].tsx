@@ -67,9 +67,9 @@ export default function MyContent() {
       }),
     );
   };
-  const copyToClipboard = (text: string) => {
-    if (text) {
-      navigator.clipboard.writeText(text);
+  const copyToClipboard = () => {
+    if (examTeacher.examUrl != undefined && examTeacher.examUrl != null) {
+      navigator.clipboard.writeText(examTeacher.examUrl);
     }
   };
   const renderedQuestions = questions?.map((question, index) => {
@@ -122,7 +122,7 @@ export default function MyContent() {
                 {!!examTeacher.examUrl && (
                   <Flex mt={4} mb={2} alignItems="center" justifyContent="center">
                     <Box>
-                      <Button variant="outline" onClick={() => copyToClipboard(examTeacher.examUrl!)}>
+                      <Button variant="outline" onClick={copyToClipboard}>
                         Copy Exam URL
                       </Button>
                     </Box>
@@ -142,7 +142,7 @@ export default function MyContent() {
           </Box>
 
           <Flex>
-            <Box flex="1" textAlign="center" borderRadius="lg" maxWidth="100%" p={3} borderWidth="2px" borderColor="gray.200">
+            <Box flex="1" textAlign="center" borderRadius="lg" w="60%" p={3} borderWidth="2px" borderColor="gray.200">
               <DialogueImage
                 image={content.data?.imageData?.image!}
                 faces={content.data?.imageData?.faces!}
@@ -150,7 +150,7 @@ export default function MyContent() {
                 dialogues={content.data?.dialogues!}
               />
             </Box>
-            <Box flex="1" borderRadius="lg" maxWidth="100%" p={3} borderWidth="2px" borderColor="gray.200">
+            <Box flex="1" borderRadius="lg" w="40%" p={3} borderWidth="2px" borderColor="gray.200">
               <Box mt={4} mb={2}>
                 <SpeechSample audio={content.data.audio!} dialogues={content.data.dialogues} onChange={setDisplayedSegmentIndex} />
               </Box>

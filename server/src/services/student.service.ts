@@ -10,8 +10,8 @@ const createOne = async (attrs: IStudentAttributes) => {
   return student;
 };
 
-const findOneByStudentNumber = async (studentNumber: string) => {
-  return await Student.findOne({ studentNumber }).exec();
+const findStudent = async (studentNumber: string, exam: string) => {
+  return await Student.findOne({ studentNumber, examId: exam }).exec();
 };
 
 const findOneByCollectionId = async (id: string) => {
@@ -53,6 +53,6 @@ const saveAnswer = async (
 export const studentService = {
   findOneByCollectionId,
   createOne,
-  findOneByStudentNumber,
+  findStudent,
   saveAnswer,
 };

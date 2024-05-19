@@ -99,8 +99,9 @@ const start = async (
   if (!exam.isSharingUrlValid(examCode))
     throw new AppError(httpStatus.BAD_REQUEST, EAppError.INVALID_EXAM_URL);
 
-  const isStudentExist = await studentService.findOneByStudentNumber(
-    body.studentNumber
+  const isStudentExist = await studentService.findStudent(
+    body.studentNumber as string,
+    exam._id as string
   );
 
   const isExamTakenByStudent = isStudentExist
@@ -134,6 +135,7 @@ const start = async (
   const student = await studentService.createOne({
     name: body.studentName,
     studentNumber: body.studentNumber,
+    examId: exam._id,
     school: exam.school,
     class: exam.class,
     startTime: Math.floor(Date.now() / 1000),
@@ -173,8 +175,9 @@ const examRefresh = async (examToken: string | undefined) => {
   const questions = await questionService.getQuestionsByContentId(
     content._id as string
   );
-  const student = await studentService.findOneByStudentNumber(
-    studentId as string
+  const student = await studentService.findStudent(
+    studentId as string,
+    exam._id as string
   );
 
   if (!student || !questions || !content)
@@ -222,10 +225,12 @@ const saveAnswer = async (
   const questions = await questionService.getQuestionsByContentId(
     content._id as string
   );
-  const student = await studentService.findOneByStudentNumber(
-    studentId as string
+  const student = await studentService.findStudent(
+    studentId as string,
+    exam._id as string
   );
 
+  console.log(student)
   if (!student || !questions || !content)
     throw new AppError(httpStatus.NOT_FOUND, EAppError.NOT_FOUND);
 
@@ -254,7 +259,10 @@ const finishExam = async (examToken: string | undefined) => {
   if (!exam || !studentId)
     throw new AppError(httpStatus.UNAUTHORIZED, EAppError.UNAUTHORIZED);
 
-  const student = await studentService.findOneByStudentNumber(studentId);
+  const student = await studentService.findStudent(
+    studentId as string,
+    exam._id as string
+  );
 
   if (!student) throw new AppError(httpStatus.NOT_FOUND, EAppError.NOT_FOUND);
 

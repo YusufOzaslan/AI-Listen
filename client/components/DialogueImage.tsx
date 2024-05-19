@@ -140,7 +140,7 @@ const DialogueImage: FC<IProps> = ({ image, faces, dialogues, displayedSegmentIn
             width={{ base: "256px", md: "512px", lg: "1024px" }}
             height={{ base: "256px", md: "512px", lg: "1024px" }}
             margin="auto"
-            maxWidth={{ base: "256px", md: "512px", lg: "1024px" }}
+            maxWidth={"100%"}
         >
             {isLeftVisible && (
                 /* Speech bubble for the first person */
@@ -158,6 +158,7 @@ const DialogueImage: FC<IProps> = ({ image, faces, dialogues, displayedSegmentIn
                         lg: `${leftY = faces[0]?.top_left_y - 180 < 0 ? 0 : faces[0]?.top_left_y - 180}px`
                     }}
                     width={{ base: "100px", md: "200px", lg: "320px" }}
+                    maxWidth={"100%"}
                     opacity="0.75"
                 >
                     <Image src={speechBubbleleft.src} />
@@ -192,6 +193,7 @@ const DialogueImage: FC<IProps> = ({ image, faces, dialogues, displayedSegmentIn
                         lg: `${rightY = faces[1]?.top_left_y! - 180 < 0 ? 0 : faces[1]?.top_left_y! - 180}px`
                     }}
                     width={{ base: "100px", md: "200px", lg: "320px" }}
+                    maxWidth={"100%"}
                     opacity="0.75"
                 >
                     <Image src={speechBubbleRight.src} />

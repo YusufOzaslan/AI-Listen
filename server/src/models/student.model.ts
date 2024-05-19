@@ -11,6 +11,7 @@ export interface IStudentAnswers {
 }
 export interface IStudentAttributes {
   name: string;
+  examId: string;
   studentNumber: string;
   school: string;
   class: string;
@@ -33,6 +34,11 @@ const studentSchema = new mongoose.Schema(
   {
     name: {
       type: String,
+      required: true,
+    },
+    examId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: EModel.USER,
       required: true,
     },
     studentNumber: {
