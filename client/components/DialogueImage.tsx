@@ -134,18 +134,22 @@ const DialogueImage: FC<IProps> = ({ image, faces, dialogues, displayedSegmentIn
         <Box
             bgImage={`url(${image})`}
             bgSize="contain"
-            bgPosition="center"
+            bgPosition="top"
             bgRepeat="no-repeat"
             position="relative"
-            width={{ base: "256px", md: "512px", lg: "1024px" }}
             height={{ base: "256px", md: "512px", lg: "1024px" }}
-            margin="auto"
-            maxWidth={"100%"}
+            width={{ base: "256px", md: "512px", lg: "1024px" }}
         >
             {isLeftVisible && (
                 /* Speech bubble for the first person */
                 <Box
-                    position="absolute"
+                    id='speechBubbleleft'
+                    bgSize="contain"
+                    bgPosition="center"
+                    bgRepeat="no-repeat"
+                    position="relative"
+                    bgImage={`url(${speechBubbleleft.src})`}
+
                     left={{
                         base: `${leftX = faces[0]?.bottom_right_x / 4 < 0 ? 0 : faces[0]?.bottom_right_x / 4}px`,
                         md: `${leftX = faces[0]?.bottom_right_x / 2 < 0 ? 0 : faces[0]?.bottom_right_x / 2}px`,
@@ -158,21 +162,15 @@ const DialogueImage: FC<IProps> = ({ image, faces, dialogues, displayedSegmentIn
                         lg: `${leftY = faces[0]?.top_left_y - 180 < 0 ? 0 : faces[0]?.top_left_y - 180}px`
                     }}
                     width={{ base: "100px", md: "200px", lg: "320px" }}
-                    maxWidth={"100%"}
+                    height={{ base: "57px", md: "115px", lg: "185px" }}
                     opacity="0.75"
                 >
-                    <Image src={speechBubbleleft.src} />
                     {/* Text inside the speech bubble */}
                     <Text
-                        position="absolute"
-                        top="50%"
-                        left="50%"
-                        transform="translate(-50%, -50%)"
-                        textAlign="center"
-                        color="black"
                         fontSize={{ base: "8px", md: "16px", lg: "24px" }}
                         fontWeight="bold"
-                        pb="20px"
+                        color="black"
+                        padding={{ base: "8px", md: "16px", lg: "24px" }}
                     >
                         {leftText}
                     </Text>
@@ -181,7 +179,12 @@ const DialogueImage: FC<IProps> = ({ image, faces, dialogues, displayedSegmentIn
             {isRightVisible && (
                 /* Speech bubble for the second person */
                 <Box
-                    position="absolute"
+                    id='speechBubbleRight'
+                    bgSize="contain"
+                    bgPosition="center"
+                    bgRepeat="no-repeat"
+                    position="relative"
+                    bgImage={`url(${speechBubbleRight.src})`}
                     left={{
                         base: `${rightX = faces[1]?.top_left_x! - 100 < 0 ? 0 : faces[1]?.top_left_x! / 4 - 100}px`,
                         md: `${rightX = faces[1]?.top_left_x! - 180 < 0 ? 0 : faces[1]?.top_left_x! / 2 - 200}px`,
@@ -193,21 +196,15 @@ const DialogueImage: FC<IProps> = ({ image, faces, dialogues, displayedSegmentIn
                         lg: `${rightY = faces[1]?.top_left_y! - 180 < 0 ? 0 : faces[1]?.top_left_y! - 180}px`
                     }}
                     width={{ base: "100px", md: "200px", lg: "320px" }}
-                    maxWidth={"100%"}
+                    height={{ base: "57px", md: "115px", lg: "185px" }}
                     opacity="0.75"
                 >
-                    <Image src={speechBubbleRight.src} />
                     {/* Text inside the speech bubble */}
                     <Text
-                        position="absolute"
-                        top="50%"
-                        left="50%"
-                        transform="translate(-50%, -50%)"
-                        textAlign="center"
-                        color="black"
-                        fontSize={{ base: "8px", md: "16px", lg: "28px" }}
+                        fontSize={{ base: "8px", md: "16px", lg: "24px" }}
                         fontWeight="bold"
-                        pb="20px"
+                        color="black"
+                        padding={{ base: "8px", md: "16px", lg: "24px" }}
                     >
                         {rightText}
                     </Text>

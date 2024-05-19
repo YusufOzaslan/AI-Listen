@@ -38,15 +38,6 @@ export default function ExamStarterPage() {
     const [isSaved, setIsSaved] = useState(false);
 
     useEffect(() => {
-        if (answers.length > 0) {
-            setIsSaved(true);
-            const timeout = setTimeout(() => setIsSaved(false), 3000);
-            return () => clearTimeout(timeout);
-        }
-    }, [answers]);
-
-
-    useEffect(() => {
         if (examStudent.examData) {
             setAnswers(examStudent.examData.studentAnswers)
             const currentTime = Math.floor(Date.now() / 1000);
@@ -99,16 +90,16 @@ export default function ExamStarterPage() {
 
     const questions = examStudent.examData?.questions.map((question, index) => {
         return (
-            <Stack key={question.id} alignItems="left" height="auto" width="60%" maxW="xlg" mx="auto" p="4" borderWidth="2px" borderRadius="lg" bg="white" boxShadow="md">
+            <Flex flexDirection="column" key={question.id} alignItems="left" width="60%" maxW="xlg" mx="auto" p="4" borderWidth="2px" borderRadius="lg" bg="white" boxShadow="md">
                 <Flex alignItems={'center'} justifyContent="space-between">
-                    <Text whiteSpace="pre-line" fontSize={'xx-large'}>
+                    <Text whiteSpace="pre-line" fontSize={{ base: "large", md: "larger", lg: "x-large" }}>
                         <Text as="span" fontWeight="bold">{index + 1})</Text> {question.question}
                     </Text>
                 </Flex>
-                <Stack>
+                <Flex flexDirection="column">
                     {question.options.map((option, optionIndex) => {
                         return (
-                            <Flex key={optionIndex} fontSize={'x-large'} alignItems="center">
+                            <Flex key={optionIndex} fontSize={{ base: "medium", md: "large", lg: "larger" }} alignItems="center">
                                 <Checkbox
                                     size="lg"
                                     colorScheme='green'
@@ -121,6 +112,9 @@ export default function ExamStarterPage() {
                                             return answer;
                                         });
                                         setAnswers(updatedAnswers);
+                                        setIsSaved(true);
+                                        const timeout = setTimeout(() => setIsSaved(false), 3000);
+                                        return () => clearTimeout(timeout);
                                     }}
                                 />
                                 <Text ml="6" as="span" fontWeight="bold">{String.fromCharCode(optionIndex + 65)})</Text>
@@ -128,8 +122,8 @@ export default function ExamStarterPage() {
                             </Flex>
                         );
                     })}
-                </Stack>
-            </Stack>
+                </Flex>
+            </Flex>
         );
     });
 
@@ -176,7 +170,7 @@ export default function ExamStarterPage() {
                     <Flex>
                         {/* Resim */}
 
-                        <Box flexWrap="wrap" alignItems="left" height="auto" w="60%" mx="auto" p="4" borderWidth="2px" borderRadius="lg" bg="white" boxShadow="md">
+                        <Box textAlign="center" flex="2" p="4" borderWidth="2px" borderRadius="lg" bg="white" boxShadow="md">
                             <DialogueImage
                                 image={examStudent.examData?.content.imageData?.image!}
                                 faces={examStudent.examData?.content.imageData?.faces!}
@@ -185,12 +179,11 @@ export default function ExamStarterPage() {
                             />
                         </Box>
                         {/* Sorular */}
-                        <Box w="40%">
+                        <Box flex="1" p="4" borderWidth="2px" borderRadius="lg" bg="white" boxShadow="md">
                             <Stack spacing={8}>
                                 <SpeechSample audio={examStudent.examData?.content.audio!} dialogues={examStudent.examData?.content.dialogues} onChange={setDisplayedSegmentIndex} />
                                 <Flex alignItems="center" justifyContent="center" flexDirection="row">
                                     <Box paddingLeft={"5%"} />
-                                    <Button onClick={previousQuestion} width="10%" disabled={stepIndex === 0} marginRight="1px"><AiOutlineArrowLeft /></Button>
                                     <Stepper colorScheme='green' index={stepIndex} flexWrap="wrap" alignItems="left" height="auto" width="100%" maxW="60%" mx="auto" p="4" borderWidth="2px" borderRadius="lg" bg="white" boxShadow="md">
                                         {examStudent.examData.questions.map((step, index) => (
                                             <Step key={index}>
@@ -203,14 +196,17 @@ export default function ExamStarterPage() {
                                                 </StepIndicator>
                                             </Step>
                                         ))}
-                                    </Stepper>
-                                    <Button onClick={nextQuestion} width="10%" disabled={stepIndex === examStudent.examData.questions.length - 1} marginLeft="1px"><AiOutlineArrowRight /></Button>
-                                    <Box paddingLeft={"5%"} />
+                                    </Stepper><Box paddingLeft={"5%"} />
                                 </Flex>
                                 <Flex paddingBottom={"30%"} key={stepIndex} flexDirection="column" justifyContent="center" alignItems="center">
                                     {questions![stepIndex]}
                                     <Box paddingTop={"2%"} />
-                                    <Button onClick={handleFinishExam} width="20%" >Finish Exam</Button>
+                                    <Flex>
+                                        <Button size="lg" onClick={previousQuestion} disabled={stepIndex === 0} marginRight="50px"><AiOutlineArrowLeft /></Button>
+                                        <Button size="lg" onClick={nextQuestion} disabled={stepIndex === examStudent.examData.questions.length - 1} marginLeft="50px"><AiOutlineArrowRight /></Button>
+                                    </Flex>
+                                    <Box paddingTop={"10%"} />
+                                    <Button onClick={handleFinishExam}  >Finish Exam</Button>
                                 </Flex>
                             </Stack>
                         </Box>
