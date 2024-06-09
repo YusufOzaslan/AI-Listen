@@ -135,7 +135,7 @@ const start = async (
   const student = await studentService.createOne({
     name: body.studentName,
     studentNumber: body.studentNumber,
-    examId: exam._id,
+    examId: exam._id as string,
     school: exam.school,
     class: exam.class,
     startTime: Math.floor(Date.now() / 1000),
@@ -230,7 +230,6 @@ const saveAnswer = async (
     exam._id as string
   );
 
-  console.log(student)
   if (!student || !questions || !content)
     throw new AppError(httpStatus.NOT_FOUND, EAppError.NOT_FOUND);
 

@@ -91,7 +91,7 @@ const DialoguePage = () => {
             title: 'Third',
             description: 'Generate Image',
             component:
-                <Flex flexDirection="column" alignItems="center">
+                <Flex textAlign="center" flexDirection="column" alignItems="center">
                     {renderGenerateImageButton()}
                     <DialogueImage
                         image={content.data?.imageData?.image!}
